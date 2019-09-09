@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>Demo</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="./vanillaSelectBox.css">
+
+    <!-- internal css -->
+    <style>
+	
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+		margin:0;
+}
+
+.darkRed{color:darkred;}
+.darkBlue{color:darkblue;}
+
+.navbar{
+	position: relative;
+    border: 1px solid #080808;
+	background-color: #222;
+	background-image: linear-gradient(to bottom,#3c3c3c 0,#222 100%);
+	background-repeat: repeat-x;
+    border-radius: 4px;
+	margin:0;
+	padding:0;
+}
+
+.navbar-brand {
+    float: left;
+    padding: 14px 15px;
+    font-size: 18px;
+    line-height: 20px;
+	color: #fff;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+a:hover{
+	color: #fff;
+
+}
+
+.navbar-links{
+	font-size: 14px;
+    line-height: 20px;
+	position:relative;
+	margin:0;
+}
+
+.navbar-links li{
+	cursor: pointer;
+	text-decoration: none;
+}
+
+
+.navbar-links li{
+	display:inline-block;
+	min-width:120px;
+	text-align:center;
+	margin-top:15px;
+}
+
+.navbar-links li.active{
+	background-image: #080808;
+	background: #080808;
+	color: #fff;
+	height:100%;
+	padding-top : 15px;
+	padding-bottom : 15px;
+	margin:0;
+
+}
+
+a{
+	color: #9d9d9d;
+	cursor: pointer;
+	text-decoration: none;
+}	
+
+@media (max-width: 640px){
+	.navbar-brand {
+		width:100%;
+
+	}
+	.navbar-links{
+		padding-left:0;
+	}
+}
+
+
+#container {
+	padding-top: 50px;
+	padding-left: 50px;
+	width: 90%;
+}
+
+label {
+	display:inline-block;
+	min-width:220px;
+	width :220px;
+}
+
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    Experiments with vanilla js
+                </a>
+            </div>
+            <ul class="navbar-links">
+                <li id="vanillaSelectBox" class="active"><a href="#vanillaSelectBox">vanillaSelectBox</a></li>
+                <li id="blog"><a href="https://philippemarcmeyer.github.io#vanillajs">Github Blog</a></li>
+                <li id="repos"><a href="https://github.com/PhilippeMarcMeyer/vanillaSelectBox">Github repos</a></li>
+            </ul>
+    </nav>
+	
+	<div id="container">
+		<label>Choose a brand in list : </label><select id="brandsOne"></select> 
+		&nbsp;&nbsp;&nbsp;<button onClick="document.getElementById('brandsOneChoice').innerHTML=document.getElementById('brandsOne').value;">document.getElementById('brandsOne').value : </button>&nbsp;&nbsp;&nbsp;<span id="brandsOneChoice"></span>
+		<br/><br/></br>
+		<label>Choose several brands : </label><select id="brandsMulti"></select> (todo...)
+	</div>
+
+        <script src="./vanillaSelectBox.js"></script>
+
+        <script>
+let brands = ["Abarth","Alfa Romeo","Alpine","Aston Martin","Audi","Bentley","BMW","Cadillac","Chevrolet","Citroën","Cupra","DACIA","DS","Ferrari","Fiat","Ford","Honda","Hyundai","Infiniti","Jaguar","Jeep","KIA","Lamborghini","Land Rover","Lexus","Lotus","Maserati","Mazda","McLaren","Mercedes-Benz","MINI","Mitsubishi","Nissan","Opel","Peugeot","Porsche","Renault","Rolls-Royce","SEAT","Skoda","smart","Ssangyong","Subaru","Suzuki","Tesla","Toyota","Volkswagen","Volvo"];
+
+let select1 = document.getElementById("brandsOne");
+    var option = document.createElement("option");
+    option.value = "";
+    option.text = "";
+    select1.appendChild(option);
+	
+for (var i = 0; i < brands.length; i++) {
+    var option = document.createElement("option");
+    option.value = brands[i];
+    option.text = brands[i];
+	if(i==23) option.setAttribute("selected",true);
+	let colorClass = "";
+	if(i>2)
+		option.classList.add(i%2==0?"darkRed":"darkBlue")
+
+    select1.appendChild(option);
+}
+
+let select2 = document.getElementById("brandsMulti");
+
+for (var i = 0; i < brands.length; i++) {
+    
+    var option = document.createElement("option");
+    option.value = brands[i];
+    option.text = brands[i];
+    select2.appendChild(option);
+}
+
+let selectBox = new vanillaSelectBox("#brandsOne",{"maxHeight":200});
+
+        </script>
+	</div>
+</html>
