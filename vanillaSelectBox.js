@@ -1,7 +1,7 @@
   /* 
  Copyright (C) Philippe Meyer 2019
  Distributed under the MIT License
- vanillaSelectBox v0.01 : shows a dropdown à la bootstrap with no dependency
+ vanillaSelectBox v0.02 : added dispach change event to select + nicer check mark
  https://github.com/PhilippeMarcMeyer/vanillaSelectBox
 */
   function vanillaSelectBox(domSelector,options){
@@ -121,6 +121,11 @@
 			self.listElements.forEach(function(x){
 				x.classList.remove("active");
 			});
+			// trigger event to select
+			let event = document.createEvent('HTMLEvents');
+			event.initEvent('change', true, false);
+			self.root.dispatchEvent(event);
+			
 			e.target.classList.add("active");
 			docListener();
 		}
