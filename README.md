@@ -1,5 +1,5 @@
 # vanillaSelectBox
-### A nice select/multiselect ui
+### A nice select/multiselect ui with no dependency
 
 ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/vanillaSelectBox.png)
 
