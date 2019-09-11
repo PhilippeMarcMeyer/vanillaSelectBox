@@ -135,7 +135,7 @@
 		ul.append(li);
 		li.setAttribute("data-value",value);
 		li.setAttribute("data-text",text);
-		if(className != undefined){
+		if(className){
 			li.classList.add(className);
 		}
 		if(isSelected){
@@ -145,7 +145,7 @@
 			li.classList.add("active");
 			if(!self.isMultiple){
 				self.title.textContent = text;
-				if(className != ""){
+				if(className){
 					self.title.classList.add(className);
 				}
 			}
@@ -217,7 +217,7 @@
 		if(!self.isMultiple){
 			self.root.value = choiceValue;
 			self.title.textContent = choiceText;
-			if(className != undefined){
+			if(className){
 				self.title.setAttribute("class",className + " title");
 			}else{
 				self.title.setAttribute("class","title");
@@ -232,7 +232,7 @@
 			docListener();
 		}else{
 			let wasActive = false;
-			if(className!== undefined){
+			if(className){
 				wasActive = className.indexOf("active") != -1;
 			}
 			if(wasActive){
@@ -378,7 +378,7 @@
 				  if(x.value == values){
 					x.selected = true;
 					className = x.getAttribute("class");
-					if(className == undefined) className = "";
+					if(!className) className = "";
 				  }else{
 					x.selected = false;
 				  }
