@@ -9,7 +9,7 @@ Demo : https://philippemarcmeyer.github.io/vanillaSelectBox/
 #### the select is hidden and the chosen value(s) is/are available in the source select
 
 ```
-let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200});
+let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 ```
 * param 1 : css selector of a normal select element
 * param 2 : options 
@@ -18,7 +18,7 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200});
 * maxWidth : for the UI if you don't want the title to expand to much to the right
 * maxHeight : the maxHeight set a scroll when there are too many items 
 * translations : { "all": "every cars", "items": "cars" }
-* search : false (for the moment, will come soon)
+* search : true/false (for the moment, will come soon)
 * placeHolder : well that's a placeholder !
 
 ### Automatic options :
@@ -41,11 +41,9 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200});
 ```
 setValues('brandsMulti',['Lamborghini','Land Rover'])
 ```
-
-### Todo : 
-* A search box
-
 #### History :
+v 0.20 : working selectBox both single and multiple choices, with search-box !
+
 v 0.10 : functional plugin for both single and multiple selects, without search box for the moment
 
 v 0.02 : added dispatch change event to select + nicer check mark
