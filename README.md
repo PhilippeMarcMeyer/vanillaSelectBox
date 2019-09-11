@@ -21,7 +21,7 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200});
 * search : false (for the moment, will come soon)
 * placeHolder : well that's a placeholder !
 
-#####Todo : search box
+##### Todo : search box
 
 ##### History :
 v 0.10 : functional plugin for both single and multiple selects, without search box for the moment
