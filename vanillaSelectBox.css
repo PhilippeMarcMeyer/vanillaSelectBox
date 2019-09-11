@@ -1,143 +1,153 @@
-        .vsb-menu{
-           cursor:pointer;
-            z-index:2000;
-          display:none;
-          position:fixed;
-          border:1px solid #B2B2B2;
-          background-color: #fff;
-		  background-clip: padding-box;
-		  border: 1px solid rgba(0,0,0,.15);
-          box-shadow: 0 6px 12px rgba(0,0,0,.175);
-          border-radius:4px;
-          font-size : 11px;
-        }
-		
-		.vsb-main{
-			position: relative;
-			display: inline-block;
-			vertical-align: middle;
-		}
+.vsb-menu{
+   cursor:pointer;
+	z-index:2000;
+  display:none;
+  position:fixed;
+  border:1px solid #B2B2B2;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+  box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  border-radius:4px;
+  font-size : 11px;
+}
 
-        .vsb-menu li{
-			display: list-item;
-            font-size: 12px;
-	        background-color: #fff;
-	        min-height:1.4em;
-	        padding: 0.2em;
-        }
+.vsb-main{
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+}
 
-        .vsb-menu  li:hover {
-            background: linear-gradient(#f5f5f5, #e8e8e8);
-        }
+.vsb-menu li{
+	display: list-item;
+	font-size: 12px;
+	background-color: #fff;
+	min-height:1.4em;
+	padding: 0.2em;
+}
 
-         .vsb-menu  ul{
-          list-style:none;
-          white-space: nowrap;
-          margin:0px;
-          margin-top:4px;
-          padding-left:10px;
-          padding-right:10px;
-          padding-bottom:3px;
-          color: #333;
-		  cursor:pointer;
-		  overflow-y:auto;
-        }
+.vsb-menu  li:hover {
+	background: linear-gradient(#f5f5f5, #e8e8e8);
+}
 
-		
-		.vsb-main button{
-			min-width: 120px;
-			border-radius: 0;
-			width: 100%;
-			text-align: left;
-			z-index: 1;
-			color: #333;
-			background: white !important;
-			border: 1px solid #999 !important;
-			line-height:20px;
-			font-size:14px;
-			padding:6px 12px;
-		}
-		
-		.vsb-main .title {
-			margin-right: 6px;
-		}
-		
-		.vsb-main li:hover {
-			background: linear-gradient(#f5f5f5, #e8e8e8);
-		}
-		
-		.vsb-main ul{
-		    white-space: nowrap;
-		}
-		
-		.vsb-main li {
-			font-size: 14px;
-			background-color: #fff;
-			min-height:1.4em;
-			padding: 0.2em 2em 0.2em 1em;
-		}
+ .vsb-menu  ul{
+ user-select:none;
+  list-style:none;
+  white-space: nowrap;
+  margin:0px;
+  margin-top:4px;
+  padding-left:10px;
+  padding-right:10px;
+  padding-bottom:3px;
+  color: #333;
+  cursor:pointer;
+  overflow-y:auto;
+}
 
 
-		.vsb-main :not(.multi) li.active::before {
-			  content: "";
-			  display: inline-block;
-			  font-size: inherit;
-			  float:left;
-			  margin-left:-16px;
-			  display: inline-block;
-			  transform: rotate(45deg);
-			  height: 10px;
-			  width:  5px;
-			  border-bottom:  3px solid black;
-			  border-right:  3px solid black;
-			  border-radius:2px;
-		}
+.vsb-main button{
+	min-width: 120px;
+	border-radius: 0;
+	width: 100%;
+	text-align: left;
+	z-index: 1;
+	color: #333;
+	background: white !important;
+	border: 1px solid #999 !important;
+	line-height:20px;
+	font-size:14px;
+	padding:6px 12px;
+}
+
+.vsb-main button.disabled{
+	cursor:not-allowed;
+	opacity:0.65;
+}
+
+.vsb-main .title {
+	margin-right: 6px;
+	user-select:none;
+}
+
+.vsb-main li:hover {
+	background: linear-gradient(#f5f5f5, #e8e8e8);
+}
+
+.vsb-main ul{
+	white-space: nowrap;
+}
+
+.vsb-menu li {
+	font-size: 14px;
+	background-color: #fff;
+	min-height:1.4em;
+	padding: 0.2em 2em 0.2em 1em;
+}
 
 
-		.vsb-main .multi li {
-			font-size: 14px;
-			background-color: #fff;
-			min-height:1.4em;
-			padding: 0.2em 2em 0.2em 26px;
-		}
+.vsb-menu :not(.multi) li.active::before {
+	  content: "";
+	  display: inline-block;
+	  font-size: inherit;
+	  float:left;
+	  margin-left:-16px;
+	  display: inline-block;
+	  transform: rotate(45deg);
+	  height: 10px;
+	  width:  5px;
+	  border-bottom:  3px solid black;
+	  border-right:  3px solid black;
+	  border-radius:2px;
+}
 
-		.vsb-main .multi li::before{
-		  content: "";
-		  display: inline-block;
-		  font-size: inherit;
-		  float:left;
-		  font-weight:bold;
-		  margin-left:-18px;
-		  margin-right:2px;
-		  border : 1px solid;
-		  border-radius : 3px;
-		  padding : 6px;
-		  margin-top:3px;
-		  color:black;
-		}
 
-		.vsb-main .multi li.active::after {
-			content: "";
-			display: inline-block;
-			font-size: inherit;
-			float: left;
-			font-weight: bold;
-			border: 1px solid;
-			padding: 3px;
-			background-color: black;
-			margin-left: -15px;
-			margin-top: 6px;
-			color: black;
-		}
-		
+.vsb-menu .multi li {
+	font-size: 14px;
+	background-color: #fff;
+	min-height:1.4em;
+	padding: 0.2em 2em 0.2em 26px;
+}
+
+.vsb-menu .multi li::before{
+  content: "";
+  display: inline-block;
+  font-size: inherit;
+  float:left;
+  font-weight:bold;
+  margin-left:-22px;
+  margin-right:2px;
+  border : 1px solid;
+  border-radius : 3px;
+  padding : 7px;
+  margin-top:0px;
+  color:black;
+}
+
+
+.vsb-menu .multi li.active::after {
+	  content: "";
+	  display: inline-block;
+	  font-size: inherit;
+	  color: #333;
+	  float:left;
+	  margin-left:-18px;
+	  display: inline-block;
+	  transform: rotate(45deg);
+	  margin-top:2px;
+	  height: 8px;
+	  width:  4px;
+	  border-bottom: 3px solid black;
+	  border-right:  3px solid black;
+}
+
 .caret {
-    display: inline-block;
-    width: 0;
-    height: 0;
-    margin-left: 2px;
-    vertical-align: middle;
-    border-top: 4px dashed;
-    border-top: 4px solid\9;
-    border-right: 4px solid transparent;
-    border-left: 4px solid transparent;
+	display: inline-block;
+	width: 0;
+	height: 0;
+	margin-left: 2px;
+	vertical-align: middle;
+	border-top: 4px dashed;
+	border-top: 4px solid;
+	border-right: 4px solid transparent;
+	border-left: 4px solid transparent;
 }
