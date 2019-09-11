@@ -24,12 +24,12 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200});
 ### Automatic options :
 * single or multiple choices : depends on the "multiple" attribute that you put in the select code 
 * size : if you set a multiple attribute and a size attribute in the select (for instance 3) :
-** the title zone will enumerate the chosen values as a comma separated string until it reaches "size"
-** Above it will show "x items" or "x" + whatever you put in the translations.items key
-** If all the items are selected, it will show "all" or whatever you put in the translations.items all
+  * the title zone will enumerate the chosen values as a comma separated string until it reaches "size"
+  * Above it will show "x items" or "x" + whatever you put in the translations.items key
+  * If all the items are selected, it will show "all" or whatever you put in the translations.items all
 
 ```
-let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200});
+<select id="brands" multiple size="3">
 ```
 ##### Todo : search box
 
