@@ -5,8 +5,8 @@
 
 Demo : https://philippemarcmeyer.github.io/vanillaSelectBox/
 
-#### Transform an HTML select into a selectBox dropdown
-##### the select is hidden and the chosen value(s) is/are available in the source select
+### Transform an HTML select into a selectBox dropdown
+#### the select is hidden and the chosen value(s) is/are available in the source select
 
 ```
 let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200});
@@ -31,11 +31,24 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200});
 ```
 <select id="brands" multiple size="3">
 ```
-##### Todo : search box
+### Available commands :
+* empty()
+* setValue([] || '' || 'all') => the multiple uses an array of values or a comma separated string or the string 'all'
+* disable()
+* enable()
+* destroy()
 
-##### History :
+```
+setValues('brandsMulti',['Lamborghini','Land Rover'])
+```
+
+### Todo : 
+* A search box
+
+#### History :
 v 0.10 : functional plugin for both single and multiple selects, without search box for the moment
 
 v 0.02 : added dispatch change event to select + nicer check mark
 
 v 0.01 : first commit => basics for a single select box + the Dom is cleaned if you init twice
+
