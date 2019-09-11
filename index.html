@@ -416,7 +416,7 @@ function doDestroy(id){
 
 function init(id){
 	if(id=="brandsOne"){
-		selectBox = new vanillaSelectBox("#brandsOne",{"maxHeight":200,"placeHolder":"Choose a brand..."});
+		selectBox = new vanillaSelectBox("#brandsOne",{"maxHeight":200,"search":true,"placeHolder":"Choose a brand..."});
 
 		let zone = document.getElementById("demo-single");
 
@@ -429,7 +429,7 @@ function init(id){
 		 buttons.style.display= "none";
 
 	}else if(id=="brandsMulti"){
-		selectBox2 = new vanillaSelectBox("#brandsMulti",{"maxHeight":200});
+		selectBox2 = new vanillaSelectBox("#brandsMulti",{"maxHeight":200,"search":true});
 
 		 let zone = document.getElementById("demo-multiple");
 
@@ -470,9 +470,9 @@ function getValues(id){
 
 }
 
-	selectBox = new vanillaSelectBox("#brandsOne",{"maxHeight":200,"placeHolder":"Choose a brand..."});
+init("brandsOne");
+init("brandsMulti");
 
-	selectBox2 = new vanillaSelectBox("#brandsMulti",{"maxHeight":200});
 
 	
 

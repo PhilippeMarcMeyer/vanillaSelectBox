@@ -1,6 +1,11 @@
+
+.hide{
+	display:none !important;
+}
+
 .vsb-menu{
    cursor:pointer;
-	z-index:2000;
+	z-index:1000;
   display:none;
   position:fixed;
   border:1px solid #B2B2B2;
@@ -10,6 +15,18 @@
   box-shadow: 0 6px 12px rgba(0,0,0,.175);
   border-radius:4px;
   font-size : 11px;
+}
+
+.vsb-js-search-zone{
+	position:absolute;
+    z-index:1001;
+	width: 80%;
+	min-height:1.8em;
+	padding: 2px;
+	background-color: #fff;
+}
+.vsb-js-search-zone input{
+	border: 1px solid grey;margin-left: 2px;width: 96%;border-radius: 4px;
 }
 
 .vsb-main{

@@ -1,11 +1,11 @@
   /* 
  Copyright (C) Philippe Meyer 2019
  Distributed under the MIT License
- vanillaSelectBox v0.10 : working selectBox both single and multiple choices, without search box
+ vanillaSelectBox v0.20 : working selectBox both single and multiple choices, with search-box
  https://github.com/PhilippeMarcMeyer/vanillaSelectBox
 */
   function vanillaSelectBox(domSelector,options){
-	  let self = this;
+	let self = this;
 	this.domSelector = domSelector;
     this.root = document.querySelector(domSelector)
 	this.main;
@@ -19,6 +19,11 @@
 	this.options;
 	this.listElements;
 	this.isDisabled = false;
+	this.search = false;
+	this.searchZone = null;
+	this.inputBox = null;
+	this.ulminWidth = 140;
+	this.ulminHeight = 25;
 	
 	this.userOptions = {
 		maxWidth : 500,
@@ -35,6 +40,16 @@
 		if (options.maxHeight != undefined) {
 			this.userOptions.maxHeight = options.maxHeight;
 		}
+		if (options.translations != undefined) {
+			this.userOptions.translations = options.translations;
+		}
+		if (options.placeHolder != undefined) {
+			this.userOptions.placeHolder = options.placeHolder;
+		}
+		
+		if (options.search != undefined) {
+            this.search = options.search;
+        }
 	}
 	
    this.init = function(){
@@ -74,6 +89,9 @@
 	 let ul = document.createElement("ul");
 	 this.drop.append(ul);
 	 ul.style.maxHeight = this.userOptions.maxHeight + "px";
+	 ul.style.minWidth = this.ulminWidth + "px";
+	 ul.style.minHeight = this.ulminHeight + "px";
+
 	if (this.isMultiple) {
 		ul.classList.add("multi");
 	}
@@ -81,6 +99,32 @@
     let sep = "";
 	let nrActives = 0;
 	
+	if (this.search) {
+		this.searchZone = document.createElement("div");
+			ul.append(this.searchZone);
+
+		this.searchZone.classList.add("vsb-js-search-zone");
+
+
+		this.inputBox = document.createElement("input");
+		
+		this.searchZone.append(this.inputBox);
+		this.inputBox.setAttribute("type", "text");
+		this.inputBox.setAttribute("id", "search_" + this.domSelector);
+
+
+		let fontSizeForP = this.isMultiple ? "8px" : "6px";
+		var para =document.createElement("p");
+		ul.append(para);
+		para.style.fontSize = fontSizeForP;
+		para.innerHTML = "&nbsp;";
+
+		ul.addEventListener("scroll", function (e) {
+			var y = this.scrollTop;
+			self.searchZone.parentNode.style.top = y + "px";
+		});
+	}
+
 	this.options = document.querySelectorAll(this.domSelector + " option");
 	this.options.forEach(function(x){
 		let text = x.textContent;
@@ -91,7 +135,7 @@
 		ul.append(li);
 		li.setAttribute("data-value",value);
 		li.setAttribute("data-text",text);
-		if(className != ""){
+		if(className != undefined){
 			li.classList.add(className);
 		}
 		if(isSelected){
@@ -122,8 +166,33 @@
 	if (self.userOptions.placeHolder != "" && self.title.textContent == "") {
 		self.title.textContent = self.userOptions.placeHolder;
 	}
-	
 	this.listElements = this.drop.querySelectorAll("li");
+	
+	if (self.search) {
+		
+	self.inputBox.addEventListener("keyup", function (e) {
+			
+		let searchValue = e.target.value.toUpperCase();
+		let searchValueLength = searchValue.length;
+		if (searchValueLength < 2) {
+			self.listElements.forEach(function (x) {
+				x.classList.remove("hide");
+			});
+		} else {
+			self.listElements.forEach(function (x) {
+				let text = x.getAttribute("data-text").toUpperCase();
+				if (text.indexOf(searchValue) == -1) {
+					x.classList.add("hide");
+				} else {
+					x.classList.remove("hide");				
+				}
+			});
+		}
+	});
+}
+
+	
+	
 	
 	this.main.addEventListener("click",function(e){
 		if(self.isDisabled) return;
@@ -136,6 +205,11 @@
 	});
 	
 	this.drop.addEventListener("click",function(e){
+		if(!e.target.hasAttribute("data-value")) {
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
 		let choiceValue = e.target.getAttribute("data-value");
 		let choiceText = e.target.getAttribute("data-text");
 		let className = e.target.getAttribute("class");
@@ -151,8 +225,9 @@
 			self.listElements.forEach(function(x){
 				x.classList.remove("active");
 			});
-			
-			e.target.classList.add("active");
+			if(choiceText != ""){
+				e.target.classList.add("active");
+			}
 			self.privateSendChange();
 			docListener();
 		}else{
