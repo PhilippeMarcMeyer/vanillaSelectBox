@@ -1,7 +1,9 @@
 # vanillaSelectBox
-A nice select/multiselect ui
+### A nice select/multiselect ui
 
-https://philippemarcmeyer.github.io/vanillaSelectBox/
+![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/vanillaSelectBox.png)
+
+Demo : https://philippemarcmeyer.github.io/vanillaSelectBox/
 
 ex : let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200});
 
