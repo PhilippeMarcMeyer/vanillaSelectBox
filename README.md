@@ -5,22 +5,27 @@
 
 Demo : https://philippemarcmeyer.github.io/vanillaSelectBox/
 
-ex : let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200});
+#### Transform an HTML select into a selectBox dropdown
+##### the select is hidden and the chosen value(s) is/are available in the source select
 
-v0.02 : Takes a mundane select and transforms it into a nice select box à la Bootstrap
+```
+let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200});
+```
+* param 1 : css selector of a normal select element
+* param 2 : options 
 
-param 1 : css selector of a normal select element
+###available options : 
+* maxWidth : for the UI if you don't want the title to expand to much to the right
+* maxHeight : the maxHeight set a scroll when there are too many items 
+* translations : { "all": "every cars", "items": "cars" }
+* search : false (for the moment, will come soon)
+* placeHolder : well that's a placeholder !
 
-param 2 : options => for the present time only maxWidth & maxHeight (integers)
+#####Todo : search box
 
-the maxWidth is for the UI (it will be useful for the multiple select in the future)
+##### History :
+v 0.10 : functional plugin for both single and multiple selects, without search box for the moment
 
-the maxHeight set a scroll when there are too many items 
-
-
-Todo : multi-select, search box + empty, set actions, destroy 
-
-History :
 v 0.02 : added dispatch change event to select + nicer check mark
 
 v 0.01 : first commit => basics for a single select box + the Dom is cleaned if you init twice
