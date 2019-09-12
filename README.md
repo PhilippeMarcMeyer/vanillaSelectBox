@@ -43,6 +43,7 @@ setValues('brandsMulti',['Lamborghini','Land Rover'])
 ```
 #### History :
  v 0.22 : Migrating the function to vanillaSelectBox prototype => several instances of vanillaSelectBox() but 1 set of functions in memory
+ 
 v 0.21 : IE 11 compatibility
 
 v 0.20 : working selectBox both single and multiple choices, with search-box !
