@@ -1,7 +1,7 @@
 /* 
 Copyright (C) Philippe Meyer 2019
 Distributed under the MIT License
-vanillaSelectBox v0.22 : Migration the function to vanillaSelectBox prototype => several instances of vanillaSelectBox() but 1 set of functions in memory
+vanillaSelectBox v0.22 : Migrating the function to vanillaSelectBox prototype => several instances of vanillaSelectBox() but 1 set of functions in memory
 https://github.com/PhilippeMarcMeyer/vanillaSelectBox
 */
 function vanillaSelectBox(domSelector, options) {
