@@ -1,7 +1,7 @@
 /* 
 Copyright (C) Philippe Meyer 2019
 Distributed under the MIT License
-vanillaSelectBox v0.21 : IE 11 compatibility
+vanillaSelectBox v0.22 : Migration the function to vanillaSelectBox prototype => several instances of vanillaSelectBox() but 1 set of functions in memory
 https://github.com/PhilippeMarcMeyer/vanillaSelectBox
 */
 function vanillaSelectBox(domSelector, options) {
@@ -48,7 +48,12 @@ function vanillaSelectBox(domSelector, options) {
             this.search = options.search;
         }
     }
-    this.init = function () {
+
+    this.init();
+}
+
+    vanillaSelectBox.prototype.init = function () {
+		let self = this;
         this.root.style.display = "none";
         let already = document.getElementById("btn-group-" + self.domSelector);
         if (already) {
@@ -252,25 +257,8 @@ function vanillaSelectBox(domSelector, options) {
         }
     }
 
-    this.privateSendChange = function () {
-        let event = document.createEvent('HTMLEvents');
-        event.initEvent('change', true, false);
-        self.root.dispatchEvent(event);
-    }
-    this.empty = function () {
-        Array.prototype.slice.call(self.listElements).forEach(function (x) {
-            x.classList.remove("active");
-        });
-        Array.prototype.slice.call(self.options).forEach(function (x) {
-            x.selected = false;
-        });
-        self.title.textContent = "";
-        if (self.userOptions.placeHolder != "" && self.title.textContent == "") {
-            self.title.textContent = self.userOptions.placeHolder;
-        }
-        self.privateSendChange();
-    }
-    this.setValue = function (values) {
+    vanillaSelectBox.prototype.setValue = function (values) {
+		let self = this;
         if (values == null || values == undefined || values == "") {
             self.empty();
         } else {
@@ -364,30 +352,54 @@ function vanillaSelectBox(domSelector, options) {
             return lowercased;
         }
     }
-    this.destroy = function () {
-        let already = document.getElementById("btn-group-" + self.domSelector);
+
+    vanillaSelectBox.prototype.privateSendChange = function () {
+        let event = document.createEvent('HTMLEvents');
+        event.initEvent('change', true, false);
+        this.root.dispatchEvent(event);
+    
+	}
+
+	vanillaSelectBox.prototype.empty = function () {
+        Array.prototype.slice.call(this.listElements).forEach(function (x) {
+            x.classList.remove("active");
+        });
+        Array.prototype.slice.call(this.options).forEach(function (x) {
+            x.selected = false;
+        });
+        this.title.textContent = "";
+        if (this.userOptions.placeHolder != "" && this.title.textContent == "") {
+            this.title.textContent = this.userOptions.placeHolder;
+        }
+        this.privateSendChange();
+    }
+	
+    vanillaSelectBox.prototype.destroy = function () {
+        let already = document.getElementById("btn-group-" + this.domSelector);
         if (already) {
             already.remove();
-            self.root.style.display = "inline-block";
+            this.root.style.display = "inline-block";
         }
     }
-    this.disable = function () {
-        let already = document.getElementById("btn-group-" + self.domSelector);
+    vanillaSelectBox.prototype.disable = function () {
+        let already = document.getElementById("btn-group-" + this.domSelector);
         if (already) {
             button = already.querySelector("button")
             button.classList.add("disabled");
-            self.isDisabled = true;
+            this.isDisabled = true;
         }
     }
-    this.enable = function () {
-        let already = document.getElementById("btn-group-" + self.domSelector);
+    vanillaSelectBox.prototype.enable = function () {
+        let already = document.getElementById("btn-group-" + this.domSelector);
         if (already) {
             button = already.querySelector("button")
             button.classList.remove("disabled");
-            self.isDisabled = false;
+            this.isDisabled = false;
         }
     }
-    this.init();
+
+vanillaSelectBox.prototype.showOptions = function(){
+	console.log(this.userOptions);
 }
 // Polyfills for IE
 if (!('remove' in Element.prototype)) {
