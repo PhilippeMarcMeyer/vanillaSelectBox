@@ -42,6 +42,8 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 setValues('brandsMulti',['Lamborghini','Land Rover'])
 ```
 #### History :
+v 0.21 : IE 11 compatibility
+
 v 0.20 : working selectBox both single and multiple choices, with search-box !
 
 v 0.10 : functional plugin for both single and multiple selects, without search box for the moment
