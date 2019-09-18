@@ -1,7 +1,7 @@
 /* 
 Copyright (C) Philippe Meyer 2019
 Distributed under the MIT License
-vanillaSelectBox v0.22 : Migrating the function to vanillaSelectBox prototype => several instances of vanillaSelectBox() but 1 set of functions in memory
+vanillaSelectBox v0.23 : erase search box on menu exit
 https://github.com/PhilippeMarcMeyer/vanillaSelectBox
 */
 function vanillaSelectBox(domSelector, options) {
@@ -254,6 +254,12 @@ function vanillaSelectBox(domSelector, options) {
         function docListener() {
             document.removeEventListener("click", docListener);
             self.drop.style.display = "none";
+			if(self.search){
+				self.inputBox.value = "";
+				Array.prototype.slice.call(self.listElements).forEach(function (x) {
+                   x.classList.remove("hide");
+                });
+			}
         }
     }
 
