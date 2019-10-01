@@ -302,9 +302,9 @@ let select1 = document.getElementById("brandsOne");
     option.value = "";
 
     option.text = "";
-
+	option.classList.add("test1");
+	option.classList.add("test2");
     select1.appendChild(option);
-
 	
 for (var i = 0;
  i < brands.length;
@@ -337,6 +337,7 @@ for (var i = 0;
     option.value = brands[i];
 
     option.text = brands[i];
+	
 
 	if(i==23) option.setAttribute("selected",true);
 

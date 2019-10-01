@@ -1,7 +1,7 @@
 /* 
 Copyright (C) Philippe Meyer 2019
 Distributed under the MIT License
-vanillaSelectBox v0.23 : erase search box on menu exit
+vanillaSelectBox v0.24 : corrected bug affecting options with more than one class
 https://github.com/PhilippeMarcMeyer/vanillaSelectBox
 */
 function vanillaSelectBox(domSelector, options) {
@@ -117,14 +117,25 @@ function vanillaSelectBox(domSelector, options) {
         Array.prototype.slice.call(this.options).forEach(function (x) {
             let text = x.textContent;
             let value = x.value;
-            let className = x.getAttribute("class");
+            let classes = x.getAttribute("class");
+			if(classes) 
+				{
+					classes=classes.split(" ");
+				}
+			else
+				{
+					classes=[];
+				}
             let li = document.createElement("li");
             let isSelected = x.hasAttribute("selected");
             ul.appendChild(li);
             li.setAttribute("data-value", value);
             li.setAttribute("data-text", text);
-            if (className) {
-                li.classList.add(className);
+            if (classes.length != 0) {
+				classes.forEach(function(x){
+					li.classList.add(x);
+				});
+                
             }
             if (isSelected) {
                 nrActives++;
@@ -133,8 +144,10 @@ function vanillaSelectBox(domSelector, options) {
                 li.classList.add("active");
                 if (!self.isMultiple) {
                     self.title.textContent = text;
-                    if (className) {
-                        self.title.classList.add(className);
+					if (classes.length != 0) {
+						classes.forEach(function(x){
+							self.title.classList.add(x);
+						});
                     }
                 }
             }
