@@ -1,232 +1,162 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-
     <title>Demo</title>
-
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" href="./vanillaSelectBox.css">
-
     <!-- internal css -->
     <style>
-	
-body {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-
-		margin:0;
-
-}
-
-.darkRed{color:darkred;
-}
-.darkBlue{color:darkblue;
-}
-
-.navbar{
-	position: relative;
-
-    border: 1px solid #080808;
-
-	background-color: #222;
-
-	background-image: linear-gradient(to bottom,#3c3c3c 0,#222 100%);
-
-	background-repeat: repeat-x;
-
-    border-radius: 4px;
-
-	margin:0;
-
-	padding:0;
-
-}
-
-.navbar-brand {
-    float: left;
-
-    padding: 14px 15px;
-
-    font-size: 18px;
-
-    line-height: 20px;
-
-	color: #fff;
-
-	cursor: pointer;
-
-	text-decoration: none;
-
-}
-
-a:hover{
-	color: #fff;
-
-
-}
-
-.navbar-links{
-	font-size: 14px;
-
-    line-height: 20px;
-
-	position:relative;
-
-	margin:0;
-
-}
-
-.navbar-links li{
-	cursor: pointer;
-
-	text-decoration: none;
-
-}
-
-
-.navbar-links li{
-	display:inline-block;
-
-	min-width:120px;
-
-	text-align:center;
-
-	margin-top:15px;
-
-}
-
-.navbar-links li.active{
-	background-image: #080808;
-
-	background: #080808;
-
-	color: #fff;
-
-	height:100%;
-
-	padding-top : 15px;
-
-	padding-bottom : 15px;
-
-	margin:0;
-
-
-}
-
-a{
-	color: #9d9d9d;
-
-	cursor: pointer;
-
-	text-decoration: none;
-
-}	
-
-@media (max-width: 640px){
-	.navbar-brand {
-		width:100%;
-
-
-	}
-	.navbar-links{
-		padding-left:0;
-
-	}
-	button.demo{
-		margin-right:100% !important;
-
-	}
-}
-
-
-#container {
-	padding-top: 30px;
-	padding-left: 50px;
-	width: 90%;
-	font-size:14px;
-}
-
-.demo-zone{
-    display:block;
-	width:100%;
-	min-height: 200px;
-
-}
-
-.btns-active,.btns-inactive{
-	margin-top: 20px;
-
-}
-
-label {
-	display:inline-block;
-
-	min-width:220px;
-
-	width :220px;
-
-}
-
-button.demo{
-		margin-right:0;
-
-		margin-left : 4px;
-
-		text-align: center;
-
-		white-space: nowrap;
-
-		vertical-align: middle;
-
-		user-select: none;
-
-		border-radius: 4px;
-
-		z-index: 1;
-
-		color: #333;
-
-		background: white;
-
-		background-image: linear-gradient(to bottom,#fff 0,#e0e0e0 100%);
-
-		border: 1px solid #ccc !important;
-
-		color: #333;
-
-		line-height:20px;
-
-		font-size:14px;
-
-		padding:4px 12px;
-
-		margin-bottom:2px;
-
-	}
-	button.demo:hover{
-		background-image: linear-gradient(to top,#fff 0,#e0e0e0 100%);
-
-	}
-	.presentation{
-		background:#eee;
-		color:#2e44b9;
-		border:1px solid grey;
-		border-radius:8px;
-		line-height:20px;
-		padding:8px;
-		margin-bottom:40px;
-		width:90%;
-		max-width:800px;
-		font-size:14px;
-	}
-
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 0;
+        }
+
+        .darkRed {
+            color: darkred;
+        }
+
+        .darkBlue {
+            color: darkblue;
+        }
+
+        .navbar {
+            position: relative;
+            border: 1px solid #080808;
+            background-color: #222;
+            background-image: linear-gradient(to bottom,#3c3c3c 0,#222 100%);
+            background-repeat: repeat-x;
+            border-radius: 4px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar-brand {
+            float: left;
+            padding: 14px 15px;
+            font-size: 18px;
+            line-height: 20px;
+            color: #fff;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #fff;
+        }
+
+        .navbar-links {
+            font-size: 14px;
+            line-height: 20px;
+            position: relative;
+            margin: 0;
+        }
+
+            .navbar-links li {
+                cursor: pointer;
+                text-decoration: none;
+            }
+
+            .navbar-links li {
+                display: inline-block;
+                min-width: 120px;
+                text-align: center;
+                margin-top: 15px;
+            }
+
+                .navbar-links li.active {
+                    background-image: #080808;
+                    background: #080808;
+                    color: #fff;
+                    height: 100%;
+                    padding-top: 15px;
+                    padding-bottom: 15px;
+                    margin: 0;
+                }
+
+        a {
+            color: #9d9d9d;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+            .navbar-brand {
+                width: 100%;
+            }
+
+            .navbar-links {
+                padding-left: 0;
+            }
+
+            button.demo {
+                margin-right: 100% !important;
+            }
+        }
+
+        #container {
+            padding-top: 30px;
+            padding-left: 50px;
+            width: 90%;
+            font-size: 14px;
+        }
+
+        .demo-zone {
+            display: block;
+            width: 100%;
+            min-height: 200px;
+        }
+
+        .btns-active, .btns-inactive {
+            margin-top: 20px;
+        }
+
+        label {
+            display: inline-block;
+            min-width: 220px;
+            width: 220px;
+        }
+
+        button.demo {
+            margin-right: 0;
+            margin-left: 4px;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border-radius: 4px;
+            z-index: 1;
+            color: #333;
+            background: white;
+            background-image: linear-gradient(to bottom,#fff 0,#e0e0e0 100%);
+            border: 1px solid #ccc !important;
+            color: #333;
+            line-height: 20px;
+            font-size: 14px;
+            padding: 4px 12px;
+            margin-bottom: 2px;
+        }
+
+            button.demo:hover {
+                background-image: linear-gradient(to top,#fff 0,#e0e0e0 100%);
+            }
+
+        .presentation {
+            background: #eee;
+            color: #2e44b9;
+            border: 1px solid grey;
+            border-radius: 8px;
+            line-height: 20px;
+            padding: 8px;
+            margin-bottom: 40px;
+            width: 90%;
+            max-width: 800px;
+            font-size: 14px;
+        }
     </style>
 </head>
-
 <body>
     <nav class="navbar">
             <div class="navbar-header">
@@ -255,9 +185,7 @@ button.demo{
 			<button class="demo" onClick="setEnable('brandsOne',true)">enable()</button>
 			<button class="demo" onClick="doDestroy('brandsOne')">destroy()</button>
 			<br/><br/>
-			<button class="demo" style="width:140px;
-" onClick="document.getElementById('brandsOneChoice').innerHTML=document.getElementById('brandsOne').value;
-">get select value</button>
+			<button class="demo" style="width:140px;" onClick="document.getElementById('brandsOneChoice').innerHTML=document.getElementById('brandsOne').value;">get select value</button>
 			<span id="brandsOneChoice"></span>
 		</div>
 		<div class="btns-inactive"  style="display:none";
@@ -275,9 +203,7 @@ button.demo{
 			<button class="demo" onClick="setEnable('brandsMulti',true)">enable()</button>
 			<button class="demo" onClick="doDestroy('brandsMulti')">destroy()</button>
 			<br/><br/>
-			<button  class="demo" style="width:140px;
-" onClick="document.getElementById('brandsMultiChoice').innerHTML=(getValues('brandsMulti')).join(',');
-">get select values</button>&nbsp;
+			<button  class="demo" style="width:140px;" onClick="document.getElementById('brandsMultiChoice').innerHTML=(getValues('brandsMulti')).join(',');">get select values</button>&nbsp;
 &nbsp;
 &nbsp;
 <span id="brandsMultiChoice"></span>
@@ -288,195 +214,119 @@ button.demo{
 		</div>
 	</div>
 </div>
-
 <script src="./vanillaSelectBox.js"></script>
-
 <script>
-let brands = ["Abarth","Alfa Romeo","Alpine","Aston Martin","Audi","Bentley","BMW","Cadillac","Chevrolet","Citroën","Cupra","DACIA","DS","Ferrari","Fiat","Ford","Honda","Hyundai","Infiniti","Jaguar","Jeep","KIA","Lamborghini","Land Rover","Lexus","Lotus","Maserati","Mazda","McLaren","Mercedes-Benz","MINI","Mitsubishi","Nissan","Opel","Peugeot","Porsche","Renault","Rolls-Royce","SEAT","Skoda","smart","Ssangyong","Subaru","Suzuki","Tesla","Toyota","Volkswagen","Volvo"];
-
-
-let select1 = document.getElementById("brandsOne");
-
+    let brands = ["Abarth", "Alfa Romeo", "Alpine", "Aston Martin", "Audi", "Bentley", "BMW", "Cadillac", "Chevrolet", "Citroën", "Cupra", "DACIA", "DS", "Ferrari", "Fiat", "Ford", "Honda", "Hyundai", "Infiniti", "Jaguar", "Jeep", "KIA", "Lamborghini", "Land Rover", "Lexus", "Lotus", "Maserati", "Mazda", "McLaren", "Mercedes-Benz", "MINI", "Mitsubishi", "Nissan", "Opel", "Peugeot", "Porsche", "Renault", "Rolls-Royce", "SEAT", "Skoda", "smart", "Ssangyong", "Subaru", "Suzuki", "Tesla", "Toyota", "Volkswagen", "Volvo"];
+    let select1 = document.getElementById("brandsOne");
     var option = document.createElement("option");
-
     option.value = "";
-
     option.text = "";
-	option.classList.add("test1");
-	option.classList.add("test2");
     select1.appendChild(option);
-	
-for (var i = 0;
- i < brands.length;
- i++) {
-    var option = document.createElement("option");
+    for (var i = 0;
+     i < brands.length;
+     i++) {
+        var option = document.createElement("option");
+        option.value = brands[i];
+        option.text = brands[i];
+        if (i == 23) option.setAttribute("selected", true);
+        let colorClass = "";
+        if (i > 2)
+            option.classList.add(i % 2 == 0 ? "darkRed" : "darkBlue")
+        select1.appendChild(option);
+    }
+    let select2 = document.getElementById("brandsMulti");
+    for (var i = 0;
+     i < brands.length;
+     i++) {
+        var option = document.createElement("option");
+        option.value = brands[i];
+        option.text = brands[i];
+        if (i == 23) option.setAttribute("selected", true);
+        if (i >= 3 && i <= 7) option.setAttribute("selected", true);
+        select2.appendChild(option);
+    }
+    let selectBox = null;
+    let selectBox2 = null;
+    function setEnable(id, isEnabled) {
+        if (id == "brandsOne" && selectBox != null) {
+            if (isEnabled) {
+                selectBox.enable();
+            } else {
+                selectBox.disable();
+            }
 
-    option.value = brands[i];
-
-    option.text = brands[i];
-
-	if(i==23) option.setAttribute("selected",true);
-
-	let colorClass = "";
-
-	if(i>2)
-		option.classList.add(i%2==0?"darkRed":"darkBlue")
-
-    select1.appendChild(option);
-
-}
-
-let select2 = document.getElementById("brandsMulti");
-
-
-for (var i = 0;
- i < brands.length;
- i++) {
-    var option = document.createElement("option");
-
-    option.value = brands[i];
-
-    option.text = brands[i];
-	
-
-	if(i==23) option.setAttribute("selected",true);
-
-		if(i>=3 && i <= 7) option.setAttribute("selected",true);
-
-
-    select2.appendChild(option);
-
-}
-
-let selectBox =null;
-
-let selectBox2 = null;
-
-
-function setEnable(id,isEnabled){
-	if(id=="brandsOne" && selectBox!=null){
-		if(isEnabled){
-			selectBox.enable();
-
-		}else{
-			selectBox.disable();
-
-		}
-		
-	}else if(id=="brandsMulti" && selectBox2!=null){
-		if(isEnabled){
-			selectBox2.enable();
-
-		}else{
-			selectBox2.disable();
-
-		}
-	}
-}
-
-function empty(id){
-	if(id=="brandsOne" && selectBox!=null){
-		selectBox.empty();
-
-	}else if(id=="brandsMulti" && selectBox2!=null){
-		selectBox2.empty();
-
-	}
-}
-
-function doDestroy(id){
-	if(id=="brandsOne" && selectBox!=null){
-		selectBox.destroy();
-
-		let zone = document.getElementById("demo-single");
-
-		 buttons = zone.querySelector(".btns-active");
-
-		 buttons.style.display= "none";
-
-		 buttons = zone.querySelector(".btns-inactive");
-
-		 buttons.style.display= "block";
-		 
-		
-	}else if(id=="brandsMulti" && selectBox2!=null){
-		selectBox2.destroy();
-
-		 let zone = document.getElementById("demo-multiple");
-
-		 buttons = zone.querySelector(".btns-active");
-
-		 buttons.style.display= "none";
-
-		 buttons = zone.querySelector(".btns-inactive");
-
-		 buttons.style.display= "block";
-	
-	}
-}
-
-function init(id){
-	if(id=="brandsOne"){
-		selectBox = new vanillaSelectBox("#brandsOne",{"maxHeight":200,"search":true,"placeHolder":"Choose a brand..."});
-
-		let zone = document.getElementById("demo-single");
-
-		 buttons = zone.querySelector(".btns-active");
-
-		 buttons.style.display= "block";
-
-		 buttons = zone.querySelector(".btns-inactive");
-
-		 buttons.style.display= "none";
-
-	}else if(id=="brandsMulti"){
-		selectBox2 = new vanillaSelectBox("#brandsMulti",{"maxHeight":200,"search":true});
-
-		 let zone = document.getElementById("demo-multiple");
-
-		 buttons = zone.querySelector(".btns-active");
-
-		 buttons.style.display= "block";
-
-		 buttons = zone.querySelector(".btns-inactive");
-
-		 buttons.style.display= "none";
-	
-	}
-}
-
-function setValues(id,value){
-	if(id=="brandsOne" && selectBox!=null){
-		selectBox.setValue(value);
-
-	}else if(id=="brandsMulti" && selectBox2!=null){
-		selectBox2.setValue(value);
-
-	}
-}
-
-function getValues(id){
-	let result = [];
-
-  	let collection = document.querySelectorAll("#"+ id + " option");
-
-	collection.forEach(function(x){
-		if(x.selected){
-			result.push(x.value);
-
-		}
-	});
-
-	return result;
-
-}
-
-init("brandsOne");
-init("brandsMulti");
+        } else if (id == "brandsMulti" && selectBox2 != null) {
+            if (isEnabled) {
+                selectBox2.enable();
+            } else {
+                selectBox2.disable();
+            }
+        }
+    }
+    function empty(id) {
+        if (id == "brandsOne" && selectBox != null) {
+            selectBox.empty();
+        } else if (id == "brandsMulti" && selectBox2 != null) {
+            selectBox2.empty();
+        }
+    }
+    function doDestroy(id) {
+        if (id == "brandsOne" && selectBox != null) {
+            selectBox.destroy();
+            let zone = document.getElementById("demo-single");
+            buttons = zone.querySelector(".btns-active");
+            buttons.style.display = "none";
+            buttons = zone.querySelector(".btns-inactive");
+            buttons.style.display = "block";
 
 
-	
+        } else if (id == "brandsMulti" && selectBox2 != null) {
+            selectBox2.destroy();
+            let zone = document.getElementById("demo-multiple");
+            buttons = zone.querySelector(".btns-active");
+            buttons.style.display = "none";
+            buttons = zone.querySelector(".btns-inactive");
+            buttons.style.display = "block";
+
+        }
+    }
+    function init(id) {
+        if (id == "brandsOne") {
+            selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": true, "placeHolder": "Choose a brand..." });
+            let zone = document.getElementById("demo-single");
+            buttons = zone.querySelector(".btns-active");
+            buttons.style.display = "block";
+            buttons = zone.querySelector(".btns-inactive");
+            buttons.style.display = "none";
+        } else if (id == "brandsMulti") {
+            selectBox2 = new vanillaSelectBox("#brandsMulti", { "maxHeight": 200, "search": true });
+            let zone = document.getElementById("demo-multiple");
+            buttons = zone.querySelector(".btns-active");
+            buttons.style.display = "block";
+            buttons = zone.querySelector(".btns-inactive");
+            buttons.style.display = "none";
+
+        }
+    }
+    function setValues(id, value) {
+        if (id == "brandsOne" && selectBox != null) {
+            selectBox.setValue(value);
+        } else if (id == "brandsMulti" && selectBox2 != null) {
+            selectBox2.setValue(value);
+        }
+    }
+    function getValues(id) {
+        let result = [];
+        let collection = document.querySelectorAll("#" + id + " option");
+        collection.forEach(function (x) {
+            if (x.selected) {
+                result.push(x.value);
+            }
+        });
+        return result;
+    }
+    init("brandsOne");
+    init("brandsMulti");
 
         </script>
-	</div>
 </html>

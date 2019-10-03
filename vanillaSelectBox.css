@@ -4,8 +4,8 @@
 }
 
 .vsb-menu{
-   cursor:pointer;
-	z-index:1000;
+  cursor:pointer;
+  z-index:1000;
   display:none;
   position:fixed;
   border:1px solid #B2B2B2;
