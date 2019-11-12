@@ -42,6 +42,9 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 setValues('brandsMulti',['Lamborghini','Land Rover'])
 ```
 #### History :
+
+ v 0.25 : New option stayOpen, and the dropbox is no longer a dropbox but a nice multi-select
+ 
  v 0.22 : Migrating the function to vanillaSelectBox prototype => several instances of vanillaSelectBox() but 1 set of functions in memory
  
 v 0.21 : IE 11 compatibility
