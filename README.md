@@ -45,6 +45,8 @@ setValues('brandsMulti',['Lamborghini','Land Rover'])
 
  v 0.25 : New option stayOpen, and the dropbox is no longer a dropbox but a nice multi-select
  
+ ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/stayOpen.jpg)
+ 
  v 0.22 : Migrating the function to vanillaSelectBox prototype => several instances of vanillaSelectBox() but 1 set of functions in memory
  
 v 0.21 : IE 11 compatibility
