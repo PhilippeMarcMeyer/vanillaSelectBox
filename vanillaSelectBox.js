@@ -1,7 +1,8 @@
 /* 
 Copyright (C) Philippe Meyer 2019
 Distributed under the MIT License
-vanillaSelectBox v0.24 : corrected bug affecting options with more than one class
+vanillaSelectBox : v0.25 : New option stayOpen, and the dropbox is no longer a dropbox but a nice multi-select
+previous version : v0.24 : corrected bug affecting options with more than one class
 https://github.com/PhilippeMarcMeyer/vanillaSelectBox
 */
 function vanillaSelectBox(domSelector, options) {
@@ -29,7 +30,8 @@ function vanillaSelectBox(domSelector, options) {
         maxHeight: 400,
         translations: { "all": "All", "items": "items" },
         search: false,
-        placeHolder: ""
+        placeHolder: "",
+		stayOpen:false
     }
     if (options) {
         if (options.maxWidth != undefined) {
@@ -46,6 +48,9 @@ function vanillaSelectBox(domSelector, options) {
         }
         if (options.search != undefined) {
             this.search = options.search;
+        }
+		if (options.stayOpen != undefined) {
+            this.userOptions.stayOpen = options.stayOpen;
         }
     }
 
@@ -64,7 +69,11 @@ function vanillaSelectBox(domSelector, options) {
         this.main.classList.add("vsb-main");
         this.main.setAttribute("id", "btn-group-" + this.domSelector);
         this.main.style.marginLeft = this.main.style.marginLeft;
-        this.button = document.createElement("button");
+		
+
+		let btnTag = self.userOptions.stayOpen ? "div" : "button";
+        this.button = document.createElement(btnTag);
+		
         let presentValue = this.main.value;
         this.main.appendChild(this.button);
         this.title = document.createElement("span");
@@ -76,6 +85,12 @@ function vanillaSelectBox(domSelector, options) {
         caret.style.position = "absolute";
         caret.style.right = "8px";
         caret.style.marginTop = "8px";
+		if(self.userOptions.stayOpen){
+			caret.style.display = "none";
+			this.title.style.paddingLeft = "20px";
+			this.title.style.fontStyle = "italic";
+			this.title.style.verticalAlign = "20%";
+		}
         let rect = this.button.getBoundingClientRect();
         this.top = rect.bottom;
         this.left = rect.left;;
@@ -84,6 +99,9 @@ function vanillaSelectBox(domSelector, options) {
         this.drop.classList.add("vsb-menu");
         let ul = document.createElement("ul");
         this.drop.appendChild(ul);
+		if(self.userOptions.stayOpen){
+			 this.drop.style.boxShadow = "none";
+		}
         ul.style.maxHeight = this.userOptions.maxHeight + "px";
         ul.style.minWidth = this.ulminWidth + "px";
         ul.style.minHeight = this.ulminHeight + "px";
@@ -93,6 +111,7 @@ function vanillaSelectBox(domSelector, options) {
         let selectedTexts = ""
         let sep = "";
         let nrActives = 0;
+		
         if (this.search) {
             this.searchZone = document.createElement("div");
             ul.appendChild(this.searchZone);
@@ -186,16 +205,24 @@ function vanillaSelectBox(domSelector, options) {
                 }
             });
         }
-
-        this.main.addEventListener("click", function (e) {
-            if (self.isDisabled) return;
-            self.drop.style.left = self.left + "px";
+		
+		if(self.userOptions.stayOpen){
+		    self.drop.style.left = self.left + "px";
             self.drop.style.top = self.top + "px";
-            self.drop.style.display = "block";
-            document.addEventListener("click", docListener);
-            e.preventDefault();
-            e.stopPropagation();
-        });
+            self.drop.style.display = "block";	
+			//self.button.style.display = "none";	
+			self.button.style.border = "none";
+		}else{
+			this.main.addEventListener("click", function (e) {
+				if (self.isDisabled) return;
+				self.drop.style.left = self.left + "px";
+				self.drop.style.top = self.top + "px";
+				self.drop.style.display = "block";
+				document.addEventListener("click", docListener);
+				e.preventDefault();
+				e.stopPropagation();
+				});
+		}
         this.drop.addEventListener("click", function (e) {
             if (!e.target.hasAttribute("data-value")) {
                 e.preventDefault();
@@ -220,7 +247,9 @@ function vanillaSelectBox(domSelector, options) {
                     e.target.classList.add("active");
                 }
                 self.privateSendChange();
-                docListener();
+				if(!self.userOptions.stayOpen){
+					docListener();
+				}
             } else {
                 let wasActive = false;
                 if (className) {

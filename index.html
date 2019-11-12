@@ -208,11 +208,15 @@
 &nbsp;
 <span id="brandsMultiChoice"></span>
 		</div>
-		<div class="btns-inactive" style="display:none";
->
+		<div class="btns-inactive" style="display:none";>
 			<button class="demo" onClick="init('brandsMulti')">vanillaSelectBox()</button>
 		</div>
 	</div>
+	
+<div class="demo-zone" id="demo-stay">
+	<label>Stay open : </label><select id="brandsMultiStay" multiple size="3"></select>
+</div>
+	
 </div>
 <script src="./vanillaSelectBox.js"></script>
 <script>
@@ -245,8 +249,20 @@
         if (i >= 3 && i <= 7) option.setAttribute("selected", true);
         select2.appendChild(option);
     }
+	    let select3 = document.getElementById("brandsMultiStay");
+    for (var i = 0;
+     i < brands.length;
+     i++) {
+        var option = document.createElement("option");
+        option.value = brands[i];
+        option.text = brands[i];
+        if (i == 15) option.setAttribute("selected", true);
+        if (i >= 3 && i <= 7) option.setAttribute("selected", true);
+        select3.appendChild(option);
+    }
     let selectBox = null;
     let selectBox2 = null;
+	let selectBox3 = null;
     function setEnable(id, isEnabled) {
         if (id == "brandsOne" && selectBox != null) {
             if (isEnabled) {
@@ -306,6 +322,8 @@
             buttons = zone.querySelector(".btns-inactive");
             buttons.style.display = "none";
 
+        }else if (id == "brandsMultiStay") {
+            selectBox3 = new vanillaSelectBox("#brandsMultiStay", { "maxHeight": 200, "search": true,"stayOpen":true });
         }
     }
     function setValues(id, value) {
@@ -327,6 +345,6 @@
     }
     init("brandsOne");
     init("brandsMulti");
-
+	init("brandsMultiStay");
         </script>
 </html>
