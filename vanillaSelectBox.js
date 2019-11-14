@@ -69,7 +69,9 @@ function vanillaSelectBox(domSelector, options) {
         this.main.classList.add("vsb-main");
         this.main.setAttribute("id", "btn-group-" + this.domSelector);
         this.main.style.marginLeft = this.main.style.marginLeft;
-		
+		if(self.userOptions.stayOpen){
+			this.main.style.minHeight =  (this.userOptions.maxHeight+10) + "px";
+		}
 
 		let btnTag = self.userOptions.stayOpen ? "div" : "button";
         this.button = document.createElement(btnTag);
@@ -99,9 +101,7 @@ function vanillaSelectBox(domSelector, options) {
         this.drop.classList.add("vsb-menu");
         let ul = document.createElement("ul");
         this.drop.appendChild(ul);
-		if(self.userOptions.stayOpen){
-			 this.drop.style.boxShadow = "none";
-		}
+
         ul.style.maxHeight = this.userOptions.maxHeight + "px";
         ul.style.minWidth = this.ulminWidth + "px";
         ul.style.minHeight = this.ulminHeight + "px";
@@ -129,6 +129,7 @@ function vanillaSelectBox(domSelector, options) {
             para.innerHTML = "&nbsp;";
             ul.addEventListener("scroll", function (e) {
                 var y = this.scrollTop;
+				console.log(e);
                 self.searchZone.parentNode.style.top = y + "px";
             });
         }
@@ -207,10 +208,12 @@ function vanillaSelectBox(domSelector, options) {
         }
 		
 		if(self.userOptions.stayOpen){
-		    self.drop.style.left = self.left + "px";
-            self.drop.style.top = self.top + "px";
             self.drop.style.display = "block";	
-			//self.button.style.display = "none";	
+			self.drop.style.boxShadow = "none";
+			self.drop.style.minHeight =  (this.userOptions.maxHeight+10) + "px";
+			self.drop.style.position = "relative";
+			self.drop.style.left = "0px";
+			self.drop.style.top = "0px";
 			self.button.style.border = "none";
 		}else{
 			this.main.addEventListener("click", function (e) {
