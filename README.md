@@ -18,8 +18,9 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 * maxWidth : for the UI if you don't want the title to expand to much to the right
 * maxHeight : the maxHeight set a scroll when there are too many items 
 * translations : { "all": "every cars", "items": "cars" }
-* search : true/false (for the moment, will come soon)
+* search : true/false, to provide a search input text to reduce the list
 * placeHolder : well that's a placeholder !
+* stayOpen : true/false. defaut is false : that's a drop-down. Set it to true and that"s a list (>= v 0.25)
 
 ### Automatic options :
 * single or multiple choices : depends on the "multiple" attribute that you put in the select code 
