@@ -1,6 +1,7 @@
 /* 
 Copyright (C) Philippe Meyer 2019
 Distributed under the MIT License
+vanillaSelectBox : v0.26 : Corrected bug in stayOpen mode with disable() function
 vanillaSelectBox : v0.25 : New option stayOpen, and the dropbox is no longer a dropbox but a nice multi-select
 previous version : v0.24 : corrected bug affecting options with more than one class
 https://github.com/PhilippeMarcMeyer/vanillaSelectBox
@@ -227,6 +228,7 @@ function vanillaSelectBox(domSelector, options) {
 				});
 		}
         this.drop.addEventListener("click", function (e) {
+			if (self.isDisabled) return;
             if (!e.target.hasAttribute("data-value")) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -436,7 +438,7 @@ function vanillaSelectBox(domSelector, options) {
         let already = document.getElementById("btn-group-" + this.domSelector);
         if (already) {
             button = already.querySelector("button")
-            button.classList.add("disabled");
+			if(button) button.classList.add("disabled");
             this.isDisabled = true;
         }
     }
@@ -444,7 +446,7 @@ function vanillaSelectBox(domSelector, options) {
         let already = document.getElementById("btn-group-" + this.domSelector);
         if (already) {
             button = already.querySelector("button")
-            button.classList.remove("disabled");
+            if(button) button.classList.remove("disabled");
             this.isDisabled = false;
         }
     }
