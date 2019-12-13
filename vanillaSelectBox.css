@@ -7,7 +7,7 @@
   cursor:pointer;
   z-index:1000;
   display:none;
-  position:fixed;
+ /* position:fixed;*/
   border:1px solid #B2B2B2;
   background-color: #fff;
   background-clip: padding-box;
