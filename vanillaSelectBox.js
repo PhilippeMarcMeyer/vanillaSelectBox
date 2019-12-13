@@ -1,13 +1,25 @@
 /* 
 Copyright (C) Philippe Meyer 2019
 Distributed under the MIT License
+vanillaSelectBox : v0.30 : The menu stops moving around on window resize and scroll + z-index in order of creation for multiple instances
 vanillaSelectBox : v0.26 : Corrected bug in stayOpen mode with disable() function
 vanillaSelectBox : v0.25 : New option stayOpen, and the dropbox is no longer a dropbox but a nice multi-select
 previous version : v0.24 : corrected bug affecting options with more than one class
 https://github.com/PhilippeMarcMeyer/vanillaSelectBox
 */
+
+let VSBoxCounter = function () {
+    let count = 0;
+    return {
+        set: function () {
+            return ++count;
+        }
+    };
+}();
+
 function vanillaSelectBox(domSelector, options) {
     let self = this;
+    this.instanceOffset = VSBoxCounter.set();
     this.domSelector = domSelector;
     this.root = document.querySelector(domSelector)
     this.main;
@@ -54,11 +66,13 @@ function vanillaSelectBox(domSelector, options) {
             this.userOptions.stayOpen = options.stayOpen;
         }
     }
+    this.repositionMenu = function(){
+        let rect = self.main.getBoundingClientRect();
+        this.drop.style.left = rect.left+"px";
+        this.drop.style.top = rect.bottom+"px";
+    }
 
-    this.init();
-}
-
-    vanillaSelectBox.prototype.init = function () {
+    this.init = function () {
 		let self = this;
         this.root.style.display = "none";
         let already = document.getElementById("btn-group-" + self.domSelector);
@@ -96,18 +110,29 @@ function vanillaSelectBox(domSelector, options) {
 		}
         let rect = this.button.getBoundingClientRect();
         this.top = rect.bottom;
-        this.left = rect.left;;
+        this.left = rect.left;
         this.drop = document.createElement("div");
         this.main.appendChild(this.drop);
         this.drop.classList.add("vsb-menu");
-        let ul = document.createElement("ul");
-        this.drop.appendChild(ul);
+        this.drop.style.zIndex = 2000 - this.instanceOffset;
+        this.ul = document.createElement("ul");
+        this.drop.appendChild(this.ul);
 
-        ul.style.maxHeight = this.userOptions.maxHeight + "px";
-        ul.style.minWidth = this.ulminWidth + "px";
-        ul.style.minHeight = this.ulminHeight + "px";
+        if(!this.userOptions.stayOpen ){
+            window.addEventListener("resize", function (e) {
+                self.repositionMenu();
+            });
+    
+            window.addEventListener("scroll", function (e) {
+                self.repositionMenu();
+            });
+        }
+
+        this.ul.style.maxHeight = this.userOptions.maxHeight + "px";
+        this.ul.style.minWidth = this.ulminWidth + "px";
+        this.ul.style.minHeight = this.ulminHeight + "px";
         if (this.isMultiple) {
-            ul.classList.add("multi");
+            this.ul.classList.add("multi");
         }
         let selectedTexts = ""
         let sep = "";
@@ -115,9 +140,9 @@ function vanillaSelectBox(domSelector, options) {
 		
         if (this.search) {
             this.searchZone = document.createElement("div");
-            ul.appendChild(this.searchZone);
+            this.ul.appendChild(this.searchZone);
             this.searchZone.classList.add("vsb-js-search-zone");
-
+            this.searchZone.style.zIndex = 2001 - this.instanceOffset;
             this.inputBox = document.createElement("input");
             this.searchZone.appendChild(this.inputBox);
             this.inputBox.setAttribute("type", "text");
@@ -125,12 +150,11 @@ function vanillaSelectBox(domSelector, options) {
 
             let fontSizeForP = this.isMultiple ? "8px" : "6px";
             var para = document.createElement("p");
-            ul.appendChild(para);
+            this.ul.appendChild(para);
             para.style.fontSize = fontSizeForP;
             para.innerHTML = "&nbsp;";
-            ul.addEventListener("scroll", function (e) {
+            this.ul.addEventListener("scroll", function (e) {
                 var y = this.scrollTop;
-				console.log(e);
                 self.searchZone.parentNode.style.top = y + "px";
             });
         }
@@ -149,7 +173,7 @@ function vanillaSelectBox(domSelector, options) {
 				}
             let li = document.createElement("li");
             let isSelected = x.hasAttribute("selected");
-            ul.appendChild(li);
+            self.ul.appendChild(li);
             li.setAttribute("data-value", value);
             li.setAttribute("data-text", text);
             if (classes.length != 0) {
@@ -219,12 +243,15 @@ function vanillaSelectBox(domSelector, options) {
 		}else{
 			this.main.addEventListener("click", function (e) {
 				if (self.isDisabled) return;
-				self.drop.style.left = self.left + "px";
-				self.drop.style.top = self.top + "px";
-				self.drop.style.display = "block";
-				document.addEventListener("click", docListener);
-				e.preventDefault();
-				e.stopPropagation();
+                    self.drop.style.left = self.left + "px";
+                    self.drop.style.top = self.top + "px";
+                    self.drop.style.display = "block";
+                    document.addEventListener("click", docListener);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if(!this.userOptions.stayOpen ){
+                        self.repositionMenu();
+                    }
 				});
 		}
         this.drop.addEventListener("click", function (e) {
@@ -309,6 +336,11 @@ function vanillaSelectBox(domSelector, options) {
 			}
         }
     }
+
+
+    this.init();
+}
+
 
     vanillaSelectBox.prototype.setValue = function (values) {
 		let self = this;

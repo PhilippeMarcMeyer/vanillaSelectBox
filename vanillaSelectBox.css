@@ -33,6 +33,7 @@
 	position: relative;
 	display: inline-block;
 	vertical-align: middle;
+	text-align:left;
 }
 
 .vsb-menu li{
@@ -48,7 +49,7 @@
 }
 
  .vsb-menu  ul{
- user-select:none;
+  user-select:none;
   list-style:none;
   white-space: nowrap;
   margin:0px;
