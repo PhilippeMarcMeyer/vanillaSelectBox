@@ -44,11 +44,15 @@ setValues('brandsMulti',['Lamborghini','Land Rover'])
 ```
 #### History :
 
- v 0.25 : New option stayOpen, and the dropbox is no longer a dropbox but a nice multi-select
+v 0.30 : The menu stops moving around on window resize and scroll + z-index in order of creation for multiple instances
+
+v 0.26 : Corrected bug in stayOpen mode with disable() function
+
+v 0.25 : New option stayOpen, and the dropbox is no longer a dropbox but a nice multi-select
  
  ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/stayOpen.jpg)
  
- v 0.22 : Migrating the function to vanillaSelectBox prototype => several instances of vanillaSelectBox() but 1 set of functions in memory
+v 0.22 : Migrating the function to vanillaSelectBox prototype => several instances of vanillaSelectBox() but 1 set of functions in memory
  
 v 0.21 : IE 11 compatibility
 
