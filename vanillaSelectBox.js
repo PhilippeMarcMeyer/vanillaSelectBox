@@ -249,7 +249,7 @@ function vanillaSelectBox(domSelector, options) {
                     document.addEventListener("click", docListener);
                     e.preventDefault();
                     e.stopPropagation();
-                    if(!this.userOptions.stayOpen ){
+                    if(!self.userOptions.stayOpen ){
                         self.repositionMenu();
                     }
 				});
