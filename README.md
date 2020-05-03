@@ -38,11 +38,14 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 * disable()
 * enable()
 * destroy()
-
+* enableItems([] || '') => array of values or comma delimited list
+* disableItems([] || '') => array of values or comma delimited list
 ```
 setValues('brandsMulti',['Lamborghini','Land Rover'])
 ```
 #### History :
+
+v 0.35 : You can enable and disable items. The already disble options of the select are also used at init time.
 
 v 0.30 : The menu stops moving around on window resize and scroll + z-index in order of creation for multiple instances
 

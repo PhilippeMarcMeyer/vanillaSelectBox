@@ -183,12 +183,14 @@
 			<button class="demo" onClick="setValues('brandsOne','Alpine')">setValue('Alpine')</button>
 			<button class="demo" onClick="setEnable('brandsOne',false)">disable()</button>
 			<button class="demo" onClick="setEnable('brandsOne',true)">enable()</button>
-			<button class="demo" onClick="doDestroy('brandsOne')">destroy()</button>
+            <button class="demo" onClick="doDestroy('brandsOne')">destroy()</button>
+            <button class="demo" onClick="disableItems('brandsOne','Alpine,Bentley')">disableItems('Alpine,Bentley')</button>
+            <button class="demo" onClick="enableItems('brandsOne','Alpine,Bentley')">enableItems('Alpine,Bentley')</button>
 			<br/><br/>
 			<button class="demo" style="width:140px;" onClick="document.getElementById('brandsOneChoice').innerHTML=document.getElementById('brandsOne').value;">get select value</button>
 			<span id="brandsOneChoice"></span>
 		</div>
-		<div class="btns-inactive"  style="display:none";
+		<div class="btns-inactive"  style="display:none">;
 			<button class="demo" onClick="init('brandsOne')">vanillaSelectBox()</button>
 		</div>
 	</div>
@@ -235,6 +237,8 @@
         var option = document.createElement("option");
         option.value = brands[i];
         option.text = brands[i];
+		if (i == 5) option.setAttribute("disabled", "");
+
         if (i == 23) option.setAttribute("selected", true);
         let colorClass = "";
         if (i > 2)
@@ -248,6 +252,8 @@
         var option = document.createElement("option");
         option.value = brands[i];
         option.text = brands[i];
+        if (i == 5) option.setAttribute("disabled", "");
+
         if (i == 23) option.setAttribute("selected", true);
         if (i >= 3 && i <= 7) option.setAttribute("selected", true);
         select2.appendChild(option);
@@ -346,6 +352,19 @@
         });
         return result;
     }
+
+    function disableItems(id,value){
+        if (id == "brandsOne" && selectBox != null) {
+            selectBox.disableItems(value);
+        } 
+    }
+
+    function enableItems(id,value){
+        if (id == "brandsOne" && selectBox != null) {
+            selectBox.enableItems(value);
+        } 
+    }
+
     init("brandsOne");
     init("brandsMulti");
 	init("brandsMultiStay");

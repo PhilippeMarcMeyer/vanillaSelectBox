@@ -1,6 +1,7 @@
 /* 
 Copyright (C) Philippe Meyer 2019
 Distributed under the MIT License
+vanillaSelectBox : v0.35 : You can enable and disable items
 vanillaSelectBox : v0.30 : The menu stops moving around on window resize and scroll + z-index in order of creation for multiple instances
 vanillaSelectBox : v0.26 : Corrected bug in stayOpen mode with disable() function
 vanillaSelectBox : v0.25 : New option stayOpen, and the dropbox is no longer a dropbox but a nice multi-select
@@ -36,6 +37,7 @@ function vanillaSelectBox(domSelector, options) {
     this.search = false;
     this.searchZone = null;
     this.inputBox = null;
+    this.disabledItems = [];
     this.ulminWidth = 140;
     this.ulminHeight = 25;
     this.userOptions = {
@@ -91,7 +93,6 @@ function vanillaSelectBox(domSelector, options) {
 		let btnTag = self.userOptions.stayOpen ? "div" : "button";
         this.button = document.createElement(btnTag);
 		
-        let presentValue = this.main.value;
         this.main.appendChild(this.button);
         this.title = document.createElement("span");
         this.button.appendChild(this.title);
@@ -173,6 +174,7 @@ function vanillaSelectBox(domSelector, options) {
 				}
             let li = document.createElement("li");
             let isSelected = x.hasAttribute("selected");
+            let isDisabled = x.hasAttribute("disabled");
             self.ul.appendChild(li);
             li.setAttribute("data-value", value);
             li.setAttribute("data-text", text);
@@ -180,7 +182,6 @@ function vanillaSelectBox(domSelector, options) {
 				classes.forEach(function(x){
 					li.classList.add(x);
 				});
-                
             }
             if (isSelected) {
                 nrActives++;
@@ -195,6 +196,9 @@ function vanillaSelectBox(domSelector, options) {
 						});
                     }
                 }
+            }
+            if(isDisabled){
+                li.classList.add("disabled"); 
             }
             li.appendChild(document.createTextNode(text));
         });
@@ -255,7 +259,8 @@ function vanillaSelectBox(domSelector, options) {
 				});
 		}
         this.drop.addEventListener("click", function (e) {
-			if (self.isDisabled) return;
+            if (self.isDisabled) return;
+           
             if (!e.target.hasAttribute("data-value")) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -264,6 +269,9 @@ function vanillaSelectBox(domSelector, options) {
             let choiceValue = e.target.getAttribute("data-value");
             let choiceText = e.target.getAttribute("data-text");
             let className = e.target.getAttribute("class");
+            if(className &&className.indexOf("disabled") != -1){
+                return;
+            }
             if (!self.isMultiple) {
                 self.root.value = choiceValue;
                 self.title.textContent = choiceText;
@@ -336,11 +344,56 @@ function vanillaSelectBox(domSelector, options) {
 			}
         }
     }
-
-
     this.init();
 }
 
+vanillaSelectBox.prototype.disableItems = function (values) {
+    let self = this;
+    let foundValues = [];
+    if (vanillaSelectBox_type(values) == "string") {
+        values = values.split(",");
+    }
+    
+    if(vanillaSelectBox_type(values) == "array"){
+        Array.prototype.slice.call(self.options).forEach(function (x) {
+            if (values.indexOf(x.value) != -1) {
+                foundValues.push(x.value);
+                x.setAttribute("disabled","");
+            } 
+        });
+    }
+    Array.prototype.slice.call(self.listElements).forEach(function (x) {
+        let val = x.getAttribute("data-value");
+        if (foundValues.indexOf(val) != -1) {
+            x.classList.add("disabled");
+        } 
+    });
+
+
+}
+
+vanillaSelectBox.prototype.enableItems = function (values) {
+    let self = this;
+    let foundValues = [];
+    if (vanillaSelectBox_type(values) == "string") {
+        values = values.split(",");
+    }
+    
+    if(vanillaSelectBox_type(values) == "array"){
+        Array.prototype.slice.call(self.options).forEach(function (x) {
+            if (values.indexOf(x.value) != -1) {
+                foundValues.push(x.value);
+                x.removeAttribute("disabled");
+            }
+        });
+    }
+
+    Array.prototype.slice.call(self.listElements).forEach(function (x) {
+        if (foundValues.indexOf(x.getAttribute("data-value")) != -1) {
+            x.classList.remove("disabled");
+        } 
+    });
+}
 
     vanillaSelectBox.prototype.setValue = function (values) {
 		let self = this;
@@ -348,7 +401,7 @@ function vanillaSelectBox(domSelector, options) {
             self.empty();
         } else {
             if (self.isMultiple) {
-                if (type(values) == "string") {
+                if (vanillaSelectBox_type(values) == "string") {
                     if (values == "all") {
                         values = [];
                         Array.prototype.slice.call(self.options).forEach(function (x) {
@@ -359,7 +412,7 @@ function vanillaSelectBox(domSelector, options) {
                     }
                 }
                 let foundValues = [];
-                if (type(values) == "array") {
+                if (vanillaSelectBox_type(values) == "array") {
                     Array.prototype.slice.call(self.options).forEach(function (x) {
                         if (values.indexOf(x.value) != -1) {
                             x.selected = true;
@@ -430,12 +483,6 @@ function vanillaSelectBox(domSelector, options) {
                 }
             }
         }
-        function type(target) {
-            const computedType = Object.prototype.toString.call(target);
-            const stripped = computedType.replace("[object ", "").replace("]", "");
-            const lowercased = stripped.toLowerCase();
-            return lowercased;
-        }
     }
 
     vanillaSelectBox.prototype.privateSendChange = function () {
@@ -483,6 +530,8 @@ function vanillaSelectBox(domSelector, options) {
         }
     }
 
+    
+
 vanillaSelectBox.prototype.showOptions = function(){
 	console.log(this.userOptions);
 }
@@ -493,4 +542,11 @@ if (!('remove' in Element.prototype)) {
             this.parentNode.removeChild(this);
         }
     };
+}
+
+function vanillaSelectBox_type(target) {
+    const computedType = Object.prototype.toString.call(target);
+    const stripped = computedType.replace("[object ", "").replace("]", "");
+    const lowercased = stripped.toLowerCase();
+    return lowercased;
 }
