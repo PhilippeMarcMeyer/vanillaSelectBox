@@ -41,7 +41,8 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 * enableItems([] || '') => array of values or comma delimited list
 * disableItems([] || '') => array of values or comma delimited list
 ```
-setValues('brandsMulti',['Lamborghini','Land Rover'])
+selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": true, "placeHolder": "Choose a brand..." });
+ selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History :
 
