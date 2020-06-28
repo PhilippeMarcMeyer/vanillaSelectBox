@@ -1,6 +1,7 @@
 /* 
 Copyright (C) Philippe Meyer 2019
 Distributed under the MIT License
+vanillaSelectBox : v0.40 : A click on one selectBox close the other opened boxes
 vanillaSelectBox : v0.35 : You can enable and disable items
 vanillaSelectBox : v0.30 : The menu stops moving around on window resize and scroll + z-index in order of creation for multiple instances
 vanillaSelectBox : v0.26 : Corrected bug in stayOpen mode with disable() function
@@ -11,16 +12,34 @@ https://github.com/PhilippeMarcMeyer/vanillaSelectBox
 
 let VSBoxCounter = function () {
     let count = 0;
+    let instances = [];
     return {
-        set: function () {
-            return ++count;
+        set: function (instancePtr) {
+            instances.push({offset:++count,ptr:instancePtr});
+            return instances[instances.length-1].offset;
+        },
+        remove: function (instanceNr) {
+            let temp = instances.filter(function(x){
+               return x.offset != instanceNr;  
+            })
+            instances = temp.splice(0);
+            temp = [];
+        },
+        closeAllButMe:function(instanceNr){
+            temp = [];
+            instances.forEach(function(x){
+                if(x.offset != instanceNr){
+                    x.ptr.closeOrder();
+                } 
+             });
         }
     };
 }();
 
+
 function vanillaSelectBox(domSelector, options) {
     let self = this;
-    this.instanceOffset = VSBoxCounter.set();
+    this.instanceOffset = VSBoxCounter.set(self);
     this.domSelector = domSelector;
     this.root = document.querySelector(domSelector)
     this.main;
@@ -72,6 +91,19 @@ function vanillaSelectBox(domSelector, options) {
         let rect = self.main.getBoundingClientRect();
         this.drop.style.left = rect.left+"px";
         this.drop.style.top = rect.bottom+"px";
+    }
+
+    this.closeOrder=function(){
+        let self = this;
+        if(!self.userOptions.stayOpen){
+            self.drop.style.display = "none";
+            if(self.search){
+                self.inputBox.value = "";
+                Array.prototype.slice.call(self.listElements).forEach(function (x) {
+                   x.classList.remove("hide");
+                });
+            }
+        }
     }
 
     this.init = function () {
@@ -255,6 +287,7 @@ function vanillaSelectBox(domSelector, options) {
                     e.stopPropagation();
                     if(!self.userOptions.stayOpen ){
                         self.repositionMenu();
+                        VSBoxCounter.closeAllButMe(self.instanceOffset);
                     }
 				});
 		}
@@ -368,6 +401,10 @@ vanillaSelectBox.prototype.disableItems = function (values) {
             x.classList.add("disabled");
         } 
     });
+}
+
+vanillaSelectBox.prototype.keepInstances = function (rootId) {
+    let instanceIds;
 
 
 }
@@ -509,6 +546,7 @@ vanillaSelectBox.prototype.enableItems = function (values) {
     vanillaSelectBox.prototype.destroy = function () {
         let already = document.getElementById("btn-group-" + this.domSelector);
         if (already) {
+            VSBoxCounter.remove(this.instanceOffset);
             already.remove();
             this.root.style.display = "inline-block";
         }

@@ -46,6 +46,8 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 ```
 #### History :
 
+v 0.40 : A click on one selectBox close the other opened boxes
+
 v 0.35 : You can enable and disable items. The already disble options of the select are also used at init time.
 
 v 0.30 : The menu stops moving around on window resize and scroll + z-index in order of creation for multiple instances
