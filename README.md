@@ -1,6 +1,10 @@
 # vanillaSelectBox
 ### A nice select/multiselect ui with no dependency
 
+# WIP : 
+### don't use css transform in your page, it disrupt the DOM so that vanillaSelectBox doesn't work 
+### Any help would be welcome
+
 ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/vanillaSelectBox.png)
 
 Demo : https://philippemarcmeyer.github.io/vanillaSelectBox/
