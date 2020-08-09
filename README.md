@@ -3,7 +3,7 @@
 
 # WIP : 
 ### don't use css transform in your page, it disrupt the DOM so that vanillaSelectBox doesn't work 
-### Any help would be welcome
+### Any help would be welcome with "Issue scrolling with the select box open"
 
 ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/vanillaSelectBox.png)
 
