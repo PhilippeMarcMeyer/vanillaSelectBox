@@ -7,7 +7,7 @@
   cursor:pointer;
   z-index:1000;
   display:none;
-  position:fixed;
+  position:absolute;/*Don't change*/
   border:1px solid #B2B2B2;
   background-color: #fff;
   background-clip: padding-box;
@@ -18,7 +18,7 @@
 }
 
 .vsb-js-search-zone{
-	position:absolute;
+	position:absolute;/*Don't change*/
     z-index:1001;
 	width: 80%;
 	min-height:1.8em;
@@ -30,7 +30,7 @@
 }
 
 .vsb-main{
-	position: relative;
+	position: relative;/*Don't change*/
 	display: inline-block;
 	vertical-align: middle;
 	text-align:left;

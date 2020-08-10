@@ -1,6 +1,7 @@
 /* 
-Copyright (C) Philippe Meyer 2019
+Copyright (C) Philippe Meyer 2019-2020
 Distributed under the MIT License
+vanillaSelectBox : v0.41 : Bug corrected, the menu content was misplaced if a css transform was applied on a parent
 vanillaSelectBox : v0.40 : A click on one selectBox close the other opened boxes
 vanillaSelectBox : v0.35 : You can enable and disable items
 vanillaSelectBox : v0.30 : The menu stops moving around on window resize and scroll + z-index in order of creation for multiple instances
@@ -87,11 +88,6 @@ function vanillaSelectBox(domSelector, options) {
             this.userOptions.stayOpen = options.stayOpen;
         }
     }
-    this.repositionMenu = function(){
-        let rect = self.main.getBoundingClientRect();
-        this.drop.style.left = rect.left+"px";
-        this.drop.style.top = rect.bottom+"px";
-    }
 
     this.closeOrder=function(){
         let self = this;
@@ -131,35 +127,25 @@ function vanillaSelectBox(domSelector, options) {
         this.title.classList.add("title");
         let caret = document.createElement("span");
         this.button.appendChild(caret);
+
         caret.classList.add("caret");
         caret.style.position = "absolute";
         caret.style.right = "8px";
         caret.style.marginTop = "8px";
+
 		if(self.userOptions.stayOpen){
 			caret.style.display = "none";
 			this.title.style.paddingLeft = "20px";
 			this.title.style.fontStyle = "italic";
 			this.title.style.verticalAlign = "20%";
-		}
-        let rect = this.button.getBoundingClientRect();
-        this.top = rect.bottom;
-        this.left = rect.left;
+        }
+        
         this.drop = document.createElement("div");
         this.main.appendChild(this.drop);
         this.drop.classList.add("vsb-menu");
         this.drop.style.zIndex = 2000 - this.instanceOffset;
         this.ul = document.createElement("ul");
         this.drop.appendChild(this.ul);
-
-        if(!this.userOptions.stayOpen ){
-            window.addEventListener("resize", function (e) {
-                self.repositionMenu();
-            });
-    
-            window.addEventListener("scroll", function (e) {
-                self.repositionMenu();
-            });
-        }
 
         this.ul.style.maxHeight = this.userOptions.maxHeight + "px";
         this.ul.style.minWidth = this.ulminWidth + "px";
@@ -286,7 +272,6 @@ function vanillaSelectBox(domSelector, options) {
                     e.preventDefault();
                     e.stopPropagation();
                     if(!self.userOptions.stayOpen ){
-                        self.repositionMenu();
                         VSBoxCounter.closeAllButMe(self.instanceOffset);
                     }
 				});
@@ -566,9 +551,7 @@ vanillaSelectBox.prototype.enableItems = function (values) {
             if(button) button.classList.remove("disabled");
             this.isDisabled = false;
         }
-    }
-
-    
+    } 
 
 vanillaSelectBox.prototype.showOptions = function(){
 	console.log(this.userOptions);

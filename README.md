@@ -46,6 +46,8 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 ```
 #### History :
 
+v 0.41 : Bug corrected, the menu content was misplaced if a css transform was applied on a parent
+
 v 0.40 : A click on one selectBox close the other opened boxes
 
 v 0.35 : You can enable and disable items. The already disble options of the select are also used at init time.
