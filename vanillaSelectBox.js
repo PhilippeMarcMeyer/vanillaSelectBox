@@ -1,4 +1,4 @@
-/* 
+/*
 Copyright (C) Philippe Meyer 2019
 Distributed under the MIT License
 vanillaSelectBox : v0.30 : The menu stops moving around on window resize and scroll + z-index in order of creation for multiple instances
@@ -44,7 +44,8 @@ function vanillaSelectBox(domSelector, options) {
         translations: { "all": "All", "items": "items" },
         search: false,
         placeHolder: "",
-		stayOpen:false
+		    stayOpen:false,
+        disableSelectAll: false,
     }
     if (options) {
         if (options.maxWidth != undefined) {
@@ -62,18 +63,16 @@ function vanillaSelectBox(domSelector, options) {
         if (options.search != undefined) {
             this.search = options.search;
         }
-		if (options.stayOpen != undefined) {
+		    if (options.stayOpen != undefined) {
             this.userOptions.stayOpen = options.stayOpen;
         }
-    }
-    this.repositionMenu = function(){
-        let rect = self.main.getBoundingClientRect();
-        this.drop.style.left = rect.left+"px";
-        this.drop.style.top = rect.bottom+"px";
+        if (options.disableSelectAll != undefined) {
+            this.userOptions.disableSelectAll = options.disableSelectAll;
+        }
     }
 
     this.init = function () {
-		let self = this;
+        let self = this;
         this.root.style.display = "none";
         let already = document.getElementById("btn-group-" + self.domSelector);
         if (already) {
@@ -84,13 +83,13 @@ function vanillaSelectBox(domSelector, options) {
         this.main.classList.add("vsb-main");
         this.main.setAttribute("id", "btn-group-" + this.domSelector);
         this.main.style.marginLeft = this.main.style.marginLeft;
-		if(self.userOptions.stayOpen){
-			this.main.style.minHeight =  (this.userOptions.maxHeight+10) + "px";
-		}
+        if(self.userOptions.stayOpen){
+            this.main.style.minHeight =  (this.userOptions.maxHeight+10) + "px";
+        }
 
-		let btnTag = self.userOptions.stayOpen ? "div" : "button";
+        let btnTag = self.userOptions.stayOpen ? "div" : "button";
         this.button = document.createElement(btnTag);
-		
+
         let presentValue = this.main.value;
         this.main.appendChild(this.button);
         this.title = document.createElement("span");
@@ -102,15 +101,12 @@ function vanillaSelectBox(domSelector, options) {
         caret.style.position = "absolute";
         caret.style.right = "8px";
         caret.style.marginTop = "8px";
-		if(self.userOptions.stayOpen){
-			caret.style.display = "none";
-			this.title.style.paddingLeft = "20px";
-			this.title.style.fontStyle = "italic";
-			this.title.style.verticalAlign = "20%";
-		}
-        let rect = this.button.getBoundingClientRect();
-        this.top = rect.bottom;
-        this.left = rect.left;
+        if(self.userOptions.stayOpen){
+            caret.style.display = "none";
+            this.title.style.paddingLeft = "20px";
+            this.title.style.fontStyle = "italic";
+            this.title.style.verticalAlign = "20%";
+        }
         this.drop = document.createElement("div");
         this.main.appendChild(this.drop);
         this.drop.classList.add("vsb-menu");
@@ -118,26 +114,24 @@ function vanillaSelectBox(domSelector, options) {
         this.ul = document.createElement("ul");
         this.drop.appendChild(this.ul);
 
-        if(!this.userOptions.stayOpen ){
-            window.addEventListener("resize", function (e) {
-                self.repositionMenu();
-            });
-    
-            window.addEventListener("scroll", function (e) {
-                self.repositionMenu();
-            });
-        }
-
         this.ul.style.maxHeight = this.userOptions.maxHeight + "px";
         this.ul.style.minWidth = this.ulminWidth + "px";
         this.ul.style.minHeight = this.ulminHeight + "px";
         if (this.isMultiple) {
             this.ul.classList.add("multi");
+            if (!self.userOptions.disableSelectAll) {
+                let selectAll = document.createElement("option");
+                selectAll.setAttribute("value", 'all');
+                selectAll.innerText = 'Select All';
+                this.root.insertBefore(selectAll,(this.root.hasChildNodes())
+                  ? this.root.childNodes[0]
+                  : null);
+            }
         }
         let selectedTexts = ""
         let sep = "";
         let nrActives = 0;
-		
+
         if (this.search) {
             this.searchZone = document.createElement("div");
             this.ul.appendChild(this.searchZone);
@@ -148,7 +142,7 @@ function vanillaSelectBox(domSelector, options) {
             this.inputBox.setAttribute("type", "text");
             this.inputBox.setAttribute("id", "search_" + this.domSelector);
 
-            let fontSizeForP = this.isMultiple ? "8px" : "6px";
+            let fontSizeForP = this.isMultiple ? "9px" : "6px";
             var para = document.createElement("p");
             this.ul.appendChild(para);
             para.style.fontSize = fontSizeForP;
@@ -158,29 +152,30 @@ function vanillaSelectBox(domSelector, options) {
                 self.searchZone.parentNode.style.top = y + "px";
             });
         }
-        this.options = document.querySelectorAll(this.domSelector + " option");
+
+        this.options = document.querySelectorAll(this.domSelector + " > option");
         Array.prototype.slice.call(this.options).forEach(function (x) {
             let text = x.textContent;
             let value = x.value;
             let classes = x.getAttribute("class");
-			if(classes) 
-				{
-					classes=classes.split(" ");
-				}
-			else
-				{
-					classes=[];
-				}
+            if(classes)
+            {
+                classes=classes.split(" ");
+            }
+            else
+            {
+                classes=[];
+            }
             let li = document.createElement("li");
             let isSelected = x.hasAttribute("selected");
             self.ul.appendChild(li);
             li.setAttribute("data-value", value);
             li.setAttribute("data-text", text);
             if (classes.length != 0) {
-				classes.forEach(function(x){
-					li.classList.add(x);
-				});
-                
+                classes.forEach(function(x){
+                    li.classList.add(x);
+                });
+
             }
             if (isSelected) {
                 nrActives++;
@@ -189,15 +184,68 @@ function vanillaSelectBox(domSelector, options) {
                 li.classList.add("active");
                 if (!self.isMultiple) {
                     self.title.textContent = text;
-					if (classes.length != 0) {
-						classes.forEach(function(x){
-							self.title.classList.add(x);
-						});
+                    if (classes.length != 0) {
+                        classes.forEach(function(x){
+                            self.title.classList.add(x);
+                        });
                     }
                 }
             }
             li.appendChild(document.createTextNode(text));
         });
+
+        if (document.querySelector(this.domSelector + ' optgroup') !== null) {
+            this.options = document.querySelectorAll(this.domSelector + " option");
+            let groups = document.querySelectorAll(this.domSelector + ' optgroup');
+            Array.prototype.slice.call(groups).forEach(function(group) {
+                let groupOptions = group.querySelectorAll('option');
+                let li = document.createElement("li");
+                li.classList.add('grouped-option');
+                li.appendChild(document.createTextNode(group.label));
+                self.ul.appendChild(li);
+
+                Array.prototype.slice.call(groupOptions).forEach(function(x) {
+                    let text = x.textContent;
+                    let value = x.value;
+                    let classes = x.getAttribute("class");
+                    if(classes)
+                    {
+                        classes=classes.split(" ");
+                    }
+                    else
+                    {
+                        classes=[];
+                    }
+                    let li = document.createElement("li");
+                    let isSelected = x.hasAttribute("selected");
+                    self.ul.appendChild(li);
+                    li.setAttribute("data-value", value);
+                    li.setAttribute("data-text", text);
+                    if (classes.length != 0) {
+                        classes.forEach(function(x){
+                            li.classList.add(x);
+                        });
+
+                    }
+                    if (isSelected) {
+                        nrActives++;
+                        selectedTexts += sep + text;
+                        sep = ",";
+                        li.classList.add("active");
+                        if (!self.isMultiple) {
+                            self.title.textContent = text;
+                            if (classes.length != 0) {
+                                classes.forEach(function(x){
+                                    self.title.classList.add(x);
+                                });
+                            }
+                        }
+                    }
+                    li.appendChild(document.createTextNode(text));
+                })
+            })
+        }
+
         if (self.multipleSize != -1) {
             if (nrActives > self.multipleSize) {
                 let wordForItems = self.userOptions.translations.items || "items"
@@ -210,52 +258,53 @@ function vanillaSelectBox(domSelector, options) {
         if (self.userOptions.placeHolder != "" && self.title.textContent == "") {
             self.title.textContent = self.userOptions.placeHolder;
         }
-        this.listElements = this.drop.querySelectorAll("li");
+        this.listElements = this.drop.querySelectorAll("li:not(.grouped-option)");
         if (self.search) {
             self.inputBox.addEventListener("keyup", function (e) {
                 let searchValue = e.target.value.toUpperCase();
                 let searchValueLength = searchValue.length;
                 if (searchValueLength < 2) {
                     Array.prototype.slice.call(self.listElements).forEach(function (x) {
-                        x.classList.remove("hide");
+                        x.classList.remove("hidden-search");
                     });
                 } else {
                     Array.prototype.slice.call(self.listElements).forEach(function (x) {
                         let text = x.getAttribute("data-text").toUpperCase();
-                        if (text.indexOf(searchValue) == -1) {
-                            x.classList.add("hide");
+                        if (text.indexOf(searchValue) == -1
+                          && x.getAttribute('data-value') !== 'all'
+                        ) {
+                            x.classList.add("hidden-search");
                         } else {
-                            x.classList.remove("hide");
+                            x.classList.remove("hidden-search");
                         }
                     });
                 }
             });
         }
-		
-		if(self.userOptions.stayOpen){
-            self.drop.style.display = "block";	
-			self.drop.style.boxShadow = "none";
-			self.drop.style.minHeight =  (this.userOptions.maxHeight+10) + "px";
-			self.drop.style.position = "relative";
-			self.drop.style.left = "0px";
-			self.drop.style.top = "0px";
-			self.button.style.border = "none";
-		}else{
-			this.main.addEventListener("click", function (e) {
-				if (self.isDisabled) return;
-                    self.drop.style.left = self.left + "px";
-                    self.drop.style.top = self.top + "px";
-                    self.drop.style.display = "block";
-                    document.addEventListener("click", docListener);
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if(!self.userOptions.stayOpen ){
-                        self.repositionMenu();
-                    }
-				});
-		}
+
+        if(self.userOptions.stayOpen){
+            self.drop.style.display = "block";
+            self.drop.style.boxShadow = "none";
+            self.drop.style.minHeight =  (this.userOptions.maxHeight+10) + "px";
+            self.drop.style.position = "relative";
+            self.drop.style.left = "0px";
+            self.drop.style.top = "0px";
+            self.button.style.border = "none";
+        }else{
+            this.main.addEventListener("click", function (e) {
+                // avoid wrong event trigger until we found a better solution
+                if (e.screenX === 0) return;
+                if (self.isDisabled) return;
+                self.drop.style.left = self.left + "px";
+                self.drop.style.top = self.top + "px";
+                self.drop.style.display = "block";
+                document.addEventListener("click", docListener);
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        }
         this.drop.addEventListener("click", function (e) {
-			if (self.isDisabled) return;
+            if (self.isDisabled) return;
             if (!e.target.hasAttribute("data-value")) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -264,6 +313,30 @@ function vanillaSelectBox(domSelector, options) {
             let choiceValue = e.target.getAttribute("data-value");
             let choiceText = e.target.getAttribute("data-text");
             let className = e.target.getAttribute("class");
+
+            if (choiceValue === 'all') {
+                if (e.target.hasAttribute('data-selected')
+                  && e.target.getAttribute('data-selected') === 'true') {
+                    self.setValue([])
+                    e.target.innerText = 'Select All'
+                    e.target.setAttribute('data-selected', 'false')
+                } else {
+                    let allValues = []
+                    e.target.innerText = 'Clear All'
+                    Array.prototype.slice.call(self.listElements).forEach(function (x) {
+                        if (x.hasAttribute('data-value')
+                          && x.getAttribute('data-value') !== 'all'
+                          && !x.classList.contains('hidden-search')) {
+                            allValues.push(x.getAttribute('data-value'))
+                        }
+                    });
+                    e.target.setAttribute('data-selected', 'true')
+                    self.setValue(allValues)
+                    e.target.classList.add("active");
+                }
+                return;
+            }
+
             if (!self.isMultiple) {
                 self.root.value = choiceValue;
                 self.title.textContent = choiceText;
@@ -279,9 +352,9 @@ function vanillaSelectBox(domSelector, options) {
                     e.target.classList.add("active");
                 }
                 self.privateSendChange();
-				if(!self.userOptions.stayOpen){
-					docListener();
-				}
+                if(!self.userOptions.stayOpen){
+                    docListener();
+                }
             } else {
                 let wasActive = false;
                 if (className) {
@@ -328,12 +401,12 @@ function vanillaSelectBox(domSelector, options) {
         function docListener() {
             document.removeEventListener("click", docListener);
             self.drop.style.display = "none";
-			if(self.search){
-				self.inputBox.value = "";
-				Array.prototype.slice.call(self.listElements).forEach(function (x) {
-                   x.classList.remove("hide");
+            if(self.search){
+                self.inputBox.value = "";
+                Array.prototype.slice.call(self.listElements).forEach(function (x) {
+                    x.classList.remove("hidden-search");
                 });
-			}
+            }
         }
     }
 
@@ -342,149 +415,149 @@ function vanillaSelectBox(domSelector, options) {
 }
 
 
-    vanillaSelectBox.prototype.setValue = function (values) {
-		let self = this;
-        if (values == null || values == undefined || values == "") {
-            self.empty();
-        } else {
-            if (self.isMultiple) {
-                if (type(values) == "string") {
-                    if (values == "all") {
-                        values = [];
-                        Array.prototype.slice.call(self.options).forEach(function (x) {
-                            values.push(x.value);
-                        });
-                    } else {
-                        values = values.split(",");
-                    }
-                }
-                let foundValues = [];
-                if (type(values) == "array") {
+vanillaSelectBox.prototype.setValue = function (values) {
+    let self = this;
+    if (values == null || values == undefined || values == "") {
+        self.empty();
+    } else {
+        if (self.isMultiple) {
+            if (type(values) == "string") {
+                if (values == "all") {
+                    values = [];
                     Array.prototype.slice.call(self.options).forEach(function (x) {
-                        if (values.indexOf(x.value) != -1) {
-                            x.selected = true;
-                            foundValues.push(x.value);
-                        } else {
-                            x.selected = false;
-                        }
+                        values.push(x.value);
                     });
-                    let selectedTexts = ""
-                    let sep = "";
-                    let nrActives = 0;
-                    let nrAll = 0;
-                    Array.prototype.slice.call(self.listElements).forEach(function (x) {
-                        nrAll++;
-                        if (foundValues.indexOf(x.getAttribute("data-value")) != -1) {
-                            x.classList.add("active");
-                            nrActives++;
-                            selectedTexts += sep + x.getAttribute("data-text");
-                            sep = ",";
-                        } else {
-                            x.classList.remove("active");
-                        }
-                    });
-                    if (nrAll == nrActives) {
-                        let wordForAll = self.userOptions.translations.all || "all";
-                        selectedTexts = wordForAll;
-                    } else if (self.multipleSize != -1) {
-                        if (nrActives > self.multipleSize) {
-                            let wordForItems = self.userOptions.translations.items || "items"
-                            selectedTexts = nrActives + " " + wordForItems;
-                        }
-                    }
-                    self.title.textContent = selectedTexts;
-                    self.privateSendChange();
+                } else {
+                    values = values.split(",");
                 }
-            } else {
-                let found = false;
-                let text = "";
-                let classNames = ""
-                Array.prototype.slice.call(self.listElements).forEach(function (x) {
-                    if (x.getAttribute("data-value") == values) {
-                        x.classList.add("active");
-                        found = true;
-                        text = x.getAttribute("data-text")
-                    } else {
-                        x.classList.remove("active");
-                    }
-                });
+            }
+            let foundValues = [];
+            if (type(values) == "array") {
                 Array.prototype.slice.call(self.options).forEach(function (x) {
-                    if (x.value == values) {
+                    if (values.indexOf(x.value) != -1) {
                         x.selected = true;
-                        className = x.getAttribute("class");
-                        if (!className) className = "";
+                        foundValues.push(x.value);
                     } else {
                         x.selected = false;
                     }
                 });
-                if (found) {
-                    self.title.textContent = text;
-                    if (self.userOptions.placeHolder != "" && self.title.textContent == "") {
-                        self.title.textContent = self.userOptions.placeHolder;
-                    }
-                    if (className != "") {
-                        self.title.setAttribute("class", className + " title");
+                let selectedTexts = ""
+                let sep = "";
+                let nrActives = 0;
+                let nrAll = 0;
+                Array.prototype.slice.call(self.listElements).forEach(function (x) {
+                    nrAll++;
+                    if (foundValues.indexOf(x.getAttribute("data-value")) != -1) {
+                        x.classList.add("active");
+                        nrActives++;
+                        selectedTexts += sep + x.getAttribute("data-text");
+                        sep = ",";
                     } else {
-                        self.title.setAttribute("class", "title");
+                        x.classList.remove("active");
                     }
+                });
+                if (nrAll == nrActives) {
+                    let wordForAll = self.userOptions.translations.all || "all";
+                    selectedTexts = wordForAll;
+                } else if (self.multipleSize != -1) {
+                    if (nrActives > self.multipleSize) {
+                        let wordForItems = self.userOptions.translations.items || "items"
+                        selectedTexts = nrActives + " " + wordForItems;
+                    }
+                }
+                self.title.textContent = selectedTexts;
+                self.privateSendChange();
+            }
+        } else {
+            let found = false;
+            let text = "";
+            let classNames = ""
+            Array.prototype.slice.call(self.listElements).forEach(function (x) {
+                if (x.getAttribute("data-value") == values) {
+                    x.classList.add("active");
+                    found = true;
+                    text = x.getAttribute("data-text")
+                } else {
+                    x.classList.remove("active");
+                }
+            });
+            Array.prototype.slice.call(self.options).forEach(function (x) {
+                if (x.value == values) {
+                    x.selected = true;
+                    className = x.getAttribute("class");
+                    if (!className) className = "";
+                } else {
+                    x.selected = false;
+                }
+            });
+            if (found) {
+                self.title.textContent = text;
+                if (self.userOptions.placeHolder != "" && self.title.textContent == "") {
+                    self.title.textContent = self.userOptions.placeHolder;
+                }
+                if (className != "") {
+                    self.title.setAttribute("class", className + " title");
+                } else {
+                    self.title.setAttribute("class", "title");
                 }
             }
         }
-        function type(target) {
-            const computedType = Object.prototype.toString.call(target);
-            const stripped = computedType.replace("[object ", "").replace("]", "");
-            const lowercased = stripped.toLowerCase();
-            return lowercased;
-        }
     }
+    function type(target) {
+        const computedType = Object.prototype.toString.call(target);
+        const stripped = computedType.replace("[object ", "").replace("]", "");
+        const lowercased = stripped.toLowerCase();
+        return lowercased;
+    }
+}
 
-    vanillaSelectBox.prototype.privateSendChange = function () {
-        let event = document.createEvent('HTMLEvents');
-        event.initEvent('change', true, false);
-        this.root.dispatchEvent(event);
-    
-	}
+vanillaSelectBox.prototype.privateSendChange = function () {
+    let event = document.createEvent('HTMLEvents');
+    event.initEvent('change', true, false);
+    this.root.dispatchEvent(event);
 
-	vanillaSelectBox.prototype.empty = function () {
-        Array.prototype.slice.call(this.listElements).forEach(function (x) {
-            x.classList.remove("active");
-        });
-        Array.prototype.slice.call(this.options).forEach(function (x) {
-            x.selected = false;
-        });
-        this.title.textContent = "";
-        if (this.userOptions.placeHolder != "" && this.title.textContent == "") {
-            this.title.textContent = this.userOptions.placeHolder;
-        }
-        this.privateSendChange();
+}
+
+vanillaSelectBox.prototype.empty = function () {
+    Array.prototype.slice.call(this.listElements).forEach(function (x) {
+        x.classList.remove("active");
+    });
+    Array.prototype.slice.call(this.options).forEach(function (x) {
+        x.selected = false;
+    });
+    this.title.textContent = "";
+    if (this.userOptions.placeHolder != "" && this.title.textContent == "") {
+        this.title.textContent = this.userOptions.placeHolder;
     }
-	
-    vanillaSelectBox.prototype.destroy = function () {
-        let already = document.getElementById("btn-group-" + this.domSelector);
-        if (already) {
-            already.remove();
-            this.root.style.display = "inline-block";
-        }
+    this.privateSendChange();
+}
+
+vanillaSelectBox.prototype.destroy = function () {
+    let already = document.getElementById("btn-group-" + this.domSelector);
+    if (already) {
+        already.remove();
+        this.root.style.display = "inline-block";
     }
-    vanillaSelectBox.prototype.disable = function () {
-        let already = document.getElementById("btn-group-" + this.domSelector);
-        if (already) {
-            button = already.querySelector("button")
-			if(button) button.classList.add("disabled");
-            this.isDisabled = true;
-        }
+}
+vanillaSelectBox.prototype.disable = function () {
+    let already = document.getElementById("btn-group-" + this.domSelector);
+    if (already) {
+        button = already.querySelector("button")
+        if(button) button.classList.add("disabled");
+        this.isDisabled = true;
     }
-    vanillaSelectBox.prototype.enable = function () {
-        let already = document.getElementById("btn-group-" + this.domSelector);
-        if (already) {
-            button = already.querySelector("button")
-            if(button) button.classList.remove("disabled");
-            this.isDisabled = false;
-        }
+}
+vanillaSelectBox.prototype.enable = function () {
+    let already = document.getElementById("btn-group-" + this.domSelector);
+    if (already) {
+        button = already.querySelector("button")
+        if(button) button.classList.remove("disabled");
+        this.isDisabled = false;
     }
+}
 
 vanillaSelectBox.prototype.showOptions = function(){
-	console.log(this.userOptions);
+    console.log(this.userOptions);
 }
 // Polyfills for IE
 if (!('remove' in Element.prototype)) {
