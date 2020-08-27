@@ -1,6 +1,9 @@
 # vanillaSelectBox
 ### A nice select/multiselect ui with no dependency
 
+# WIP : 
+### vanillaSelectBox is not currently in v1+, please test it carefully before using it in production (interactions with other plugins, css) and be kind enough to report any bug to me so I can improve it.
+
 ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/vanillaSelectBox.png)
 
 Demo : https://philippemarcmeyer.github.io/vanillaSelectBox/
@@ -38,11 +41,19 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 * disable()
 * enable()
 * destroy()
-
+* enableItems([] || '') => array of values or comma delimited list
+* disableItems([] || '') => array of values or comma delimited list
 ```
-setValues('brandsMulti',['Lamborghini','Land Rover'])
+selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": true, "placeHolder": "Choose a brand..." });
+ selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History :
+
+v 0.41 : Bug corrected, the menu content was misplaced if a css transform was applied on a parent
+
+v 0.40 : A click on one selectBox close the other opened boxes
+
+v 0.35 : You can enable and disable items. The already disble options of the select are also used at init time.
 
 v 0.30 : The menu stops moving around on window resize and scroll + z-index in order of creation for multiple instances
 
