@@ -20,10 +20,11 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 ### Available options : 
 * maxWidth : for the UI if you don't want the title to expand to much to the right
 * maxHeight : the maxHeight set a scroll when there are too many items 
-* translations : { "all": "every cars", "items": "cars" }
+* translations : { "all": "All", "items": "items","selectAll":"Select All","clearAll":"Clear All"}
 * search : true/false, to provide a search input text to reduce the list
 * placeHolder : well that's a placeholder !
 * stayOpen : true/false. defaut is false : that's a drop-down. Set it to true and that"s a list (>= v 0.25)
+* disableSelectAll : true/false. defaut is false : add a checkbox select all / clear all
 
 ### Automatic options :
 * single or multiple choices : depends on the "multiple" attribute that you put in the select code 
@@ -45,9 +46,13 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 * disableItems([] || '') => array of values or comma delimited list
 ```
 selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": true, "placeHolder": "Choose a brand..." });
- selectBox.disableItems(['Lamborghini','Land Rover']);
+selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History :
+
+v0.51 : Translations for select all/clear all + minor css corrections + don't select disabled items
+
+v0.50 : PR by jaguerra2017 adding a select all/clear all check button + optgroup support !
 
 v 0.41 : Bug corrected, the menu content was misplaced if a css transform was applied on a parent
 

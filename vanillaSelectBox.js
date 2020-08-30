@@ -1,6 +1,9 @@
 /*
 Copyright (C) Philippe Meyer 2019-2020
-Distributed under the MIT License
+Distributed under the MIT License  
+
+vanillaSelectBox : v0.51 : Translations for select all/clear all + minor css corrections + don't select disabled items
+vanillaSelectBox : v0.50 : PR by jaguerra2017 adding a select all/clear all check button + optgroup support !
 vanillaSelectBox : v0.41 : Bug corrected, the menu content was misplaced if a css transform was applied on a parent
 vanillaSelectBox : v0.40 : A click on one selectBox close the other opened boxes
 vanillaSelectBox : v0.35 : You can enable and disable items
@@ -62,10 +65,10 @@ function vanillaSelectBox(domSelector, options) {
     this.userOptions = {
         maxWidth: 500,
         maxHeight: 400,
-        translations: { "all": "All", "items": "items" },
+        translations: { "all": "All", "items": "items","selectAll":"Select All","clearAll":"Clear All"},
         search: false,
         placeHolder: "",
-		    stayOpen:false,
+		stayOpen:false,
         disableSelectAll: false,
     }
     if (options) {
@@ -76,7 +79,13 @@ function vanillaSelectBox(domSelector, options) {
             this.userOptions.maxHeight = options.maxHeight;
         }
         if (options.translations != undefined) {
-            this.userOptions.translations = options.translations;
+            for (var property in options.translations) {
+                if (options.translations.hasOwnProperty(property)) {
+                    if(this.userOptions.translations[property] ){
+                        this.userOptions.translations[property] = options.translations[property];
+                    }
+                }
+              }
         }
         if (options.placeHolder != undefined) {
             this.userOptions.placeHolder = options.placeHolder;
@@ -84,7 +93,7 @@ function vanillaSelectBox(domSelector, options) {
         if (options.search != undefined) {
             this.search = options.search;
         }
-		    if (options.stayOpen != undefined) {
+		if (options.stayOpen != undefined) {
             this.userOptions.stayOpen = options.stayOpen;
         }
         if (options.disableSelectAll != undefined) {
@@ -158,7 +167,7 @@ function vanillaSelectBox(domSelector, options) {
             if (!self.userOptions.disableSelectAll) {
                 let selectAll = document.createElement("option");
                 selectAll.setAttribute("value", 'all');
-                selectAll.innerText = 'Select All';
+                selectAll.innerText = self.userOptions.translations.selectAll;
                 this.root.insertBefore(selectAll,(this.root.hasChildNodes())
                   ? this.root.childNodes[0]
                   : null);
@@ -178,7 +187,7 @@ function vanillaSelectBox(domSelector, options) {
             this.inputBox.setAttribute("type", "text");
             this.inputBox.setAttribute("id", "search_" + this.domSelector);
 
-            let fontSizeForP = this.isMultiple ? "9px" : "6px";
+            let fontSizeForP = this.isMultiple ? "12px" : "6px";
             var para = document.createElement("p");
             this.ul.appendChild(para);
             para.style.fontSize = fontSizeForP;
@@ -360,15 +369,16 @@ function vanillaSelectBox(domSelector, options) {
                 if (e.target.hasAttribute('data-selected')
                   && e.target.getAttribute('data-selected') === 'true') {
                     self.setValue([])
-                    e.target.innerText = 'Select All'
+                    e.target.innerText = self.userOptions.translations.selectAll;
                     e.target.setAttribute('data-selected', 'false')
                 } else {
                     let allValues = []
-                    e.target.innerText = 'Clear All'
+                    e.target.innerText = self.userOptions.translations.clearAll;
                     Array.prototype.slice.call(self.listElements).forEach(function (x) {
                         if (x.hasAttribute('data-value')
                           && x.getAttribute('data-value') !== 'all'
-                          && !x.classList.contains('hidden-search')) {
+                          && !x.classList.contains('hidden-search')
+                          && !x.classList.contains('disabled')) {
                             allValues.push(x.getAttribute('data-value'))
                         }
                     });
