@@ -52,7 +52,7 @@ selectBox.disableItems(['Lamborghini','Land Rover']);
 
 v0.51 : Translations for select all/clear all + minor css corrections + don't select disabled items
 
-v0.50 : PR by jaguerra2017 adding a select all/clear all check button + optgroup support !
+v0.50 : PR by @jaguerra2017 adding a select all/clear all check button + optgroup support !
 
 v 0.41 : Bug corrected, the menu content was misplaced if a css transform was applied on a parent
 
