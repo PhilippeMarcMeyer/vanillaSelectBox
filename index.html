@@ -125,7 +125,7 @@
             width: 220px;
         }
 
-        button.demo {
+        button.demo,a.demo {
             margin-right: 0;
             margin-left: 4px;
             text-align: center;
@@ -179,9 +179,10 @@
 <div id="container">
 	<p class="presentation">
 	<b>vanillaSelectBox()</b> <br/>
-	To train my vanilla js skills I redid my bootStrapSelect jQuery plugin without jQuery and without Bootstrap
+    To train my vanilla js skills I redid my bootStrapSelect jQuery plugin without jQuery and without Bootstrap
 	</p>
-	
+    <p><a  class="demo" href="ajaxDemo.html">AJAX DEMO</a></p>
+
 	<div class="demo-zone" style="text-align:left;" id="demo-single">
 		<label>Choose a brand in list : </label><select id="brandsOne"></select> 
 		<div class="btns-active">
@@ -252,6 +253,7 @@
 
 <script src="./vanillaSelectBox.js"></script>
 <script>
+
     let brands = ["Abarth", "Alfa Romeo", "Alpine", "Aston Martin", "Audi", "Bentley", "BMW", "Cadillac", "Chevrolet", "Citroën", "Cupra", "DACIA", "DS", "Ferrari", "Fiat", "Ford", "Honda", "Hyundai", "Infiniti", "Jaguar", "Jeep", "KIA", "Lamborghini", "Land Rover", "Lexus", "Lotus", "Maserati", "Mazda", "McLaren", "Mercedes-Benz", "MINI", "Mitsubishi", "Nissan", "Opel", "Peugeot", "Porsche", "Renault", "Rolls-Royce", "SEAT", "Skoda", "smart", "Ssangyong", "Subaru", "Suzuki", "Tesla", "Toyota", "Volkswagen", "Volvo"];
     let select1 = document.getElementById("brandsOne");
     var option = document.createElement("option");
