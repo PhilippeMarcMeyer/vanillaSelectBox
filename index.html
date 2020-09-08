@@ -181,7 +181,7 @@
 	<b>vanillaSelectBox()</b> <br/>
     To train my vanilla js skills I redid my bootStrapSelect jQuery plugin without jQuery and without Bootstrap
 	</p>
-    <p><a  class="demo" href="ajaxDemo.html">AJAX DEMO</a></p>
+    <p id="ajaxDemoLink"><a  class="demo" href="ajaxDemo.html">AJAX DEMO</a></p>
 
 	<div class="demo-zone" style="text-align:left;" id="demo-single">
 		<label>Choose a brand in list : </label><select id="brandsOne"></select> 
@@ -643,7 +643,8 @@ let allCountries = [
 {"name": "Zambia", "code": "ZM"},
 {"name": "Zimbabwe", "code": "ZW"}
 ];
-
+let timeTag = new Date().getTime();
+document.getElementById("ajaxDemoLink").setAttribute('href','ajaxDemo.html?v='+timeTag);
 let selectCountries = document.getElementById("allCountries");
 for (var i = 0;i < allCountries.length;i++) {
     var option = document.createElement("option");
