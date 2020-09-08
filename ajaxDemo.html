@@ -205,7 +205,7 @@ if (httpRequest) {
                 }
                 if(response && response.data){
                     buildSelect(response.data,"demo-ajax","demo-ajax-select");
-                    peopleVSB = new vanillaSelectBox("#demo-ajax-select",{ "maxHeight": 200, translations: { "all": "All", "items": "ppl" } });
+                    peopleVSB = new vanillaSelectBox("#demo-ajax-select",{ "maxHeight": 200, "search": true,translations: { "all": "All", "items": "ppl" } });
 
                 }
 
