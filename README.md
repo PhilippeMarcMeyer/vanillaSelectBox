@@ -2,7 +2,6 @@
 # vanillaSelectBox
 ### A nice select/multiselect ui with no dependency
 
-# WIP : 
 ### vanillaSelectBox is not currently in v1+, please test it carefully before using it in production (interactions with other plugins, css) and be kind enough to report any bug to me so I can improve it.
 
 ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/vanillaSelectBox.png)
