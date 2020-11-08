@@ -1,8 +1,3 @@
-[![Build Status][build-shield]]()
-[![Contributors][contributors-shield]]()
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
 
 # vanillaSelectBox
 ### A nice select/multiselect ui with no dependency
