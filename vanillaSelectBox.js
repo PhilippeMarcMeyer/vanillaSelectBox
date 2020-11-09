@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2020
 Distributed under the MIT License  
 
+vanillaSelectBox : v0.53 : if all the options of the select are selected then the check all checkbox is checked
 vanillaSelectBox : v0.52 : Better support of select('all') => command is consistent with checkbox and selecting / deselecting while searching select / uncheck only the found items
 vanillaSelectBox : v0.51 : Translations for select all/clear all + minor css corrections + don't select disabled items
 vanillaSelectBox : v0.50 : PR by jaguerra2017 adding a select all/clear all check button + optgroup support !
@@ -214,7 +215,7 @@ function vanillaSelectBox(domSelector, options) {
             }
             let li = document.createElement("li");
             let isSelected = x.hasAttribute("selected");
-          let isDisabled = x.hasAttribute("disabled");
+            let isDisabled = x.hasAttribute("disabled");
             self.ul.appendChild(li);
             li.setAttribute("data-value", value);
             li.setAttribute("data-text", text);
@@ -462,6 +463,7 @@ function vanillaSelectBox(domSelector, options) {
                     }
                 }
                 self.title.textContent = selectedTexts;
+
                 self.privateSendChange();
             }
             e.preventDefault();
@@ -482,6 +484,8 @@ function vanillaSelectBox(domSelector, options) {
         }
     }
     this.init();
+    this.checkUncheckAll();
+
 }
 
 vanillaSelectBox.prototype.disableItems = function (values) {
