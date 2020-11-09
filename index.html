@@ -202,7 +202,7 @@
 		</div>
     </div>
 
-    <div class="mini-demo-zone" > 
+    <div id="mini-demo-zone" class="demo-zone"> 
         <div>optgroup support : </div>
         <div> 
             <label for="dino-select">Choose a dinosaur:</label>
@@ -239,7 +239,26 @@
 		<div class="btns-inactive" style="display:none";>
 			<button class="demo" onClick="init('brandsMulti')">vanillaSelectBox()</button>
 		</div>
-	</div>
+    </div>
+    
+    <div class="demo-zone">
+        <label><b>All selected test : </b></label>
+        <select id="demoShort" multiple="" size="3" style="display: inline-block;">
+            <option value="Abarth" selected="true">Abarth</option>
+            <option value="Alfa Romeo"  selected="true"">Alfa Romeo</option>
+            <option value="Alpine" selected="true">Alpine</option>
+            <option value="Aston Martin" selected="true">Aston Martin</option>
+            <option value="Audi" selected="true">Audi</option>
+            <option value="Bentley" selected="true">Bentley</option>
+            <option value="BMW" selected="true">BMW</option>
+            <option value="Cadillac" selected="true">Cadillac</option>
+            <option value="Chevrolet" selected="true">Chevrolet</option>
+            <option value="Citroën" selected="true">Citroën</option>
+            <option value="Cupra" selected="true">Cupra</option>
+            <option value="DACIA" selected="true">DACIA</option>
+        </select>
+    
+    </div>
     <div style="width:100%;">
         <div class="demo-zone" id="demo-stay" style="width:40%;display:inline-block;">
             <label>Stay open : </label><br/><select id="brandsMultiStay" multiple size="3"></select>
@@ -353,7 +372,8 @@
             buttons = zone.querySelector(".btns-inactive");
             buttons.style.display = "none";
         } else if (id == "brandsMulti") {
-            selectBox2 = new vanillaSelectBox("#brandsMulti", { "maxHeight": 200, "search": true ,"translations": { "all": "All", "items": "items","selectAll":"Check All","clearAll":"Clear All"}});
+        
+            selectBox2 = new vanillaSelectBox("#brandsMulti", {"disableSelectAll": true, "maxHeight": 200, "search": true ,"translations": { "all": "All", "items": "items","selectAll":"Check All","clearAll":"Clear All"}});
             let zone = document.getElementById("demo-multiple");
             buttons = zone.querySelector(".btns-active");
             buttons.style.display = "block";
@@ -397,6 +417,13 @@
     init("brandsOne");
     init("brandsMulti");
 	init("brandsMultiStay");
+    selectBoxTest = new vanillaSelectBox("#demoShort", {
+        "maxHeight": 200, 
+        "search": true ,
+        "translations": { "all": "All", "items": "items","selectAll":"Check All","clearAll":"Clear All"}
+    });
+
+    
 	
 let allCountries = [
 {"name": "Afghanistan", "code": "AF"},

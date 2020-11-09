@@ -49,6 +49,9 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History :
+
+v0.53 : if all the options of the select are selected then the check all checkbox is checked => see demo "select all test"
+
 v0.52 : Better support of select('all') => command is consistent with checkbox and selecting / deselecting while searching select / uncheck only the found items
 
 v0.51 : Translations for select all/clear all + minor css corrections + don't select disabled items
