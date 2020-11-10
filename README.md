@@ -36,6 +36,11 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 ```
 <select id="brands" multiple size="3">
 ```
+#### Result :
+
+![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/sizeMatters.png)
+
+
 ### Available commands :
 * empty()
 * setValue([] || '' || 'all') => the multiple uses an array of values or a comma separated string or the string 'all'
