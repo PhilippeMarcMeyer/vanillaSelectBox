@@ -464,6 +464,7 @@ function vanillaSelectBox(domSelector, options) {
                 }
                 self.title.textContent = selectedTexts;
 
+                self.checkUncheckAll();
                 self.privateSendChange();
             }
             e.preventDefault();
