@@ -55,6 +55,8 @@ selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History :
 
+v0.54 : if all the options of the select are selected by the user then the check all checkbox is checked.
+
 v0.53 : if all the options of the select are selected then the check all checkbox is checked => see demo "select all test"
 
 v0.52 : Better support of select('all') => command is consistent with checkbox and selecting / deselecting while searching select / uncheck only the found items
