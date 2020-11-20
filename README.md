@@ -4,7 +4,7 @@
 
 ### vanillaSelectBox is not currently in v1+, please test it carefully before using it in production (interactions with other plugins, css) and be kind enough to report any bug to me so I can improve it. 
 
-I think one improvement would be to integrate the css as style tags because there are still interferences between the document and vanillaSelectBox
+I think one improvement would be to integrate the css as style tags because there are still css interferences between the document and vanillaSelectBox
 
 What do you think ?
 
