@@ -59,7 +59,9 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History :
-
+v0.55 : All attributes from the original select options are copied to the selectBox element.
+        Excepted => "selected","disabled","data-text","data-value","style"
+        
 v0.54 : if all the options of the select are selected by the user then the check all checkbox is checked.
 
 v0.53 : if all the options of the select are selected then the check all checkbox is checked => see demo "select all test"

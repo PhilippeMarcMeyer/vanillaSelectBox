@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2020
 Distributed under the MIT License  
 
+vanillaSelectBox : v0.55 : All attributes from the original select options are copied to the selectBox element
 vanillaSelectBox : v0.54 : if all the options of the select are selected by the user then the check all checkbox is checked
 vanillaSelectBox : v0.53 : if all the options of the select are selected then the check all checkbox is checked
 vanillaSelectBox : v0.52 : Better support of select('all') => command is consistent with checkbox and selecting / deselecting while searching select / uncheck only the found items
@@ -65,6 +66,8 @@ function vanillaSelectBox(domSelector, options) {
     this.disabledItems = [];
     this.ulminWidth = 140;
     this.ulminHeight = 25;
+    this.forbidenAttributes = ["class","selected","disabled","data-text","data-value","style"]; 
+    this.forbidenClasses= ["active","disabled"]; 
     this.userOptions = {
         maxWidth: 500,
         maxHeight: 400,
@@ -205,27 +208,40 @@ function vanillaSelectBox(domSelector, options) {
         Array.prototype.slice.call(this.options).forEach(function (x) {
             let text = x.textContent;
             let value = x.value;
+            let originalAttrs;
+            if (x.hasAttributes()) {
+                originalAttrs = Array.prototype.slice.call(x.attributes)
+                    .filter(function(a){
+                        return self.forbidenAttributes.indexOf(a.name) === -1
+                    });
+            }
             let classes = x.getAttribute("class");
             if(classes)
             {
-                classes=classes.split(" ");
-            }
-            else
+                classes=classes
+                    .split(" ")
+                    .filter(function(c){
+                        return self.forbidenClasses.indexOf(c) === -1
+                    });
+            }else
             {
                 classes=[];
             }
             let li = document.createElement("li");
             let isSelected = x.hasAttribute("selected");
             let isDisabled = x.hasAttribute("disabled");
+
             self.ul.appendChild(li);
             li.setAttribute("data-value", value);
             li.setAttribute("data-text", text);
-            if (classes.length != 0) {
-                classes.forEach(function(x){
-                    li.classList.add(x);
-                });
 
-            }
+            originalAttrs.forEach(function(a){
+                li.setAttribute(a.name, a.value);
+            });
+
+            classes.forEach(function(x){
+                li.classList.add(x);
+            });
             if (isSelected) {
                 nrActives++;
                 selectedTexts += sep + text;
