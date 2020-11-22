@@ -24,6 +24,7 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 
 ### Available options : 
 * maxWidth : for the UI if you don't want the title to expand to much to the right
+* minWidth : for the UI if you don't want the title to be to narrow (combining both, you've got a fixed width)
 * maxHeight : the maxHeight set a scroll when there are too many items 
 * translations : { "all": "Tous", "items": "éléments","selectAll":"Tout sélectionner","clearAll":"Effacer"}
 * search : true/false, to provide a search input text to reduce the list
@@ -59,6 +60,9 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History :
+v0.56 : The multiselect checkboxes are a little smaller, maxWidth option is now working + added minWidth option as well
+        The button has now a style attribute to protect its appearance 
+
 v0.55 : All attributes from the original select options are copied to the selectBox element.
         Excepted => "selected","disabled","data-text","data-value","style"
         

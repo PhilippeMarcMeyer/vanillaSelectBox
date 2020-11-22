@@ -155,7 +155,7 @@ li.disabled{
 	border : 1px solid;
 	border-radius : 3px;
 	padding : 7px;
-	margin-top:2px;
+	margin-top:0px;
 	color:black;
 }
 
@@ -168,9 +168,9 @@ li.disabled{
 	margin-left:-18px;
 	display: inline-block;
 	transform: rotate(45deg);
-	margin-top:2px;
-	height: 10px;
-	width:  6px;
+	margin-top:1px;
+	height: 8px;
+	width:  5px;
 	border-bottom: 3px solid black;
 	border-right:  3px solid black;
 }

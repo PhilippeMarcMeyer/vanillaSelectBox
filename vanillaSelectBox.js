@@ -2,6 +2,8 @@
 Copyright (C) Philippe Meyer 2019-2020
 Distributed under the MIT License  
 
+vanillaSelectBox : v0.56 : The multiselect checkboxes are a little smaller, maxWidth option is now working + added minWidth option as well
+                           The button has now a style attribute to protect its appearance 
 vanillaSelectBox : v0.55 : All attributes from the original select options are copied to the selectBox element
 vanillaSelectBox : v0.54 : if all the options of the select are selected by the user then the check all checkbox is checked
 vanillaSelectBox : v0.53 : if all the options of the select are selected then the check all checkbox is checked
@@ -70,6 +72,7 @@ function vanillaSelectBox(domSelector, options) {
     this.forbidenClasses= ["active","disabled"]; 
     this.userOptions = {
         maxWidth: 500,
+        minWidth:-1,
         maxHeight: 400,
         translations: { "all": "All", "items": "items","selectAll":"Select All","clearAll":"Clear All"},
         search: false,
@@ -80,6 +83,9 @@ function vanillaSelectBox(domSelector, options) {
     if (options) {
         if (options.maxWidth != undefined) {
             this.userOptions.maxWidth = options.maxWidth;
+        }
+        if (options.maxWidth != undefined) {
+            this.userOptions.minWidth = options.minWidth;
         }
         if (options.maxHeight != undefined) {
             this.userOptions.maxHeight = options.maxHeight;
@@ -120,6 +126,35 @@ function vanillaSelectBox(domSelector, options) {
         }
     }
 
+    this.getCssArray =function(selector){
+        let cssArray = [];
+    if(selector === ".vsb-main button"){
+       cssArray= [
+                {"key":"min-width","value":"120px"},
+                {"key":"border-radius","value":"0"},
+                {"key":"width","value":"100%"},
+                {"key":"text-align","value":"left"},
+                {"key":"z-index","value":"1"},
+                {"key":"color","value":"#333"},
+                {"key":"background","value":"white !important"},
+                {"key":"border","value":"1px solid #999 !important"},
+                {"key":"line-height","value":"20px"},
+                {"key":"font-size","value":"14px"},
+                {"key":"padding","value":"6px 12px"}
+                ]
+        }
+    
+        return cssArrayToString(cssArray);
+    
+        function cssArrayToString(cssList){
+            let list = "";
+            cssList.forEach(function(x){
+                list += x.key + ":" + x.value + ";";
+            });
+            return list;
+        }
+    }
+
     this.init = function () {
         let self = this;
         this.root.style.display = "none";
@@ -136,8 +171,19 @@ function vanillaSelectBox(domSelector, options) {
             this.main.style.minHeight =  (this.userOptions.maxHeight+10) + "px";
         }
 
-        let btnTag = self.userOptions.stayOpen ? "div" : "button";
-        this.button = document.createElement(btnTag);
+        if(self.userOptions.stayOpen){
+            this.button = document.createElement("div");
+        }else{
+            this.button = document.createElement("button");
+            var cssList = self.getCssArray(".vsb-main button");
+            this.button.setAttribute("style", cssList);
+        }
+        this.button.style.maxWidth = this.userOptions.maxHeight + "px";
+        if(this.userOptions.minWidth !== -1){
+            this.button.style.minWidth = this.userOptions.minWidth + "px";
+        }
+
+        
 
         this.main.appendChild(this.button);
         this.title = document.createElement("span");
@@ -588,6 +634,7 @@ vanillaSelectBox.prototype.checkUncheckAll = function () {
         }
     }
 }
+
 
 vanillaSelectBox.prototype.setValue = function (values) {
     let self = this;

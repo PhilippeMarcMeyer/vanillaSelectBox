@@ -365,7 +365,7 @@
     }
     function init(id) {
         if (id == "brandsOne") {
-            selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": true, "placeHolder": "Choose a brand..." });
+            selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200,"maxWidth":178,"minWidth":178, "search": true, "placeHolder": "Choose a brand..." });
             let zone = document.getElementById("demo-single");
             buttons = zone.querySelector(".btns-active");
             buttons.style.display = "block";
