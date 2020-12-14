@@ -281,13 +281,16 @@ function vanillaSelectBox(domSelector, options) {
             li.setAttribute("data-value", value);
             li.setAttribute("data-text", text);
 
-            originalAttrs.forEach(function(a){
-                li.setAttribute(a.name, a.value);
-            });
-
+            if(originalAttrs !== undefined){
+                originalAttrs.forEach(function(a){
+                    li.setAttribute(a.name, a.value);
+                });
+            }
+            
             classes.forEach(function(x){
                 li.classList.add(x);
             });
+
             if (isSelected) {
                 nrActives++;
                 selectedTexts += sep + text;
