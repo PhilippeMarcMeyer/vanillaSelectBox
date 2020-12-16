@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2020
 Distributed under the MIT License  
 
+vanillaSelectBox : v0.57 : Added an input of type hidden with a name attribute equal to the select id which holds the selected options delimited by commas
 vanillaSelectBox : v0.56 : The multiselect checkboxes are a little smaller, maxWidth option is now working + added minWidth option as well
                            The button has now a style attribute to protect its appearance 
 vanillaSelectBox : v0.55 : All attributes from the original select options are copied to the selectBox element
@@ -157,11 +158,21 @@ function vanillaSelectBox(domSelector, options) {
 
     this.init = function () {
         let self = this;
+        if(!self.root.id){
+            self.root.id = "VSB_" + getRandomInt(1024000000);
+        }
         this.root.style.display = "none";
         let already = document.getElementById("btn-group-" + self.domSelector);
         if (already) {
             already.remove();
         }
+        let inputHidden = document.createElement("input");
+        inputHidden.setAttribute("type","hidden");
+        inputHidden.setAttribute("name", self.root.id)
+        inputHidden.setAttribute("value","");
+
+        this.root.parentNode.insertBefore(inputHidden , this.root.nextSibling);
+
         this.main = document.createElement("div");
         this.root.parentNode.insertBefore(this.main, this.root.nextSibling);
         this.main.classList.add("vsb-main");
@@ -182,8 +193,6 @@ function vanillaSelectBox(domSelector, options) {
         if(this.userOptions.minWidth !== -1){
             this.button.style.minWidth = this.userOptions.minWidth + "px";
         }
-
-        
 
         this.main.appendChild(this.button);
         this.title = document.createElement("span");
@@ -552,7 +561,7 @@ function vanillaSelectBox(domSelector, options) {
     }
     this.init();
     this.checkUncheckAll();
-
+    this.privateSendChange();
 }
 
 vanillaSelectBox.prototype.disableItems = function (values) {
@@ -761,7 +770,15 @@ vanillaSelectBox.prototype.privateSendChange = function () {
     let event = document.createEvent('HTMLEvents');
     event.initEvent('change', true, false);
     this.root.dispatchEvent(event);
-
+    let name = this.root.id;
+    let result = [];
+    let collection = document.querySelectorAll("#" + this.root.id + " option");
+    collection.forEach(function (x) {
+        if (x.selected) {
+            result.push(x.value);
+        }
+        document.querySelector("input[name='"+name+"']").value = result.join(",");
+    });
 }
 
 	vanillaSelectBox.prototype.empty = function () {

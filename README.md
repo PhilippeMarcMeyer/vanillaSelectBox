@@ -60,6 +60,8 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History :
+v0.57 : Added an input of type hidden with a name attribute equal to the select id which holds the selected options delimited by commas
+
 v0.56 : The multiselect checkboxes are a little smaller, maxWidth option is now working + added minWidth option as well
         The button has now a style attribute to protect its appearance 
 
