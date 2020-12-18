@@ -2,6 +2,8 @@
 # vanillaSelectBox v 0.56
 ### A nice select/multiselect ui with no dependency
 
+### New : you can use the discussions page to help me improve this little tool or even suggest other plugins
+
 ### vanillaSelectBox is not currently in v1+, please test it carefully before using it in production (interactions with other plugins, css) and be kind enough to report any bug to me so I can improve it. 
 
 I think one improvement would be to integrate the css as style tags because there are still css interferences between the document and vanillaSelectBox
