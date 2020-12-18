@@ -1,5 +1,5 @@
 
-# vanillaSelectBox v 0.57
+# vanillaSelectBox v 0.56
 ### A nice select/multiselect ui with no dependency
 
 ### vanillaSelectBox is not currently in v1+, please test it carefully before using it in production (interactions with other plugins, css) and be kind enough to report any bug to me so I can improve it. 
@@ -60,7 +60,6 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History :
-v0.57 : Added an input of type hidden with a name attribute equal to the select id which holds the selected options delimited by commas
 
 v0.56 : The multiselect checkboxes are a little smaller, maxWidth option is now working + added minWidth option as well
         The button has now a style attribute to protect its appearance 
