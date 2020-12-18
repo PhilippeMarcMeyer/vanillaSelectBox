@@ -1,5 +1,6 @@
 
-# vanillaSelectBox v 0.57
+# vanillaSelectBox v 0.57 (archive : master branch was reverted to 0.56 due to performance issues)
+
 ### A nice select/multiselect ui with no dependency
 
 ### vanillaSelectBox is not currently in v1+, please test it carefully before using it in production (interactions with other plugins, css) and be kind enough to report any bug to me so I can improve it. 
@@ -11,7 +12,7 @@ What do you think ?
 
 ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/vanillaSelectBox.png)
 
-Demo : https://philippemarcmeyer.github.io/vanillaSelectBox/
+Demo : no demo for this branch
 
 ### Transform an HTML select into a selectBox dropdown
 #### the select is hidden and the chosen value(s) is/are available in the source select
