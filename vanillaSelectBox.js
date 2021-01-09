@@ -126,10 +126,9 @@ function vanillaSelectBox(domSelector, options) {
         }
     }
 
-    this.getCssArray =function(selector){
-        let cssArray = [];
-    if(selector === ".vsb-main button"){
-       cssArray= [
+    this.setButtonCss =function(){
+       let self = this;
+       let cssArray= [
                 {"key":"min-width","value":"120px"},
                 {"key":"border-radius","value":"0"},
                 {"key":"width","value":"100%"},
@@ -141,18 +140,15 @@ function vanillaSelectBox(domSelector, options) {
                 {"key":"line-height","value":"20px"},
                 {"key":"font-size","value":"14px"},
                 {"key":"padding","value":"6px 12px"}
-                ]
-        }
-    
-        return cssArrayToString(cssArray);
-    
-        function cssArrayToString(cssList){
-            let list = "";
-            cssList.forEach(function(x){
-                list += x.key + ":" + x.value + ";";
-            });
-            return list;
-        }
+                ];
+                let list = "";
+                cssArray.forEach(function(x){
+                    var classStyles = window.getComputedStyle(self.button, null);
+                    var styleItem = classStyles.getPropertyValue(x.key);
+                    x.value = styleItem != null ? styleItem : x.value;
+                    list += x.key + ":" + x.value + ";";
+                });
+                self.button.setAttribute("style", list);
     }
 
     this.init = function () {
@@ -176,9 +172,8 @@ function vanillaSelectBox(domSelector, options) {
             this.button = document.createElement("div");
         }else{
             this.button = document.createElement("button");
-            var cssList = self.getCssArray(".vsb-main button");
-            this.button.setAttribute("style", cssList);
         }
+
         this.button.style.maxWidth = this.userOptions.maxHeight + "px";
         if(this.userOptions.minWidth !== -1){
             this.button.style.minWidth = this.userOptions.minWidth + "px";
@@ -201,6 +196,8 @@ function vanillaSelectBox(domSelector, options) {
 			this.title.style.paddingLeft = "20px";
 			this.title.style.fontStyle = "italic";
 			this.title.style.verticalAlign = "20%";
+        }else{
+            self.setButtonCss();
         }
 
         this.drop = document.createElement("div");
