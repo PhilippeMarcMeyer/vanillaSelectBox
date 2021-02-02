@@ -1,7 +1,7 @@
 /*
-Copyright (C) Philippe Meyer 2019-2020
+Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License  
-
+vanillaSelectBox : v0.57 : Bug fix (minWidth option not honored)
 vanillaSelectBox : v0.56 : The multiselect checkboxes are a little smaller, maxWidth option is now working + added minWidth option as well
                            The button has now a style attribute to protect its appearance 
 vanillaSelectBox : v0.55 : All attributes from the original select options are copied to the selectBox element
@@ -84,7 +84,7 @@ function vanillaSelectBox(domSelector, options) {
         if (options.maxWidth != undefined) {
             this.userOptions.maxWidth = options.maxWidth;
         }
-        if (options.maxWidth != undefined) {
+        if (options.minWidth != undefined) {
             this.userOptions.minWidth = options.minWidth;
         }
         if (options.maxHeight != undefined) {
