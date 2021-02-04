@@ -116,7 +116,7 @@ function vanillaSelectBox(domSelector, options) {
     this.closeOrder=function(){
         let self = this;
         if(!self.userOptions.stayOpen){
-            self.drop.style.display = "none";
+            self.drop.style.visibility = "hidden";
             if(self.search){
                 self.inputBox.value = "";
                 Array.prototype.slice.call(self.listElements).forEach(function (x) {
@@ -428,7 +428,7 @@ function vanillaSelectBox(domSelector, options) {
         }
 
 		if(self.userOptions.stayOpen){
-            self.drop.style.display = "block";
+            self.drop.style.visibility = "visible";
 			self.drop.style.boxShadow = "none";
 			self.drop.style.minHeight =  (this.userOptions.maxHeight+10) + "px";
 			self.drop.style.position = "relative";
@@ -440,7 +440,7 @@ function vanillaSelectBox(domSelector, options) {
 				if (self.isDisabled) return;
                     self.drop.style.left = self.left + "px";
                     self.drop.style.top = self.top + "px";
-                    self.drop.style.display = "block";
+                    self.drop.style.visibility = "visible";
                     document.addEventListener("click", docListener);
                     e.preventDefault();
                     e.stopPropagation();
@@ -540,7 +540,7 @@ function vanillaSelectBox(domSelector, options) {
         });
         function docListener() {
             document.removeEventListener("click", docListener);
-            self.drop.style.display = "none";
+            self.drop.style.visibility = "hidden";
             if(self.search){
                 self.inputBox.value = "";
                 Array.prototype.slice.call(self.listElements).forEach(function (x) {
