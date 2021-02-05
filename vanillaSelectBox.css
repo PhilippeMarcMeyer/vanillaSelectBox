@@ -5,7 +5,8 @@
 .vsb-menu{
   cursor:pointer;
   z-index:1000;
-  display:none;
+	display:block;
+	visibility: hidden;
   position:absolute;/*Don't change*/
   border:1px solid #B2B2B2;
   background-color: #fff;
