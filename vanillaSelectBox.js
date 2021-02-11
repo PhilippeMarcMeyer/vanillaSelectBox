@@ -1,6 +1,8 @@
 /*
 Copyright (C) Philippe Meyer 2019-2021
-Distributed under the MIT License  
+Distributed under the MIT License 
+
+vanillaSelectBox : v0.58 : Bug fixes
 vanillaSelectBox : v0.57 : Bug fix (minWidth option not honored)
 vanillaSelectBox : v0.56 : The multiselect checkboxes are a little smaller, maxWidth option is now working + added minWidth option as well
                            The button has now a style attribute to protect its appearance 
