@@ -551,7 +551,6 @@ function vanillaSelectBox(domSelector, options) {
     }
     this.init();
     this.checkUncheckAll();
-    this.privateSendChange();
 }
 
 vanillaSelectBox.prototype.disableItems = function (values) {
