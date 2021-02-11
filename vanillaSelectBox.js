@@ -179,7 +179,7 @@ function vanillaSelectBox(domSelector, options) {
             var cssList = self.getCssArray(".vsb-main button");
             this.button.setAttribute("style", cssList);
         }
-        this.button.style.maxWidth = this.userOptions.maxHeight + "px";
+        this.button.style.maxWidth = this.userOptions.maxWidth + "px";
         if(this.userOptions.minWidth !== -1){
             this.button.style.minWidth = this.userOptions.minWidth + "px";
         }
