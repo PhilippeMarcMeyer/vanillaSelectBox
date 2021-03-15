@@ -81,6 +81,17 @@ function vanillaSelectBox(domSelector, options) {
         placeHolder: "",
 		stayOpen:false,
         disableSelectAll: false,
+        mode : "light", // light|dark
+        lightMode : {
+            "color":"#333",
+            "background-color":"white !important",
+            "border":"1px solid #999 !important"
+        },
+        darkMode : {
+            "color":"#ccc",
+            "background-color":"#333 !important",
+            "border":"1px solid #999 !important"
+        }
     }
     if (options) {
         if (options.maxWidth != undefined) {
@@ -113,6 +124,45 @@ function vanillaSelectBox(domSelector, options) {
         if (options.disableSelectAll != undefined) {
             this.userOptions.disableSelectAll = options.disableSelectAll;
         }
+        if (options.mode != undefined) {
+            if(options.mode == "dark"){
+                this.userOptions.mode = "dark";
+            }
+        }
+        if (options.lightMode != undefined) {
+            if (options.lightMode.color != undefined) {
+                this.userOptions.lightMode.color = options.lightMode.color;
+            }
+            if (options.lightMode["background-color"] != undefined) {
+                this.userOptions.lightMode["background-color"] = options.lightMode["background-color"] ;
+                if(this.userOptions.lightMode["background-color"].indexOf("!important") == -1 ){
+                    this.userOptions.lightMode["background-color"] += " !important";
+                }
+            }
+            if (options.lightMode.border != undefined) {
+                this.userOptions.lightMode.border = options.lightMode.border;
+                if(this.userOptions.lightMode.border.indexOf("!important") == -1 ){
+                    this.userOptions.lightMode.border += " !important";
+                }
+            }
+        }
+        if (options.darkMode != undefined) {
+            if (options.darkMode.color != undefined) {
+                this.userOptions.darkMode.color = options.darkMode.color;
+            }
+            if (options.darkMode["background-color"] != undefined) {
+                this.userOptions.darkMode["background-color"] = options.darkMode["background-color"] ;
+                if(this.userOptions.darkMode["background-color"].indexOf("!important") == -1 ){
+                    this.userOptions.darkMode["background-color"] += " !important";
+                }
+            }
+            if (options.darkMode.border != undefined) {
+                this.userOptions.darkMode.border = options.darkMode.border;
+                if(this.userOptions.darkMode.border.indexOf("!important") == -1 ){
+                    this.userOptions.darkMode.border += " !important";
+                }
+            }
+        }
     }
 
     this.closeOrder=function(){
@@ -128,31 +178,39 @@ function vanillaSelectBox(domSelector, options) {
         }
     }
 
-    this.getCssArray =function(selector){
-        let cssArray = [];
-    if(selector === ".vsb-main button"){
-       cssArray= [
-                {"key":"min-width","value":"120px"},
-                {"key":"border-radius","value":"0"},
-                {"key":"width","value":"100%"},
-                {"key":"text-align","value":"left"},
-                {"key":"z-index","value":"1"},
-                {"key":"color","value":"#333"},
-                {"key":"background","value":"white !important"},
-                {"key":"border","value":"1px solid #999 !important"},
-                {"key":"line-height","value":"20px"},
-                {"key":"font-size","value":"14px"},
-                {"key":"padding","value":"6px 12px"}
-                ]
+    this.getMandatoryCss = function (selector) {
+        let cssMandatories = {};
+        if (selector === ".vsb-main button") {
+            cssMandatories =
+            {
+                "min-width": "120px",
+                "border-radius": "0",
+                "width": "100%",
+                "text-align": "left",
+                "z-index": "1",
+                "line-height": "20px",
+                "font-size": "14px",
+                "padding": "6px 12px"
+            }
+            if (this.userOptions.mode == "dark") {
+                for (const prop in this.userOptions.darkMode) {
+                    cssMandatories[prop] = this.userOptions.darkMode[prop];
+                  }
+            } else {
+                for (const prop in this.userOptions.lightMode) {
+                    cssMandatories[prop] = this.userOptions.lightMode[prop];
+                  }
+            }
+
         }
-    
-        return cssArrayToString(cssArray);
-    
-        function cssArrayToString(cssList){
+
+        return cssMandatoriesToString(cssMandatories);
+
+        function cssMandatoriesToString(cssList) {
             let list = "";
-            cssList.forEach(function(x){
-                list += x.key + ":" + x.value + ";";
-            });
+            for (const prop in cssMandatories) {
+                list +=  `${prop}: ${cssMandatories[property]};`;
+              }
             return list;
         }
     }
@@ -178,7 +236,7 @@ function vanillaSelectBox(domSelector, options) {
             this.button = document.createElement("div");
         }else{
             this.button = document.createElement("button");
-            var cssList = self.getCssArray(".vsb-main button");
+            var cssList = self.getMandatoryCss(".vsb-main button");
             this.button.setAttribute("style", cssList);
         }
         this.button.style.maxWidth = this.userOptions.maxWidth + "px";
