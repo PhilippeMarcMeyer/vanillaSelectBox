@@ -209,7 +209,7 @@ function vanillaSelectBox(domSelector, options) {
         function cssMandatoriesToString(cssList) {
             let list = "";
             for (const prop in cssMandatories) {
-                list +=  `${prop}: ${cssMandatories[property]};`;
+                list +=  prop + ":" + cssMandatories[prop] + ";"; //es5 keep IE compatibility...
               }
             return list;
         }
@@ -266,6 +266,8 @@ function vanillaSelectBox(domSelector, options) {
         this.drop = document.createElement("div");
         this.main.appendChild(this.drop);
         this.drop.classList.add("vsb-menu");
+        if (this.userOptions.mode == "dark") this.drop.classList.add("dark");
+
         this.drop.style.zIndex = 2000 - this.instanceOffset;
         this.ul = document.createElement("ul");
         this.drop.appendChild(this.ul);
@@ -273,6 +275,7 @@ function vanillaSelectBox(domSelector, options) {
         this.ul.style.maxHeight = this.userOptions.maxHeight + "px";
         this.ul.style.minWidth = this.ulminWidth + "px";
         this.ul.style.minHeight = this.ulminHeight + "px";
+
         if (this.isMultiple) {
             this.ul.classList.add("multi");
             if (!self.userOptions.disableSelectAll) {

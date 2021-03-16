@@ -289,8 +289,8 @@
 
         if (i == 23) option.setAttribute("selected", true);
         let colorClass = "";
-        if (i > 2)
-            option.classList.add(i % 2 == 0 ? "darkRed" : "darkBlue")
+  //      if (i > 2)
+    //        option.classList.add(i % 2 == 0 ? "darkRed" : "darkBlue")
         select1.appendChild(option);
     }
     let select2 = document.getElementById("brandsMulti");
@@ -415,11 +415,12 @@
     }
 
     init("brandsOne");
-    init("brandsMulti");
-	init("brandsMultiStay");
+    //init("brandsMulti");
+	//init("brandsMultiStay");
     selectBoxTest = new vanillaSelectBox("#demoShort", {
         "maxHeight": 200, 
         "search": true ,
+        "mode":"dark",
         "translations": { "all": "All", "items": "items","selectAll":"Check All","clearAll":"Clear All"}
     });
 	
@@ -677,7 +678,7 @@ for (var i = 0;i < allCountries.length;i++) {
     option.text = allCountries[i].name;
     selectCountries.appendChild(option);
 }
-let selectBox4 = new vanillaSelectBox("#allCountries", { "maxHeight": 200, "search": true,"stayOpen":true,translations: { "all": "All", "items": "Countries" } });
-let selecDino = new vanillaSelectBox("#dino-select",{ "maxHeight": 200, translations: { "all": "All", "items": "Dinos" } });
+//let selectBox4 = new vanillaSelectBox("#allCountries", { "maxHeight": 200, "search": true,"stayOpen":true,translations: { "all": "All", "items": "Countries" } });
+//let selecDino = new vanillaSelectBox("#dino-select",{ "maxHeight": 200, translations: { "all": "All", "items": "Dinos" } });
         </script>
 </html>
