@@ -1,5 +1,5 @@
 
-# vanillaSelectBox v 0.58
+# vanillaSelectBox v 0.59
 ### A nice select/multiselect ui with no dependency
 
 ### New : you can use the discussions page to help me improve this little tool or even suggest other plugins
@@ -62,6 +62,8 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History : 
+
+v0.59 : Bug fix : search box was overlapping first item in single selects
 
 v0.58 : Bug fixes
 
