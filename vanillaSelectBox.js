@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v0.59 : Bug fix : search box was overlapping first item in single selects
 vanillaSelectBox : v0.58 : Bug fixes
 vanillaSelectBox : v0.57 : Bug fix (minWidth option not honored)
 vanillaSelectBox : v0.56 : The multiselect checkboxes are a little smaller, maxWidth option is now working + added minWidth option as well
@@ -243,10 +244,9 @@ function vanillaSelectBox(domSelector, options) {
             this.inputBox.setAttribute("type", "text");
             this.inputBox.setAttribute("id", "search_" + this.rootToken);
 
-            let fontSizeForP = this.isMultiple ? "12px" : "6px";
             var para = document.createElement("p");
             this.ul.appendChild(para);
-            para.style.fontSize = fontSizeForP;
+            para.style.fontSize = "12px";
             para.innerHTML = "&nbsp;";
             this.ul.addEventListener("scroll", function (e) {
                 var y = this.scrollTop;
