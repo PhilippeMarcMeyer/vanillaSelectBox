@@ -36,10 +36,8 @@ let VSBoxCounter = function () {
                return x.offset != instanceNr;
             })
             instances = temp.splice(0);
-            temp = [];
         },
         closeAllButMe:function(instanceNr){
-            let temp = [];
             instances.forEach(function(x){
                 if(x.offset != instanceNr){
                     x.ptr.closeOrder();
