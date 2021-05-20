@@ -84,7 +84,7 @@ function vanillaSelectBox(domSelector, options) {
         search: false,
         placeHolder: "",
 		stayOpen:false,
-        disableSelectAll: false,
+        disableSelectAll: false
     }
     if (options) {
         if (options.maxWidth != undefined) {
@@ -322,7 +322,13 @@ function vanillaSelectBox(domSelector, options) {
             Array.prototype.slice.call(groups).forEach(function(group) {
                 let groupOptions = group.querySelectorAll('option');
                 let li = document.createElement("li");
+                let dataWay = group.getAttribute("data-way");
+                if(!dataWay) dataWay = "closed";
+                if(!dataWay || (dataWay !== "closed" && dataWay !== "opened") ) dataWay = "closed";
+
+                self.ul.appendChild(li);
                 li.classList.add('grouped-option');
+                li.classList.add(dataWay);
                 self.currentOptgroup ++;
                 let optId = self.rootToken+"-opt-"+self.currentOptgroup;
                 li.id = optId;
@@ -341,6 +347,7 @@ function vanillaSelectBox(domSelector, options) {
                     {
                         classes=[];
                     }
+                    classes.push(dataWay);
                     let li = document.createElement("li");
                     let isSelected = x.hasAttribute("selected");
                     self.ul.appendChild(li);
@@ -351,7 +358,6 @@ function vanillaSelectBox(domSelector, options) {
                         classes.forEach(function(x){
                             li.classList.add(x);
                         });
-
                     }
                     if (isSelected) {
                         nrActives++;

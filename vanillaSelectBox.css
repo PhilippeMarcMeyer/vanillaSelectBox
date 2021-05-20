@@ -119,7 +119,7 @@ li.disabled{
 }
 
 
-.vsb-menu li.grouped-option::before {
+.vsb-menu li.grouped-option.opened::before {
 	content: "";
 	display: inline-block;
 	font-size: inherit;
