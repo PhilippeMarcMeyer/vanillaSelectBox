@@ -2,6 +2,15 @@
 	display: none !important;
 }
 
+
+li[data-parent].closed:not(.shown-search){
+	display:none !important;
+}
+
+li[data-parent].open:not(.hidden-search){
+	display:block !important;
+}
+
 .vsb-menu{
   cursor:pointer;
   z-index:1000;
@@ -117,7 +126,6 @@ li.disabled{
 	font-size: 15px;
 	margin-left:10px;
 }
-
 
 .vsb-menu li.grouped-option.opened::before {
 	content: "";

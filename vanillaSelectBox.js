@@ -324,7 +324,7 @@ function vanillaSelectBox(domSelector, options) {
                 let li = document.createElement("li");
                 let dataWay = group.getAttribute("data-way");
                 if(!dataWay) dataWay = "closed";
-                if(!dataWay || (dataWay !== "closed" && dataWay !== "opened") ) dataWay = "closed";
+                if(!dataWay || (dataWay !== "closed" && dataWay !== "open") ) dataWay = "closed";
 
                 self.ul.appendChild(li);
                 li.classList.add('grouped-option');
@@ -404,6 +404,7 @@ function vanillaSelectBox(domSelector, options) {
                             selectAll = x;
                         }else{
                             x.classList.remove("hidden-search");
+                            x.classList.remove("shown-search");
                             nrFound++;
                             nrChecked += x.classList.contains('active');
                         }
@@ -413,10 +414,12 @@ function vanillaSelectBox(domSelector, options) {
                         if (x.getAttribute('data-value') !== 'all') {
                             let text = x.getAttribute("data-text").toUpperCase();
                             if (text.indexOf(searchValue) === -1 && x.getAttribute('data-value') !== 'all') {
+                                x.classList.remove("shown-search");
                                 x.classList.add("hidden-search");
                             } else {
                                 nrFound++;
                                 x.classList.remove("hidden-search");
+                                x.classList.add("shown-search");
                                 nrChecked += x.classList.contains('active');
                             }
                         }else{
@@ -561,6 +564,7 @@ function vanillaSelectBox(domSelector, options) {
                 self.inputBox.value = "";
                 Array.prototype.slice.call(self.listElements).forEach(function (x) {
                     x.classList.remove("hidden-search");
+                    x.classList.add("shown-search");
                 });
             }
         }
