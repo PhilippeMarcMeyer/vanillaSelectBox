@@ -3,7 +3,7 @@
 }
 
 
-li[data-parent].closed:not(.shown-search){
+li[data-parent].closed{
 	display:none !important;
 }
 
@@ -127,7 +127,7 @@ li.disabled{
 	margin-left:10px;
 }
 
-.vsb-menu li.grouped-option.opened::before {
+.vsb-menu li.grouped-option.open::before {
 	content: "";
 	display: inline-block;
 	font-size: inherit;

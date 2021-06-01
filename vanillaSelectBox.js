@@ -472,15 +472,35 @@ function vanillaSelectBox(domSelector, options) {
             if (self.isDisabled) return;
 
             if (!e.target.hasAttribute("data-value")) {
-                e.preventDefault();
-                e.stopPropagation();
-                return;
+                if(e.target.classList.contains("grouped-option")){
+                    let oldClass,newClass;
+                    if(e.target.classList.contains("open")){
+                        oldClass = "open"
+                        newClass = "closed"
+                    }else{
+                        oldClass = "closed"
+                        newClass = "open"   
+                    }
+                    e.target.classList.remove(oldClass);
+                    e.target.classList.add(newClass);
+                    let theChildren = self.drop.querySelectorAll("[data-parent='"+e.target.id+"']");
+                    theChildren.forEach(function(x){
+                        x.classList.remove(oldClass);
+                        x.classList.add(newClass);
+                    })
+                    return;
+                }
+                else{
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
             }
             let choiceValue = e.target.getAttribute("data-value");
             let choiceText = e.target.getAttribute("data-text");
             let className = e.target.getAttribute("class");
 
-            if(className &&className.indexOf("disabled") != -1){
+            if(className && className.indexOf("disabled") != -1){
                 return;
             }
 
