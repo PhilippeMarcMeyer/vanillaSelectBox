@@ -1,6 +1,6 @@
 
-# vanillaSelectBox v 0.59
-### A nice select/multiselect ui with no dependency
+# vanillaSelectBox v 0.60
+### A nice select/multiselect ui with no dependency and two levels support thru optgroups
 
 ### New : you can use the discussions page to help me improve this little tool or even suggest other plugins
 
