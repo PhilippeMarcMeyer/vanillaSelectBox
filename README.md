@@ -115,3 +115,28 @@ v 0.02 : added dispatch change event to select + nicer check mark
 
 v 0.01 : first commit => basics for a single select box + the Dom is cleaned if you init twice
 
+## Examples
+
+```
+        <div> 
+            <label for="dino-select">Choose dinosaurs :</label>
+            <select id="dino-select" multiple="" size="3" >
+                <optgroup label="Theropods">
+                    <option>Tyrannosaurus</option>
+                    <option>Velociraptor</option>
+                    <option>Deinonychus</option>
+                </optgroup>
+                <optgroup label="Sauropods">
+                    <option>Diplodocus</option>
+                    <option>Saltasaurus</option>
+                    <option>Apatosaurus</option>
+                </optgroup>
+            </select>
+        </div>
+        
+        <script>
+            let selecDino = new vanillaSelectBox("#dino-select",{ "maxHeight": 300,"search": true,translations: { "all": "All", "items": "Dinos" } });
+        </script>
+        
+
+```
