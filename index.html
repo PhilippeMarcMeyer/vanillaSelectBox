@@ -205,8 +205,8 @@
     <div id="mini-demo-zone" class="demo-zone"> 
         <div>optgroup support : </div>
         <div> 
-            <label for="dino-select">Choose a dinosaur:</label>
-            <select id="dino-select">
+            <label for="dino-select">Choose dinosaurs :</label>
+            <select id="dino-select" multiple="" size="3" >
                 <optgroup label="Theropods">
                     <option>Tyrannosaurus</option>
                     <option>Velociraptor</option>
@@ -678,6 +678,6 @@ for (var i = 0;i < allCountries.length;i++) {
     selectCountries.appendChild(option);
 }
 let selectBox4 = new vanillaSelectBox("#allCountries", { "maxHeight": 200, "search": true,"stayOpen":true,translations: { "all": "All", "items": "Countries" } });
-let selecDino = new vanillaSelectBox("#dino-select",{ "maxHeight": 200,"search": true,translations: { "all": "All", "items": "Dinos" } });
+let selecDino = new vanillaSelectBox("#dino-select",{ "maxHeight": 300,"search": true,translations: { "all": "All", "items": "Dinos" } });
         </script>
 </html>

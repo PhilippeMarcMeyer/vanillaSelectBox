@@ -63,6 +63,10 @@ selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History : 
 
+v0.60 : Two levels: optgroups are now used to show two level dropdowns 
+
+ ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/twoLevels.jpg)
+
 v0.59 : Bug fix : search box was overlapping first item in single selects
 
 v0.58 : Bug fixes
