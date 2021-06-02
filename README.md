@@ -117,6 +117,8 @@ v 0.01 : first commit => basics for a single select box + the Dom is cleaned if 
 
 ## Examples
 
+Two levels :
+
 ```
         <div> 
             <label for="dino-select">Choose dinosaurs :</label>
@@ -136,7 +138,24 @@ v 0.01 : first commit => basics for a single select box + the Dom is cleaned if 
         
         <script>
             let selecDino = new vanillaSelectBox("#dino-select",{ "maxHeight": 300,"search": true,translations: { "all": "All", "items": "Dinos" } });
-        </script>
+            
+            // How to get the result from the original select tag :
+            
+       function getValues(id) {
+        let result = [];
+        let collection = document.querySelectorAll("#" + id + " option");
+        collection.forEach(function (x) {
+            if (x.selected) {
+                result.push(x.value);
+            }
+        });
+        return result;
+      }
+      
+      let chosenDinos = getValues("dino-select");
+      
+     </script>
         
 
 ```
+
