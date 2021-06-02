@@ -136,25 +136,31 @@ Two levels :
             </select>
         </div>
         
-        <script>
-            let selecDino = new vanillaSelectBox("#dino-select",{ "maxHeight": 300,"search": true,translations: { "all": "All", "items": "Dinos" } });
+<script>
             
-            // How to get the result from the original select tag :
+// How to get the result from the original select tag :
             
-       function getValues(id) {
-        let result = [];
-        let collection = document.querySelectorAll("#" + id + " option");
-        collection.forEach(function (x) {
-            if (x.selected) {
-                result.push(x.value);
-            }
-        });
-        return result;
-      }
+let chosenDinos = [];
+
+function getValues(id) {
+let result = [];
+let collection = document.querySelectorAll("#" + id + " option");
+collection.forEach(function (x) {
+	if (x.selected) {
+		result.push(x.value);
+	}
+});
+return result;
+}
+
+let selectDinos = new vanillaSelectBox("#dino-select",{ "maxHeight": 300,"search": true,translations: { "all": "All", "items": "Dinos" } });
+
+document.getElementById("dino-select").addEventListener("change", function (e) {
+	chosenDinos = getValues("dino-select");
+	console.log(chosenDinos);
+});
       
-      let chosenDinos = getValues("dino-select");
-      
-     </script>
+</script>
         
 
 ```
