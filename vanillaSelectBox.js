@@ -51,7 +51,8 @@ function vanillaSelectBox(domSelector, options) {
     let self = this;
     this.instanceOffset = VSBoxCounter.set(self);
     this.domSelector = domSelector;
-    this.root = document.querySelector(domSelector)
+    this.root = document.querySelector(domSelector);
+    this.rootToken = null;
     this.main;
     this.button;
     this.title;
@@ -69,6 +70,8 @@ function vanillaSelectBox(domSelector, options) {
     this.disabledItems = [];
     this.ulminWidth = 140;
     this.ulminHeight = 25;
+    this.optgroups = false;
+    this.currentOptgroup = 0;
     this.forbidenAttributes = ["class","selected","disabled","data-text","data-value","style"]; 
     this.forbidenClasses= ["active","disabled"]; 
     this.userOptions = {
@@ -79,7 +82,7 @@ function vanillaSelectBox(domSelector, options) {
         search: false,
         placeHolder: "",
 		stayOpen:false,
-        disableSelectAll: false,
+        disableSelectAll: false
     }
     if (options) {
         if (options.maxWidth != undefined) {
@@ -158,16 +161,16 @@ function vanillaSelectBox(domSelector, options) {
 
     this.init = function () {
         let self = this;
+        this.rootToken = self.domSelector.replace(/[^A-Za-z0-9]+/,"")
         this.root.style.display = "none";
-        let already = document.getElementById("btn-group-" + self.domSelector);
+        let already = document.getElementById("btn-group-" + this.rootToken);
         if (already) {
             already.remove();
         }
-
         this.main = document.createElement("div");
         this.root.parentNode.insertBefore(this.main, this.root.nextSibling);
         this.main.classList.add("vsb-main");
-        this.main.setAttribute("id", "btn-group-" + this.domSelector);
+        this.main.setAttribute("id", "btn-group-" + this.rootToken);
         this.main.style.marginLeft = this.main.style.marginLeft;
         if(self.userOptions.stayOpen){
             this.main.style.minHeight =  (this.userOptions.maxHeight+10) + "px";
@@ -237,7 +240,7 @@ function vanillaSelectBox(domSelector, options) {
             this.inputBox = document.createElement("input");
             this.searchZone.appendChild(this.inputBox);
             this.inputBox.setAttribute("type", "text");
-            this.inputBox.setAttribute("id", "search_" + this.domSelector);
+            this.inputBox.setAttribute("id", "search_" + this.rootToken);
 
             var para = document.createElement("p");
             this.ul.appendChild(para);
@@ -311,12 +314,22 @@ function vanillaSelectBox(domSelector, options) {
         });
 
         if (document.querySelector(this.domSelector + ' optgroup') !== null) {
+            this.optgroups = true;
             this.options = document.querySelectorAll(this.domSelector + " option");
             let groups = document.querySelectorAll(this.domSelector + ' optgroup');
             Array.prototype.slice.call(groups).forEach(function(group) {
                 let groupOptions = group.querySelectorAll('option');
                 let li = document.createElement("li");
+                let dataWay = group.getAttribute("data-way");
+                if(!dataWay) dataWay = "closed";
+                if(!dataWay || (dataWay !== "closed" && dataWay !== "open") ) dataWay = "closed";
+
+                self.ul.appendChild(li);
                 li.classList.add('grouped-option');
+                li.classList.add(dataWay);
+                self.currentOptgroup ++;
+                let optId = self.rootToken+"-opt-"+self.currentOptgroup;
+                li.id = optId;
                 li.appendChild(document.createTextNode(group.label));
                 self.ul.appendChild(li);
 
@@ -332,16 +345,17 @@ function vanillaSelectBox(domSelector, options) {
                     {
                         classes=[];
                     }
+                    classes.push(dataWay);
                     let li = document.createElement("li");
                     let isSelected = x.hasAttribute("selected");
                     self.ul.appendChild(li);
                     li.setAttribute("data-value", value);
                     li.setAttribute("data-text", text);
+                    li.setAttribute("data-parent",optId);
                     if (classes.length != 0) {
                         classes.forEach(function(x){
                             li.classList.add(x);
                         });
-
                     }
                     if (isSelected) {
                         nrActives++;
@@ -388,6 +402,7 @@ function vanillaSelectBox(domSelector, options) {
                             selectAll = x;
                         }else{
                             x.classList.remove("hidden-search");
+                            x.classList.remove("shown-search");
                             nrFound++;
                             nrChecked += x.classList.contains('active');
                         }
@@ -397,10 +412,12 @@ function vanillaSelectBox(domSelector, options) {
                         if (x.getAttribute('data-value') !== 'all') {
                             let text = x.getAttribute("data-text").toUpperCase();
                             if (text.indexOf(searchValue) === -1 && x.getAttribute('data-value') !== 'all') {
+                                x.classList.remove("shown-search");
                                 x.classList.add("hidden-search");
                             } else {
                                 nrFound++;
                                 x.classList.remove("hidden-search");
+                                x.classList.add("shown-search");
                                 nrChecked += x.classList.contains('active');
                             }
                         }else{
@@ -453,15 +470,35 @@ function vanillaSelectBox(domSelector, options) {
             if (self.isDisabled) return;
 
             if (!e.target.hasAttribute("data-value")) {
-                e.preventDefault();
-                e.stopPropagation();
-                return;
+                if(e.target.classList.contains("grouped-option")){
+                    let oldClass,newClass;
+                    if(e.target.classList.contains("open")){
+                        oldClass = "open"
+                        newClass = "closed"
+                    }else{
+                        oldClass = "closed"
+                        newClass = "open"   
+                    }
+                    e.target.classList.remove(oldClass);
+                    e.target.classList.add(newClass);
+                    let theChildren = self.drop.querySelectorAll("[data-parent='"+e.target.id+"']");
+                    theChildren.forEach(function(x){
+                        x.classList.remove(oldClass);
+                        x.classList.add(newClass);
+                    })
+                    return;
+                }
+                else{
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
             }
             let choiceValue = e.target.getAttribute("data-value");
             let choiceText = e.target.getAttribute("data-text");
             let className = e.target.getAttribute("class");
 
-            if(className &&className.indexOf("disabled") != -1){
+            if(className && className.indexOf("disabled") != -1){
                 return;
             }
 
@@ -545,6 +582,7 @@ function vanillaSelectBox(domSelector, options) {
                 self.inputBox.value = "";
                 Array.prototype.slice.call(self.listElements).forEach(function (x) {
                     x.classList.remove("hidden-search");
+                    x.classList.add("shown-search");
                 });
             }
         }
@@ -777,7 +815,7 @@ vanillaSelectBox.prototype.privateSendChange = function () {
     }
 
     vanillaSelectBox.prototype.destroy = function () {
-        let already = document.getElementById("btn-group-" + this.domSelector);
+        let already = document.getElementById("btn-group-" + this.rootToken);
         if (already) {
             VSBoxCounter.remove(this.instanceOffset);
             already.remove();
@@ -785,7 +823,7 @@ vanillaSelectBox.prototype.privateSendChange = function () {
         }
     }
     vanillaSelectBox.prototype.disable = function () {
-        let already = document.getElementById("btn-group-" + this.domSelector);
+        let already = document.getElementById("btn-group-" + this.rootToken);
         if (already) {
             button = already.querySelector("button")
 			if(button) button.classList.add("disabled");
@@ -793,7 +831,7 @@ vanillaSelectBox.prototype.privateSendChange = function () {
         }
     }
     vanillaSelectBox.prototype.enable = function () {
-        let already = document.getElementById("btn-group-" + this.domSelector);
+        let already = document.getElementById("btn-group-" + this.rootToken);
         if (already) {
             button = already.querySelector("button")
             if(button) button.classList.remove("disabled");
