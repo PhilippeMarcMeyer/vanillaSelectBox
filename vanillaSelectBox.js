@@ -311,7 +311,7 @@ function vanillaSelectBox(domSelector, options) {
           if(isDisabled){
             li.classList.add("disabled");
           }
-            li.appendChild(document.createTextNode(text));
+            li.appendChild(document.createTextNode(" " + text));
         });
 
         if (document.querySelector(this.domSelector + ' optgroup') !== null) {
@@ -403,7 +403,6 @@ function vanillaSelectBox(domSelector, options) {
                             selectAll = x;
                         }else{
                             x.classList.remove("hidden-search");
-                            x.classList.remove("shown-search");
                             nrFound++;
                             nrChecked += x.classList.contains('active');
                         }
@@ -413,12 +412,10 @@ function vanillaSelectBox(domSelector, options) {
                         if (x.getAttribute('data-value') !== 'all') {
                             let text = x.getAttribute("data-text").toUpperCase();
                             if (text.indexOf(searchValue) === -1 && x.getAttribute('data-value') !== 'all') {
-                                x.classList.remove("shown-search");
                                 x.classList.add("hidden-search");
                             } else {
                                 nrFound++;
                                 x.classList.remove("hidden-search");
-                                x.classList.add("shown-search");
                                 nrChecked += x.classList.contains('active');
                             }
                         }else{
@@ -583,7 +580,6 @@ function vanillaSelectBox(domSelector, options) {
                 self.inputBox.value = "";
                 Array.prototype.slice.call(self.listElements).forEach(function (x) {
                     x.classList.remove("hidden-search");
-                    x.classList.add("shown-search");
                 });
             }
         }
