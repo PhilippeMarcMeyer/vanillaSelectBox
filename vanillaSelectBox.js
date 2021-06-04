@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v0.61 : New option: maxSelect, set a maximum to the selectable options in a multiple choice menu
 vanillaSelectBox : v0.60 : Two levels: optgroups are now used to show two level dropdowns 
 vanillaSelectBox : v0.59 : Bug fix : search box was overlapping first item in single selects
 vanillaSelectBox : v0.58 : Bug fixes
@@ -73,6 +74,7 @@ function vanillaSelectBox(domSelector, options) {
     this.ulminHeight = 25;
     this.optgroups = false;
     this.currentOptgroup = 0;
+    this.maxSelect = Infinity;
     this.forbidenAttributes = ["class","selected","disabled","data-text","data-value","style"]; 
     this.forbidenClasses= ["active","disabled"]; 
     this.userOptions = {
@@ -115,6 +117,10 @@ function vanillaSelectBox(domSelector, options) {
         }
         if (options.disableSelectAll != undefined) {
             this.userOptions.disableSelectAll = options.disableSelectAll;
+        }
+        if (options.maxSelect != undefined && !isNaN(options.maxSelect) && options.maxSelect >=1) {
+            this.maxSelect = options.maxSelect;
+            this.userOptions.disableSelectAll = true;
         }
     }
 
@@ -500,6 +506,10 @@ function vanillaSelectBox(domSelector, options) {
                 return;
             }
 
+            if(className && className.indexOf("overflow") != -1){
+                return;
+            }
+
             if (choiceValue === 'all') {
                 if (e.target.hasAttribute('data-selected')
                   && e.target.getAttribute('data-selected') === 'true') {
@@ -563,7 +573,7 @@ function vanillaSelectBox(domSelector, options) {
                     }
                 }
                 self.title.textContent = selectedTexts;
-
+                self.checkSelectMax(nrActives);
                 self.checkUncheckAll();
                 self.privateSendChange();
             }
@@ -634,6 +644,27 @@ vanillaSelectBox.prototype.enableItems = function (values) {
     });
 }
 
+vanillaSelectBox.prototype.checkSelectMax= function (nrActives) {
+    let self = this;
+    if (self.maxSelect == Infinity || !self.isMultiple ) return;
+    if (self.maxSelect <= nrActives) {
+        Array.prototype.slice.call(self.listElements).forEach(function (x) {
+            if (x.hasAttribute('data-value')){
+                if(!x.classList.contains('disabled') && !x.classList.contains('active')){
+                    x.classList.add("overflow");
+                }
+            }
+        });
+    }else{
+        Array.prototype.slice.call(self.listElements).forEach(function (x) {
+            if(x.classList.contains('overflow')){
+                x.classList.remove("overflow");
+            }
+        }); 
+    }
+
+}
+
 vanillaSelectBox.prototype.checkUncheckAll = function () {
     let self = this;
     if (self.isMultiple) {
@@ -670,7 +701,6 @@ vanillaSelectBox.prototype.checkUncheckAll = function () {
         }
     }
 }
-
 
 vanillaSelectBox.prototype.setValue = function (values) {
     let self = this;

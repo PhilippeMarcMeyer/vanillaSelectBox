@@ -27,12 +27,13 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 ### Available options : 
 * maxWidth : for the UI if you don't want the title to expand to much to the right
 * minWidth : for the UI if you don't want the title to be to narrow (combining both, you've got a fixed width)
-* maxHeight : the maxHeight set a scroll when there are too many items 
+* maxHeight : the maxHeight set a scroll on the menu when there are too many items 
 * translations : { "all": "Tous", "items": "éléments","selectAll":"Tout sélectionner","clearAll":"Effacer"}
 * search : true/false, to provide a search input text to reduce the list
 * placeHolder : well that's a placeholder !
 * stayOpen : true/false. defaut is false : that's a drop-down. Set it to true and that"s a list (>= v 0.25)
 * disableSelectAll : true/false. defaut is false : add a checkbox select all / clear all
+* maxSelect : integer. set a maximum in the number of selectable options. CheckAll/uncheckAll is then disabled
 
 ### Automatic options :
 * single or multiple choices : depends on the "multiple" attribute that you put in the select code 
@@ -63,9 +64,12 @@ selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History : 
 
+v0.61 : New option: maxSelect, set a maximum to the selectable options in a multiple choice menu
+
 v0.60 : Two levels: optgroups are now used to show two level dropdowns 
 
  ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/twoLevels.jpg)
+
 
 v0.59 : Bug fix : search box was overlapping first item in single selects
 
@@ -165,3 +169,8 @@ document.getElementById("dino-select").addEventListener("change", function (e) {
 
 ```
 
+maxSelect option :
+
+```
+let selectCars = new vanillaSelectBox("#demoShort",{"maxSelect":4, "maxHeight": 200,"search": true,translations: { "all": "All", "items": "Cars" } });
+```

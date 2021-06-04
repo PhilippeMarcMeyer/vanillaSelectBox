@@ -74,6 +74,12 @@ li.disabled{
 	background-color: #999;
 }
 
+li.overflow{
+	cursor:not-allowed;
+	opacity:0.3;
+	background-color: #999;
+}
+
 .vsb-main button{
 	min-width: 120px;
 	border-radius: 0;
