@@ -161,7 +161,11 @@ collection.forEach(function (x) {
 return result;
 }
 
-let selectDinos = new vanillaSelectBox("#dino-select",{ "maxHeight": 300,"search": true,translations: { "all": "All", "items": "Dinos" } });
+let selectDinos = new vanillaSelectBox("#dino-select",
+    {"maxHeight": 300,
+    "search": true,
+    translations: { "all": "All", "items": "Dinos" } 
+    });
 
 document.getElementById("dino-select").addEventListener("change", function (e) {
 	chosenDinos = getValues("dino-select");
