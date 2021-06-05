@@ -19,10 +19,16 @@
             width: 90%;
             font-size: 14px;
         }
+        .demo-zone {
+            display: block;
+            width: 100%;
+            min-height: 200px;
+        }
 
     </style>
 </head>
 <body>
+    <div id="container">
     <div id="mini-demo-zone" class="demo-zone"> 
         <div>optgroup support : </div>
         <div> 
@@ -41,6 +47,7 @@
             </select>
         </div>
     </div>
+    <br/>
 	<div class="demo-zone">
         <label><b>Multiple select: </b></label>
         <select id="demoShort" multiple="" size="3">
@@ -58,6 +65,7 @@
             <option value="DACIA">Dacia</option>
         </select>
     </div>
+    <br/>
 	<div class="demo-zone">
         <label><b>Single select: </b></label>
         <select id="demoShort2">
@@ -75,11 +83,12 @@
             <option value="DACIA">Dacia</option>
         </select>
     </div>
+</div>
 <script src="./vanillaSelectBox.js"></script>
 <script>
 	
 let selectDinos = new vanillaSelectBox("#dino-select",{ "maxSelect":2,"maxHeight": 200,"search": true,translations: { "all": "All", "items": "Dinos" } });
-let selectCars = new vanillaSelectBox("#demoShort",{"maxSelect":4, "maxHeight": 200,"search": true,translations: { "all": "All", "items": "Cars" } });
+let selectCars = new vanillaSelectBox("#demoShort",{"maxOptionWidth":70, "maxHeight": 200,"search": true,translations: { "all": "All", "items": "Cars" } });
 let selectCars2 = new vanillaSelectBox("#demoShort2",{ "maxHeight": 200,"search": true,translations: { "all": "All", "items": "Cars" } });
 
 </script>

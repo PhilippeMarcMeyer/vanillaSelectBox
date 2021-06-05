@@ -64,6 +64,8 @@ selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History : 
 
+v0.62 : New option: maxOptionWidth set a maximum width for each option for narrow menus
+
 v0.61 : New option: maxSelect, set a maximum to the selectable options in a multiple choice menu
 
 v0.60 : Two levels: optgroups are now used to show two level dropdowns 
@@ -173,4 +175,11 @@ maxSelect option :
 
 ```
 let selectCars = new vanillaSelectBox("#demoShort",{"maxSelect":4, "maxHeight": 200,"search": true,translations: { "all": "All", "items": "Cars" } });
+```
+
+
+maxOptionWidth option :
+
+```
+let selectCars = new vanillaSelectBox("#demoShort",{"maxOptionWidth":70, "maxHeight": 200,"search": true,translations: { "all": "All", "items": "Cars" } });
 ```

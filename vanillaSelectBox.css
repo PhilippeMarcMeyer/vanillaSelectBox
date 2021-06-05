@@ -80,6 +80,11 @@ li.overflow{
 	background-color: #999;
 }
 
+li.short{
+	overflow:hidden;
+	text-overflow: ellipsis;
+}
+
 .vsb-main button{
 	min-width: 120px;
 	border-radius: 0;
