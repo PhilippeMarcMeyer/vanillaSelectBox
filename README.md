@@ -176,12 +176,22 @@ document.getElementById("dino-select").addEventListener("change", function (e) {
 maxSelect option :
 
 ```
-let selectCars = new vanillaSelectBox("#demoShort",{"maxSelect":4, "maxHeight": 200,"search": true,translations: { "all": "All", "items": "Cars" } });
+let selectCars = new vanillaSelectBox("#demoShort",
+    {"maxSelect":4, 
+    "maxHeight": 200,
+    "search": true,
+    translations: { "all": "All", "items": "Cars" } 
+    });
 ```
 
 
 maxOptionWidth option :
 
 ```
-let selectCars = new vanillaSelectBox("#demoShort",{"maxOptionWidth":70, "maxHeight": 200,"search": true,translations: { "all": "All", "items": "Cars" } });
+let selectCars = new vanillaSelectBox("#demoShort",
+    {"maxOptionWidth":70,
+    "maxHeight": 200,
+    "search": true,
+    translations: { "all": "All", "items": "Cars" } 
+});
 ```
