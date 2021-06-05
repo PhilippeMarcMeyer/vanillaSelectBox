@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v0.62 : New option: maxOptionWidth set a maximum width for each option for narrow menus
 vanillaSelectBox : v0.61 : New option: maxSelect, set a maximum to the selectable options in a multiple choice menu
 vanillaSelectBox : v0.60 : Two levels: optgroups are now used to show two level dropdowns 
 vanillaSelectBox : v0.59 : Bug fix : search box was overlapping first item in single selects
@@ -71,9 +72,11 @@ function vanillaSelectBox(domSelector, options) {
     this.inputBox = null;
     this.disabledItems = [];
     this.ulminWidth = 140;
+    this.ulmaxWidth = 280;
     this.ulminHeight = 25;
     this.optgroups = false;
     this.currentOptgroup = 0;
+    this.maxOptionWidth = Infinity;
     this.maxSelect = Infinity;
     this.forbidenAttributes = ["class","selected","disabled","data-text","data-value","style"]; 
     this.forbidenClasses= ["active","disabled"]; 
@@ -121,6 +124,12 @@ function vanillaSelectBox(domSelector, options) {
         if (options.maxSelect != undefined && !isNaN(options.maxSelect) && options.maxSelect >=1) {
             this.maxSelect = options.maxSelect;
             this.userOptions.disableSelectAll = true;
+        }
+        if (options.maxOptionWidth != undefined && !isNaN(options.maxOptionWidth) && options.maxOptionWidth >=20) {
+            this.maxOptionWidth = options.maxOptionWidth;
+            this.ulminWidth= options.maxOptionWidth+60;
+            this.ulmaxWidth = options.maxOptionWidth+60;
+            
         }
     }
 
@@ -223,6 +232,7 @@ function vanillaSelectBox(domSelector, options) {
 
         this.ul.style.maxHeight = this.userOptions.maxHeight + "px";
         this.ul.style.minWidth = this.ulminWidth + "px";
+        this.ul.style.maxWidth= this.ulmaxWidth + "px";
         this.ul.style.minHeight = this.ulminHeight + "px";
         if (this.isMultiple) {
             this.ul.classList.add("multi");
@@ -248,6 +258,10 @@ function vanillaSelectBox(domSelector, options) {
             this.searchZone.appendChild(this.inputBox);
             this.inputBox.setAttribute("type", "text");
             this.inputBox.setAttribute("id", "search_" + this.rootToken);
+            if(this.maxOptionWidth < Infinity){
+                this.searchZone.style.maxWidth = self.maxOptionWidth + 30 + "px";
+                this.inputBox.style.maxWidth = self.maxOptionWidth + 30 + "px";
+            }
 
             var para = document.createElement("p");
             this.ul.appendChild(para);
@@ -299,6 +313,11 @@ function vanillaSelectBox(domSelector, options) {
             classes.forEach(function(x){
                 li.classList.add(x);
             });
+
+            if(self.maxOptionWidth < Infinity){
+                li.classList.add("short");
+                li.style.maxWidth = self.maxOptionWidth + "px";
+            }
 
             if (isSelected) {
                 nrActives++;
