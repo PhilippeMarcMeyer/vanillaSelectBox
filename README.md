@@ -34,6 +34,7 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 * stayOpen : true/false. defaut is false : that's a drop-down. Set it to true and that"s a list (>= v 0.25)
 * disableSelectAll : true/false. defaut is false : add a checkbox select all / clear all
 * maxSelect : integer. set a maximum in the number of selectable options. CheckAll/uncheckAll is then disabled
+* maxOptionWidth : integer,set a maximum width for each option for narrow menus
 
 ### Automatic options :
 * single or multiple choices : depends on the "multiple" attribute that you put in the select code 
@@ -64,7 +65,7 @@ selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History : 
 
-v0.62 : New option: maxOptionWidth set a maximum width for each option for narrow menus
+v0.62 : New option: maxOptionWidth set a maximum width for each option for narrow menus (ellipsis troncature)
 
 v0.61 : New option: maxSelect, set a maximum to the selectable options in a multiple choice menu
 
