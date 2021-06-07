@@ -1,5 +1,5 @@
 
-# vanillaSelectBox v 0.62
+# vanillaSelectBox v0.63 
 
 ### A nice select/multiselect ui with no dependency and two levels support thru optgroups
 
@@ -10,6 +10,8 @@
 I think one improvement would be to integrate the css as style tags because there are still css interferences between the document and vanillaSelectBox
 
 What do you think ?
+
+last change : Two levels: one click on the group selects / unselects children
 
 
 ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/vanillaSelectBox.png)
@@ -65,6 +67,8 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History : 
+
+v0.63 : Two levels: one click on the group selects / unselects children
 
 v0.62 : New option: maxOptionWidth set a maximum width for each option for narrow menus (ellipsis troncature)
 

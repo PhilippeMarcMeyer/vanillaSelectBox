@@ -117,17 +117,6 @@ li.short{
 	white-space: nowrap;
 }
 
-/*
-.vsb-menu li{
-	display: list-item;
-	font-size: 12px;
-	background-color: #fff;
-	min-height:1.4em;
-	padding: 0.2em;
-}
-*/
-
-
 .vsb-menu li {
 	font-size: 14px;
 	background-color: #fff;
@@ -190,9 +179,15 @@ li.short{
 }
 
 .vsb-menu .multi li.grouped-option {
-	font-weight: bold;
 	font-size: 15px;
 	padding-left: 5px;
+}
+
+
+.vsb-menu .multi li.grouped-option:hover {
+	font-weight: bold;
+	text-decoration: underline;
+	color:rgb(52, 31, 112);
 }
 
 .vsb-menu .multi li:not(.grouped-option)::before{
@@ -237,3 +232,9 @@ li.short{
 	border-right: 4px solid transparent;
 	border-left: 4px solid transparent;
 }
+
+
+li[data-parent]{
+	padding-left: 50px !important;
+}
+

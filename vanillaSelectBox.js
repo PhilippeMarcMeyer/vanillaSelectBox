@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v0.63 : Two levels: one click on the group selects / unselects children
 vanillaSelectBox : v0.62 : New option: maxOptionWidth set a maximum width for each option for narrow menus
 vanillaSelectBox : v0.61 : New option: maxSelect, set a maximum to the selectable options in a multiple choice menu
 vanillaSelectBox : v0.60 : Two levels: optgroups are now used to show two level dropdowns 
@@ -494,21 +495,39 @@ function vanillaSelectBox(domSelector, options) {
 
             if (!e.target.hasAttribute("data-value")) {
                 if(e.target.classList.contains("grouped-option")){
+                    let isCheckCommand = e.offsetX > 25;
                     let oldClass,newClass;
-                    if(e.target.classList.contains("open")){
-                        oldClass = "open"
-                        newClass = "closed"
-                    }else{
-                        oldClass = "closed"
-                        newClass = "open"   
+                    console.log(e)
+                    if(isCheckCommand){ // check or uncheck children
+                        if(e.target.classList.contains("closed")){
+                            oldClass = "closed"
+                            newClass = "open"   
+                            e.target.classList.remove(oldClass);
+                            e.target.classList.add(newClass);
+                            let theChildren = self.drop.querySelectorAll("[data-parent='"+e.target.id+"']");
+                            theChildren.forEach(function(x){
+                                x.classList.remove(oldClass);
+                                x.classList.add(newClass);
+                            })
+                        }
+                        self.checkUncheckFromParent(e.target.id);
+                    }else{ //open or close
+                        if(e.target.classList.contains("open")){
+                            oldClass = "open"
+                            newClass = "closed"
+                        }else{
+                            oldClass = "closed"
+                            newClass = "open"   
+                        }
+                        e.target.classList.remove(oldClass);
+                        e.target.classList.add(newClass);
+                        let theChildren = self.drop.querySelectorAll("[data-parent='"+e.target.id+"']");
+                        theChildren.forEach(function(x){
+                            x.classList.remove(oldClass);
+                            x.classList.add(newClass);
+                        })
                     }
-                    e.target.classList.remove(oldClass);
-                    e.target.classList.add(newClass);
-                    let theChildren = self.drop.querySelectorAll("[data-parent='"+e.target.id+"']");
-                    theChildren.forEach(function(x){
-                        x.classList.remove(oldClass);
-                        x.classList.add(newClass);
-                    })
+
                     return;
                 }
                 else{
@@ -683,6 +702,38 @@ vanillaSelectBox.prototype.checkSelectMax= function (nrActives) {
     }
 
 }
+
+vanillaSelectBox.prototype.checkUncheckFromParent = function (parentId) {
+    let self = this;
+    if (!self.isMultiple) return;
+    let childrenElements = Array.prototype.slice.call(self.listElements).filter(function(el){
+         return el.hasAttribute("data-parent") && el.getAttribute('data-parent') == parentId;
+    });
+    let nrChecked = 0;
+    let nrCheckable = childrenElements.length ; 
+    if(nrCheckable == 0) return;
+    childrenElements.forEach(function(el){
+        if(el.classList.contains('active')) nrChecked++;
+    });
+    if(nrChecked === nrCheckable || nrChecked === 0){
+        //check all or uncheckAll : just do the opposite
+        childrenElements.forEach(function(el){
+            var event = document.createEvent('HTMLEvents');
+            event.initEvent('click', true, false);
+            el.dispatchEvent(event);
+        });
+    }else{
+        //check all
+        childrenElements.forEach(function(el){
+            if(!el.classList.contains('active')){
+                var event = document.createEvent('HTMLEvents');
+                event.initEvent('click', true, false);
+                el.dispatchEvent(event);
+            }
+        });
+    }
+}
+
 
 vanillaSelectBox.prototype.checkUncheckAll = function () {
     let self = this;
