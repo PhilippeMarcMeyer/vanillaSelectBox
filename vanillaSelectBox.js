@@ -713,6 +713,7 @@ vanillaSelectBox.prototype.checkUncheckAll = function () {
                 checkAllElement.setAttribute('data-selected', 'true')
             }else if(nrChecked === 0){
                 // uncheck the checkAll checkbox
+                self.title.textContent = self.userOptions.placeHolder;
                 checkAllElement.classList.remove("active");
                 checkAllElement.innerText = self.userOptions.translations.selectAll;
                 checkAllElement.setAttribute('data-selected', 'false')
