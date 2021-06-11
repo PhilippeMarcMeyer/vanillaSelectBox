@@ -347,17 +347,20 @@ function vanillaSelectBox(domSelector, options) {
             Array.prototype.slice.call(groups).forEach(function(group) {
                 let groupOptions = group.querySelectorAll('option');
                 let li = document.createElement("li");
+                let span = document.createElement("span");
+                let labelElement = document.createElement("b");
                 let dataWay = group.getAttribute("data-way");
                 if(!dataWay) dataWay = "closed";
                 if(!dataWay || (dataWay !== "closed" && dataWay !== "open") ) dataWay = "closed";
-
+                li.appendChild(span);
                 self.ul.appendChild(li);
                 li.classList.add('grouped-option');
                 li.classList.add(dataWay);
                 self.currentOptgroup ++;
                 let optId = self.rootToken+"-opt-"+self.currentOptgroup;
                 li.id = optId;
-                li.appendChild(document.createTextNode(group.label));
+                li.appendChild(labelElement);
+                labelElement.appendChild(document.createTextNode(group.label));
                 self.ul.appendChild(li);
 
                 Array.prototype.slice.call(groupOptions).forEach(function(x) {
@@ -490,20 +493,20 @@ function vanillaSelectBox(domSelector, options) {
                     }
 				});
 		}
+
         this.drop.addEventListener("click", function (e) {
             if (self.isDisabled) return;
-
-            if (!e.target.hasAttribute("data-value")) {
-                if(e.target.classList.contains("grouped-option")){
-                    let isCheckCommand = e.offsetX > 25;
+            let isCheckShowHideCommand = e.target.tagName === 'SPAN';
+            let liClicked = isCheckShowHideCommand ? e.target.parentElement : e.target;
+            if (!liClicked.hasAttribute("data-value")) {
+                if(liClicked.classList.contains("grouped-option")){
                     let oldClass,newClass;
-                    console.log(e)
-                    if(isCheckCommand){ // check or uncheck children
-                        if(e.target.classList.contains("closed")){
+                    if(!isCheckShowHideCommand){ // check or uncheck children
+                        if(liClicked.classList.contains("closed")){
                             oldClass = "closed"
-                            newClass = "open"   
-                            e.target.classList.remove(oldClass);
-                            e.target.classList.add(newClass);
+                            newClass = "open"   ;
+                            liClicked.classList.remove(oldClass);
+                            liClicked.classList.add(newClass);
                             let theChildren = self.drop.querySelectorAll("[data-parent='"+e.target.id+"']");
                             theChildren.forEach(function(x){
                                 x.classList.remove(oldClass);
@@ -512,16 +515,16 @@ function vanillaSelectBox(domSelector, options) {
                         }
                         self.checkUncheckFromParent(e.target.id);
                     }else{ //open or close
-                        if(e.target.classList.contains("open")){
+                        if(liClicked.classList.contains("open")){
                             oldClass = "open"
                             newClass = "closed"
                         }else{
                             oldClass = "closed"
                             newClass = "open"   
                         }
-                        e.target.classList.remove(oldClass);
-                        e.target.classList.add(newClass);
-                        let theChildren = self.drop.querySelectorAll("[data-parent='"+e.target.id+"']");
+                        liClicked.classList.remove(oldClass);
+                        liClicked.classList.add(newClass);
+                        let theChildren = self.drop.querySelectorAll("[data-parent='"+liClicked.id+"']");
                         theChildren.forEach(function(x){
                             x.classList.remove(oldClass);
                             x.classList.add(newClass);
