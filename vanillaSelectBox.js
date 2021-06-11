@@ -507,17 +507,6 @@ function vanillaSelectBox(domSelector, options) {
                     if(!isShowHideCommand && !isCheckCommand) return;
                     let oldClass,newClass;
                     if(isCheckCommand){ // check or uncheck children
-                        if(liClicked.classList.contains("closed")){
-                            oldClass = "closed"
-                            newClass = "open"   ;
-                            liClicked.classList.remove(oldClass);
-                            liClicked.classList.add(newClass);
-                            let theChildren = self.drop.querySelectorAll("[data-parent='"+e.target.id+"']");
-                            theChildren.forEach(function(x){
-                                x.classList.remove(oldClass);
-                                x.classList.add(newClass);
-                            })
-                        }
                         self.checkUncheckFromParent(liClicked);
                     }else{ //open or close
                         if(liClicked.classList.contains("open")){
