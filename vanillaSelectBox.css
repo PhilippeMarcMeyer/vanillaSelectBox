@@ -134,6 +134,7 @@ li.short{
 .vsb-menu li.grouped-option.open span {
 	display: inline-block;
 	font-size: inherit;
+	margin-top:-2px;
 	height: 8px;
 	width:  8px;
 	transform: translate(-38px) rotate(45deg);
@@ -151,6 +152,37 @@ li.short{
 	border-bottom:  3px solid black;
 	border-right:  3px solid black;
 	border-radius:2px;
+}
+
+.vsb-menu li.grouped-option i {
+	display: inline-block;
+	font-size: inherit;
+	float:left;
+	font-weight:bold;
+	margin-left:22px;
+	margin-right:2px;
+	height: 11px;
+	width:  8px;
+	border : 1px solid;
+	border-radius : 3px;
+	padding: 1px 3px 2px 3px;
+	margin-top:0px;
+	color:black;
+}
+
+.vsb-menu li.grouped-option.checked i::after {
+	content: "";
+	display: inline-block;
+	font-size: inherit;
+	color: #333;
+	float:left;
+	margin-left:0px;
+	display: inline-block;
+	transform: rotate(45deg);
+	height: 8px;
+	width:  5px;
+	border-bottom: 3px solid black;
+	border-right:  3px solid black;
 }
 
 .vsb-menu :not(.multi) li.active {
@@ -202,38 +234,6 @@ li.short{
 	padding : 7px;
 	margin-top:0px;
 	color:black;
-}
-
-.vsb-menu .multi li.grouped-option::before{
-	content: "";
-	display: inline-block;
-	font-size: inherit;
-	float:left;
-	font-weight:bold;
-	margin-left:13px;
-	margin-right:2px;
-	border : 1px solid;
-	border-radius : 3px;
-	padding : 7px;
-	margin-top:0px;
-	color:black;
-}
-
-
-.vsb-menu .multi li.grouped-option.checked::after {
-	content: "";
-	display: inline-block;
-	font-size: inherit;
-	color: #333;
-	float:left;
-	margin-left:13px;
-	display: inline-block;
-	transform: rotate(45deg);
-	margin-top:1px;
-	height: 8px;
-	width:  5px;
-	border-bottom: 3px solid black;
-	border-right:  3px solid black;
 }
 
 .vsb-menu .multi li:not(.grouped-option).active::after {
