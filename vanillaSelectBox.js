@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v0.64 : Two levels: groups are now checkable to check/uncheck the children options 
 vanillaSelectBox : v0.63 : Two levels: one click on the group selects / unselects children
 vanillaSelectBox : v0.62 : New option: maxOptionWidth set a maximum width for each option for narrow menus
 vanillaSelectBox : v0.61 : New option: maxSelect, set a maximum to the selectable options in a multiple choice menu
@@ -347,17 +348,22 @@ function vanillaSelectBox(domSelector, options) {
             Array.prototype.slice.call(groups).forEach(function(group) {
                 let groupOptions = group.querySelectorAll('option');
                 let li = document.createElement("li");
+                let span = document.createElement("span");
+                let iCheck = document.createElement("i");
+                let labelElement = document.createElement("b");
                 let dataWay = group.getAttribute("data-way");
                 if(!dataWay) dataWay = "closed";
                 if(!dataWay || (dataWay !== "closed" && dataWay !== "open") ) dataWay = "closed";
-
+                li.appendChild(span);
+                li.appendChild(iCheck);
                 self.ul.appendChild(li);
                 li.classList.add('grouped-option');
                 li.classList.add(dataWay);
                 self.currentOptgroup ++;
                 let optId = self.rootToken+"-opt-"+self.currentOptgroup;
                 li.id = optId;
-                li.appendChild(document.createTextNode(group.label));
+                li.appendChild(labelElement);
+                labelElement.appendChild(document.createTextNode(group.label));
                 self.ul.appendChild(li);
 
                 Array.prototype.slice.call(groupOptions).forEach(function(x) {
@@ -490,49 +496,45 @@ function vanillaSelectBox(domSelector, options) {
                     }
 				});
 		}
+
         this.drop.addEventListener("click", function (e) {
             if (self.isDisabled) return;
-
-            if (!e.target.hasAttribute("data-value")) {
-                if(e.target.classList.contains("grouped-option")){
-                    let isCheckCommand = e.offsetX > 25;
+            let isShowHideCommand = e.target.tagName === 'SPAN';
+            let isCheckCommand = e.target.tagName === 'I';
+            let liClicked = e.target.parentElement;
+            if (!liClicked.hasAttribute("data-value")) {
+                if(liClicked.classList.contains("grouped-option")){
+                    if(!isShowHideCommand && !isCheckCommand) return;
                     let oldClass,newClass;
-                    console.log(e)
                     if(isCheckCommand){ // check or uncheck children
-                        if(e.target.classList.contains("closed")){
+                        if(liClicked.classList.contains("closed")){
                             oldClass = "closed"
-                            newClass = "open"   
-                            e.target.classList.remove(oldClass);
-                            e.target.classList.add(newClass);
+                            newClass = "open"   ;
+                            liClicked.classList.remove(oldClass);
+                            liClicked.classList.add(newClass);
                             let theChildren = self.drop.querySelectorAll("[data-parent='"+e.target.id+"']");
                             theChildren.forEach(function(x){
                                 x.classList.remove(oldClass);
                                 x.classList.add(newClass);
                             })
                         }
-                        self.checkUncheckFromParent(e.target.id);
+                        self.checkUncheckFromParent(liClicked);
                     }else{ //open or close
-                        if(e.target.classList.contains("open")){
+                        if(liClicked.classList.contains("open")){
                             oldClass = "open"
                             newClass = "closed"
                         }else{
                             oldClass = "closed"
                             newClass = "open"   
                         }
-                        e.target.classList.remove(oldClass);
-                        e.target.classList.add(newClass);
-                        let theChildren = self.drop.querySelectorAll("[data-parent='"+e.target.id+"']");
+                        liClicked.classList.remove(oldClass);
+                        liClicked.classList.add(newClass);
+                        let theChildren = self.drop.querySelectorAll("[data-parent='"+liClicked.id+"']");
                         theChildren.forEach(function(x){
                             x.classList.remove(oldClass);
                             x.classList.add(newClass);
                         })
                     }
-
-                    return;
-                }
-                else{
-                    e.preventDefault();
-                    e.stopPropagation();
                     return;
                 }
             }
@@ -586,6 +588,10 @@ function vanillaSelectBox(domSelector, options) {
                 } else {
                     e.target.classList.add("active");
                 }
+               if(e.target.hasAttribute("data-parent")){
+                    self.checkUncheckFromChild(e.target);
+               }
+                
                 let selectedTexts = ""
                 let sep = "";
                 let nrActives = 0;
@@ -703,8 +709,35 @@ vanillaSelectBox.prototype.checkSelectMax= function (nrActives) {
 
 }
 
-vanillaSelectBox.prototype.checkUncheckFromParent = function (parentId) {
+vanillaSelectBox.prototype.checkUncheckFromChild = function (liClicked){
     let self = this;
+    let parentId = liClicked.getAttribute('data-parent');
+    let parentLi = document.getElementById(parentId);
+    if (!self.isMultiple) return;
+    let childrenElements = Array.prototype.slice.call(self.listElements).filter(function(el){
+        return el.hasAttribute("data-parent") && el.getAttribute('data-parent') == parentId;
+   });
+   let nrChecked = 0;
+   let nrCheckable = childrenElements.length ; 
+   if(nrCheckable == 0) return;
+   childrenElements.forEach(function(el){
+       if(el.classList.contains('active')) nrChecked++;
+   });
+   if(nrChecked === nrCheckable || nrChecked === 0){
+       if(nrChecked === 0){
+            parentLi.classList.remove("checked");
+       }else{
+            parentLi.classList.add("checked");
+       }
+   }else{
+        parentLi.classList.remove("checked");
+   }
+}
+
+
+vanillaSelectBox.prototype.checkUncheckFromParent = function (liClicked) {
+    let self = this;
+    let parentId = liClicked.id;
     if (!self.isMultiple) return;
     let childrenElements = Array.prototype.slice.call(self.listElements).filter(function(el){
          return el.hasAttribute("data-parent") && el.getAttribute('data-parent') == parentId;
@@ -722,8 +755,14 @@ vanillaSelectBox.prototype.checkUncheckFromParent = function (parentId) {
             event.initEvent('click', true, false);
             el.dispatchEvent(event);
         });
+        if(nrChecked === 0){
+            liClicked.classList.add("checked");
+        }else{
+            liClicked.classList.remove("checked");
+        }
     }else{
         //check all
+        liClicked.classList.remove("checked");
         childrenElements.forEach(function(el){
             if(!el.classList.contains('active')){
                 var event = document.createEvent('HTMLEvents');

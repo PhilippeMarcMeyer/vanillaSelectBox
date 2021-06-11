@@ -206,16 +206,29 @@
         <div>optgroup support : </div>
         <div> 
             <label for="dino-select">Choose dinosaurs :</label>
-            <select id="dino-select" multiple size="3" >
+            <select id="dino-select" multiple size="2" >
                 <optgroup label="Theropods">
+                    <option>Archaeopteryx</option>
+                    <option>Carnotaurus</option>
+                    <option>Deinonychus</option>
+                    <option>Troodon</option>
                     <option>Tyrannosaurus</option>
                     <option>Velociraptor</option>
-                    <option>Deinonychus</option>
                 </optgroup>
                 <optgroup label="Sauropods">
+                    <option>Aegyptosaurus</option>
+                    <option>Apatosaurus</option>
+                    <option>Argentinosaurus</option>
+                    <option>Brachiosaurus</option>
                     <option>Diplodocus</option>
                     <option>Saltasaurus</option>
-                    <option>Apatosaurus</option>
+                </optgroup>
+                <optgroup label="Armoured dinosaur">
+                    <option>Ankylosaurus</option>
+                    <option>Nodosaurus</option>
+                    <option>Shamosaurus</option>
+                    <option>Tsagantegia</option>                    
+                    <option>Stegosaurus</option>
                 </optgroup>
             </select>
         </div>
@@ -678,6 +691,6 @@ for (var i = 0;i < allCountries.length;i++) {
     selectCountries.appendChild(option);
 }
 let selectBox4 = new vanillaSelectBox("#allCountries", { "maxHeight": 200, "search": true,"stayOpen":true,translations: { "all": "All", "items": "Countries" } });
-let selecDino = new vanillaSelectBox("#dino-select",{ "maxHeight": 300,"search": true,translations: { "all": "All", "items": "Dinos" } });
+let selecDino = new vanillaSelectBox("#dino-select",{ "maxHeight": 400,"search": true,translations: { "all": "All", "items": "Dinos" } });
         </script>
 </html>

@@ -1,5 +1,5 @@
 
-# vanillaSelectBox v0.63 
+# vanillaSelectBox v0.64 
 
 ### A nice select/multiselect ui with no dependency and two levels support thru optgroups
 
@@ -67,6 +67,8 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History : 
+
+v0.64 : Two levels: groups are now checkable to check/uncheck the children options 
 
 v0.63 : Two levels: one click on the group selects / unselects children
 
