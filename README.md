@@ -131,10 +131,52 @@ v 0.01 : first commit => basics for a single select box + the Dom is cleaned if 
 
 ## Examples
 
-Two levels : just use optgroup tags to make it two levels
+Single select menu :
+
+```
+       <select id="singleTest">
+            <option value="Abarth" >Abarth</option>
+            <option value="Alfa Romeo">Alfa Romeo</option>
+            <option value="Alpine">Alpine</option>
+            <option value="Aston Martin" >Aston Martin</option>
+            <option value="Audi" >Audi</option>
+            <option value="Bentley" >Bentley</option>
+            <option value="BMW" >BMW</option>
+            <option value="Cadillac">Cadillac</option>
+            <option value="Chevrolet">Chevrolet</option>
+            <option value="Citroën">Citroën</option>
+            <option value="Cupra">Cupra</option>
+            <option value="DACIA">Dacia</option>
+        </select>
+	
+let selectCars = new vanillaSelectBox("#singleTest",{ "placeHolder":"Choose your car",translations: { "all": "All", "items": "Cars" } });
+
+```
+Multiple select menu :
 note the "multiple" attribute to ge en multiple select menu
-and the size="3" to replace the comma delimited string of selected items by "4 items" where more than size items are selected
-(here items is translated to dinos)
+and the size="2" to replace the comma delimited string of selected items by "3 items" where more than size items are selected
+(here items is translated to Cars)
+```
+       <select id="multiTest" multiple size="2">
+            <option value="Abarth" >Abarth</option>
+            <option value="Alfa Romeo">Alfa Romeo</option>
+            <option value="Alpine">Alpine</option>
+            <option value="Aston Martin" >Aston Martin</option>
+            <option value="Audi" >Audi</option>
+            <option value="Bentley" >Bentley</option>
+            <option value="BMW" >BMW</option>
+            <option value="Cadillac">Cadillac</option>
+            <option value="Chevrolet">Chevrolet</option>
+            <option value="Citroën">Citroën</option>
+            <option value="Cupra">Cupra</option>
+            <option value="DACIA">Dacia</option>
+        </select>
+	
+let selectCars = new vanillaSelectBox("#multiTest",{ "placeHolder":"Choose up to 3 cars","maxSelect":3,translations: { "all": "All", "items": "Cars" } });
+
+```
+
+Two levels : just use optgroup tags to make it two levels
 
 ```
         <div> 
