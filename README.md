@@ -132,11 +132,14 @@ v 0.01 : first commit => basics for a single select box + the Dom is cleaned if 
 ## Examples
 
 Two levels : just use optgroup tags to make it two levels
+note the "multiple" attribute to ge en multiple select menu
+and the size="3" to replace the comma delimited string of selected items by "4 items" where more than size items are selected
+(here items is translated to dinos)
 
 ```
         <div> 
             <label for="dino-select">Choose dinosaurs :</label>
-            <select id="dino-select" multiple="" size="3" >
+            <select id="dino-select" multiple size="3" >
                 <optgroup label="Theropods">
                     <option>Tyrannosaurus</option>
                     <option>Velociraptor</option>
