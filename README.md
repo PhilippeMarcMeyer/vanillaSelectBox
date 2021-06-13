@@ -149,7 +149,12 @@ Single select menu :
             <option value="DACIA">Dacia</option>
         </select>
 	
-let selectCars = new vanillaSelectBox("#singleTest",{ "placeHolder":"Choose your car",translations: { "all": "All", "items": "Cars" } });
+let selectCars = new vanillaSelectBox(
+	"#singleTest",
+	    {
+	    	"placeHolder":"Choose your car",
+		translations: { "all": "All", "items": "Cars" } 
+	    });
 
 ```
 Multiple select menu :
@@ -172,7 +177,13 @@ and the size="2" to replace the comma delimited string of selected items by "3 i
             <option value="DACIA">Dacia</option>
         </select>
 	
-let selectCars = new vanillaSelectBox("#multiTest",{ "placeHolder":"Choose up to 3 cars","maxSelect":3,translations: { "all": "All", "items": "Cars" } });
+let selectCars = new vanillaSelectBox(
+	"#multiTest",
+	    {
+		"placeHolder":"Choose up to 3 cars",
+		"maxSelect":3,
+		"translations": { "all": "All", "items": "Cars" } 
+	    });
 
 ```
 
