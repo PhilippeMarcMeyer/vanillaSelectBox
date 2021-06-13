@@ -131,7 +131,7 @@ v 0.01 : first commit => basics for a single select box + the Dom is cleaned if 
 
 ## Examples
 
-Two levels :
+Two levels : just use optgroup tags to make it two levels
 
 ```
         <div> 
@@ -183,11 +183,11 @@ document.getElementById("dino-select").addEventListener("change", function (e) {
 
 ```
 
-maxSelect option :
+maxSelect option : limits the number of options you can select
 
 ```
 let selectCars = new vanillaSelectBox("#demoShort",
-    {"maxSelect":4, 
+    {"maxSelect": 4, 
     "maxHeight": 200,
     "search": true,
     translations: { "all": "All", "items": "Cars" } 
@@ -195,7 +195,7 @@ let selectCars = new vanillaSelectBox("#demoShort",
 ```
 
 
-maxOptionWidth option :
+maxOptionWidth option : limits the width of the menu options to make the menu more narrow using ellipis
 
 ```
 let selectCars = new vanillaSelectBox("#demoShort",
