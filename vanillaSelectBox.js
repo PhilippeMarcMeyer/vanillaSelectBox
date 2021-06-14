@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v0.65 : Two levels: bug fix : groups are checked/unchecked when check all/uncheck all is clicked
 vanillaSelectBox : v0.64 : Two levels: groups are now checkable to check/uncheck the children options 
 vanillaSelectBox : v0.63 : Two levels: one click on the group selects / unselects children
 vanillaSelectBox : v0.62 : New option: maxOptionWidth set a maximum width for each option for narrow menus
@@ -340,7 +341,7 @@ function vanillaSelectBox(domSelector, options) {
           }
             li.appendChild(document.createTextNode(" " + text));
         });
-
+        
         if (document.querySelector(this.domSelector + ' optgroup') !== null) {
             this.optgroups = true;
             this.options = document.querySelectorAll(this.domSelector + " option");
@@ -803,6 +804,8 @@ vanillaSelectBox.prototype.checkUncheckAll = function () {
 
 vanillaSelectBox.prototype.setValue = function (values) {
     let self = this;
+    let listElements = self.drop.querySelectorAll("li");
+
     if (values == null || values == undefined || values == "") {
         self.empty();
     } else {
@@ -810,25 +813,27 @@ vanillaSelectBox.prototype.setValue = function (values) {
             if (vanillaSelectBox_type(values) == "string") {
                 if (values === "all") {
                     values = [];
-                    Array.prototype.slice.call(self.listElements).forEach(function (x) {
-                        if (x.hasAttribute('data-value')){
+                    Array.prototype.slice.call(listElements).forEach(function (x) {
+                        if (x.hasAttribute('data-value')) {
                             let value = x.getAttribute('data-value');
-                            if (value !== 'all'){
-                                if(!x.classList.contains('hidden-search') && !x.classList.contains('disabled')) {
+                            if (value !== 'all') {
+                                if (!x.classList.contains('hidden-search') && !x.classList.contains('disabled')) {
                                     values.push(x.getAttribute('data-value'));
-                            }
-                            // already checked (but hidden by search)
-                            if(x.classList.contains('active')){
-                                if(x.classList.contains('hidden-search') || x.classList.contains('disabled')){
-                                    values.push(value);
+                                }
+                                // already checked (but hidden by search)
+                                if (x.classList.contains('active')) {
+                                    if (x.classList.contains('hidden-search') || x.classList.contains('disabled')) {
+                                        values.push(value);
+                                    }
                                 }
                             }
-                        } 
-                    }
+                        } else if(x.classList.contains('grouped-option') ) {
+                            x.classList.add("checked");
+                        }
                     });
                 } else if (values === "none") {
                     values = [];
-                    Array.prototype.slice.call(self.listElements).forEach(function (x) {
+                    Array.prototype.slice.call(listElements).forEach(function (x) {
                         if (x.hasAttribute('data-value')){
                             let value = x.getAttribute('data-value');
                             if (value !== 'all'){
@@ -838,7 +843,9 @@ vanillaSelectBox.prototype.setValue = function (values) {
                                     }
                                 }
                             }
-                        } 
+                        }else if(x.classList.contains('grouped-option') ) {
+                            x.classList.remove("checked");
+                        }
                     });
                 }else {
                     values = values.split(",");
@@ -858,7 +865,7 @@ vanillaSelectBox.prototype.setValue = function (values) {
                 let sep = "";
                 let nrActives = 0;
                 let nrAll = 0;
-                Array.prototype.slice.call(self.listElements).forEach(function (x) {
+                Array.prototype.slice.call(listElements).forEach(function (x) {
                     nrAll++;
                     if (foundValues.indexOf(x.getAttribute("data-value")) != -1) {
                         x.classList.add("active");
@@ -886,7 +893,7 @@ vanillaSelectBox.prototype.setValue = function (values) {
             let found = false;
             let text = "";
             let classNames = ""
-            Array.prototype.slice.call(self.listElements).forEach(function (x) {
+            Array.prototype.slice.call(listElements).forEach(function (x) {
                 if (x.getAttribute("data-value") == values) {
                     x.classList.add("active");
                     found = true;
