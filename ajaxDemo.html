@@ -205,7 +205,16 @@ function init() {
   loadJSON(function(response) {
     var data = JSON.parse(response).slice(0,15);
 	buildSelect(data,"app","demo");
-	let selectDemo = new vanillaSelectBox("#demo",{ "maxHeight": 300,"search": true,translations: { "all": "All", "items": "Cars" } });
+	let selectDemo = new vanillaSelectBox("#demo",
+        {
+            "remote": true,
+            "placeHolder": "Search to load more options",
+            "maxHeight": 300,
+            "search": true,
+            translations: { "all": "All", "items": "Cars" },
+            
+        }
+    );
 
   });
 }

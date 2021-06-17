@@ -81,6 +81,8 @@ function vanillaSelectBox(domSelector, options) {
     this.currentOptgroup = 0;
     this.maxOptionWidth = Infinity;
     this.maxSelect = Infinity;
+    this.remote = false;
+    this.onSearch = null; // if remote is true : a user defined function that loads more options from the back
     this.forbidenAttributes = ["class","selected","disabled","data-text","data-value","style"]; 
     this.forbidenClasses= ["active","disabled"]; 
     this.userOptions = {
@@ -118,6 +120,12 @@ function vanillaSelectBox(domSelector, options) {
         if (options.search != undefined) {
             this.search = options.search;
         }
+        if(options.remote != undefined && options.remote){
+            this.remote = this.search; // search is mandatory to use the remote option
+        }
+        if(options.onSearch!= undefined && typeof options.onSearch === 'function' && options.remote){
+            this.onSearch=options.onSearch;
+        }
 		if (options.stayOpen != undefined) {
             this.userOptions.stayOpen = options.stayOpen;
         }
@@ -132,7 +140,6 @@ function vanillaSelectBox(domSelector, options) {
             this.maxOptionWidth = options.maxOptionWidth;
             this.ulminWidth= options.maxOptionWidth+60;
             this.ulmaxWidth = options.maxOptionWidth+60;
-            
         }
     }
 
@@ -150,6 +157,7 @@ function vanillaSelectBox(domSelector, options) {
     }
 
     this.getCssArray =function(selector){
+        // Why inline css ? To protect the button display from foreign css files
         let cssArray = [];
     if(selector === ".vsb-main button"){
        cssArray= [
@@ -430,49 +438,84 @@ function vanillaSelectBox(domSelector, options) {
                 let nrFound = 0;
                 let nrChecked = 0;
                 let selectAll = null;
-                if (searchValueLength < 2) {
-                    Array.prototype.slice.call(self.listElements).forEach(function (x) {
-                        if (x.getAttribute('data-value') === 'all') {
-                            selectAll = x;
-                        }else{
-                            x.classList.remove("hidden-search");
-                            nrFound++;
-                            nrChecked += x.classList.contains('active');
-                        }
-                    });
-                } else {
-                    Array.prototype.slice.call(self.listElements).forEach(function (x) {
-                        if (x.getAttribute('data-value') !== 'all') {
-                            let text = x.getAttribute("data-text").toUpperCase();
-                            if (text.indexOf(searchValue) === -1 && x.getAttribute('data-value') !== 'all') {
-                                x.classList.add("hidden-search");
+                if (self.remote != null) {
+                    if (searchValueLength == 0) {
+                        let toRemove = [];
+                        Array.prototype.slice.call(self.listElements).forEach(function (x) {
+                            if (x.getAttribute('data-value') === 'all') {
+                                selectAll = x;
+                                x.classList.remove('disabled');
+                                x.classList.add("active");
+                                x.innerText = self.userOptions.translations.clearAll;
+                                x.setAttribute('data-selected', 'true')
                             } else {
-                                nrFound++;
+                                if(x.classList.contains('active')){
+                                    x.classList.remove("hidden-search");
+                                    nrChecked ++;
+                                }else{
+                                    x.classList.add("hidden-search");
+                                    toRemove.push(x);
+                                }
+                            }
+                        });
+                        if(toRemove.length > 0){
+                            for(let i = toRemove.length-1; i >=0;i--){
+                                toRemove[i].parentElement.removeChild(toRemove[i]); // legacy IE syntax
+                            }
+                        }
+                        if(nrChecked==0 && selectAll!=null){
+                            selectAll.classList.add('disabled');
+                        }
+                    } else if(searchValueLength >= 2){
+
+                    }
+                    //---
+                }else{
+                    if (searchValueLength < 2) {
+                        Array.prototype.slice.call(self.listElements).forEach(function (x) {
+                            if (x.getAttribute('data-value') === 'all') {
+                                selectAll = x;
+                            } else {
                                 x.classList.remove("hidden-search");
+                                nrFound++;
                                 nrChecked += x.classList.contains('active');
                             }
+                        });
+                    } else {
+                        Array.prototype.slice.call(self.listElements).forEach(function (x) {
+                            if (x.getAttribute('data-value') !== 'all') {
+                                let text = x.getAttribute("data-text").toUpperCase();
+                                if (text.indexOf(searchValue) === -1 && x.getAttribute('data-value') !== 'all') {
+                                    x.classList.add("hidden-search");
+                                } else {
+                                    nrFound++;
+                                    x.classList.remove("hidden-search");
+                                    nrChecked += x.classList.contains('active');
+                                }
+                            } else {
+                                selectAll = x;
+                            }
+                        });
+                    }
+                    if(selectAll){
+                        if(nrFound === 0){
+                            selectAll.classList.add('disabled');
                         }else{
-                            selectAll = x;
+                            selectAll.classList.remove('disabled');
                         }
-                    });
-                }
-                if(selectAll){
-                    if(nrFound === 0){
-                        selectAll.classList.add('disabled');
-                    }else{
-                        selectAll.classList.remove('disabled');
-                    }
-                    if( nrChecked !== nrFound){
-                        selectAll.classList.remove("active");
-                        selectAll.innerText = self.userOptions.translations.selectAll;
-                        selectAll.setAttribute('data-selected', 'false')
-                    }else{
-                        selectAll.classList.add("active");
-                        selectAll.innerText = self.userOptions.translations.clearAll;
-                        selectAll.setAttribute('data-selected', 'true')
+                        if( nrChecked !== nrFound){
+                            selectAll.classList.remove("active");
+                            selectAll.innerText = self.userOptions.translations.selectAll;
+                            selectAll.setAttribute('data-selected', 'false')
+                        }else{
+                            selectAll.classList.add("active");
+                            selectAll.innerText = self.userOptions.translations.clearAll;
+                            selectAll.setAttribute('data-selected', 'true')
+                        }
                     }
                 }
-            });
+
+            }); //
         }
 
 		if(self.userOptions.stayOpen){
