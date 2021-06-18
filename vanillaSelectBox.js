@@ -123,7 +123,7 @@ function vanillaSelectBox(domSelector, options) {
         if(options.remote != undefined && options.remote){
             this.remote = this.search; // search is mandatory to use the remote option
         }
-        if(options.onSearch!= undefined && typeof options.onSearch === 'function' && options.remote){
+        if(options.onSearch!= undefined && typeof options.onSearch === 'function' && this.remote){
             this.onSearch=options.onSearch;
         }
 		if (options.stayOpen != undefined) {
@@ -467,7 +467,7 @@ function vanillaSelectBox(domSelector, options) {
                             selectAll.classList.add('disabled');
                         }
                     } else if(searchValueLength >= 2){
-
+                        self.onSearch(searchValue);
                     }
                     //---
                 }else{
@@ -673,6 +673,11 @@ function vanillaSelectBox(domSelector, options) {
     }
     this.init();
     this.checkUncheckAll();
+}
+
+vanillaSelectBox.prototype.remoteSearchIntegrate = function(data){
+    let self = this;
+    console.log(data);
 }
 
 vanillaSelectBox.prototype.disableItems = function (values) {
