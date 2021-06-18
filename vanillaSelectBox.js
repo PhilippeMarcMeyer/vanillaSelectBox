@@ -351,7 +351,8 @@ function vanillaSelectBox(domSelector, options) {
         });
         
         if (document.querySelector(this.domSelector + ' optgroup') !== null) {
-            this.optgroups = true;
+            this.optgroups = true; 
+            this.remote = false;// debug
             this.options = document.querySelectorAll(this.domSelector + " option");
             let groups = document.querySelectorAll(this.domSelector + ' optgroup');
             Array.prototype.slice.call(groups).forEach(function(group) {
@@ -440,36 +441,12 @@ function vanillaSelectBox(domSelector, options) {
                 let selectAll = null;
                 if (self.remote != null) {
                     if (searchValueLength == 0) {
-                        let toRemove = [];
-                        Array.prototype.slice.call(self.listElements).forEach(function (x) {
-                            if (x.getAttribute('data-value') === 'all') {
-                                selectAll = x;
-                                x.classList.remove('disabled');
-                                x.classList.add("active");
-                                x.innerText = self.userOptions.translations.clearAll;
-                                x.setAttribute('data-selected', 'true')
-                            } else {
-                                if(x.classList.contains('active')){
-                                    x.classList.remove("hidden-search");
-                                    nrChecked ++;
-                                }else{
-                                    x.classList.add("hidden-search");
-                                    toRemove.push(x);
-                                }
-                            }
-                        });
-                        if(toRemove.length > 0){
-                            for(let i = toRemove.length-1; i >=0;i--){
-                                toRemove[i].parentElement.removeChild(toRemove[i]); // legacy IE syntax
-                            }
-                        }
-                        if(nrChecked==0 && selectAll!=null){
-                            selectAll.classList.add('disabled');
-                        }
-                    } else if(searchValueLength >= 2){
+                        self.removeOptionsNotChecked();
+                        self.reloadTree();
+                        self.checkUncheckAll();
+                    } else if(searchValueLength >= 3){
                         self.onSearch(searchValue);
                     }
-                    //---
                 }else{
                     if (searchValueLength < 2) {
                         Array.prototype.slice.call(self.listElements).forEach(function (x) {
@@ -677,7 +654,133 @@ function vanillaSelectBox(domSelector, options) {
 
 vanillaSelectBox.prototype.remoteSearchIntegrate = function(data){
     let self = this;
-    console.log(data);
+    if(data == null || data.length == 0){
+        self.removeOptionsNotChecked();
+        self.reloadTree();
+    }else{
+        self.removeOptionsNotChecked();
+        let already = Array.prototype.slice.call(self.root.options).map(function(x){
+            return x.value;
+        });
+        if(already.length >0){
+            if(typeof(data[0].id) == "number"){
+                already = already.map(function(x){
+                    return parseInt(x);
+                });
+            }
+            data = data.filter(function(x){
+                return already.indexOf(x.id) === -1;
+            });
+        }
+
+        self.remoteSearchIntegrateIt(data);
+    }
+}
+
+vanillaSelectBox.prototype.removeOptionsNotChecked = function () {
+    let self = this;
+
+    for (var i = self.root.length-1; i >=0; i--) {
+        if (self.root.options[i].selected==false){
+            self.root.remove(i);
+        }
+    }
+}
+
+vanillaSelectBox.prototype.remoteSearchIntegrateIt = function(data){
+    let self = this;
+    if(data == null || data.length == 0) return;
+
+    for (var i = 0; i < data.length; i++) {
+        option = document.createElement("option");
+        option.value = data[i].id;
+        option.text = data[i].name;
+        self.root.appendChild(option);
+    }
+    self.reloadTree();
+}
+
+vanillaSelectBox.prototype.reloadTree = function(){
+    let self = this;
+    let lis = self.ul.querySelectorAll("li");
+    if(lis != null ){
+        for (var i = lis.length-1; i >=0; i--) {
+            if (lis[i].getAttribute('data-value') !== 'all') {
+            self.ul.removeChild(lis[i]);
+            }
+        }
+    }
+    let selectedTexts = ""
+    let sep = "";
+    let nrActives = 0;
+    let nrAll = 0;
+    self.options = self.root.querySelectorAll("option");
+    Array.prototype.slice.call(self.options).forEach(function (x) {
+        let text = x.textContent;
+        let value = x.value;
+        let originalAttrs;
+        if (x.hasAttributes()) {
+            originalAttrs = Array.prototype.slice.call(x.attributes)
+                .filter(function(a){
+                    return self.forbidenAttributes.indexOf(a.name) === -1
+                });
+        }
+        let classes = x.getAttribute("class");
+        if(classes)
+        {
+            classes=classes
+                .split(" ")
+                .filter(function(c){
+                    return self.forbidenClasses.indexOf(c) === -1
+                });
+        }else
+        {
+            classes=[];
+        }
+        let li = document.createElement("li");
+        let isSelected = x.selected;
+        let isDisabled = x.disabled;
+
+        self.ul.appendChild(li);
+        li.setAttribute("data-value", value);
+        li.setAttribute("data-text", text);
+
+        if(originalAttrs !== undefined){
+            originalAttrs.forEach(function(a){
+                li.setAttribute(a.name, a.value);
+            });
+        }
+        
+        classes.forEach(function(x){
+            li.classList.add(x);
+        });
+
+        if(self.maxOptionWidth < Infinity){
+            li.classList.add("short");
+            li.style.maxWidth = self.maxOptionWidth + "px";
+        }
+
+        if (isSelected) {
+            nrActives++;
+            selectedTexts += sep + text;
+            sep = ",";
+            li.classList.add("active");
+            if (!self.isMultiple) {
+                self.title.textContent = text;
+                if (classes.length != 0) {
+                    classes.forEach(function(x){
+                        self.title.classList.add(x);
+                    });
+                }
+            }
+        }
+      if(isDisabled){
+        li.classList.add("disabled");
+      }
+        li.appendChild(document.createTextNode(" " + text));
+    });
+
+    self.listElements = self.drop.querySelectorAll("li:not(.grouped-option)");
 }
 
 vanillaSelectBox.prototype.disableItems = function (values) {
@@ -772,7 +875,6 @@ vanillaSelectBox.prototype.checkUncheckFromChild = function (liClicked){
    }
 }
 
-
 vanillaSelectBox.prototype.checkUncheckFromParent = function (liClicked) {
     let self = this;
     let parentId = liClicked.id;
@@ -810,7 +912,6 @@ vanillaSelectBox.prototype.checkUncheckFromParent = function (liClicked) {
         });
     }
 }
-
 
 vanillaSelectBox.prototype.checkUncheckAll = function () {
     let self = this;

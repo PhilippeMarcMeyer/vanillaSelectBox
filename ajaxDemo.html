@@ -226,7 +226,7 @@ function init() {
       if(response != null){
         var data = JSON.parse(response).slice(0,15);
 	    buildSelect(data,"app","demo");
-	    let selectDemo = new vanillaSelectBox("#demo",{ "maxHeight": 300,"search": true,translations: { "all": "All", "items": "Cars" },remote:true,"onSearch":remoteSearch });
+	    let selectDemo = new vanillaSelectBox("#demo",{ "maxHeight": 300,"search": true,translations: { "all": "everybody", "items": "persons" },remote:true,"onSearch":remoteSearch });
       } // todo
   });
 }
