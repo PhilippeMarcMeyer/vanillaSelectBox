@@ -7,7 +7,7 @@ vanillaSelectBox : v0.64 : Two levels: groups are now checkable to check/uncheck
 vanillaSelectBox : v0.63 : Two levels: one click on the group selects / unselects children
 vanillaSelectBox : v0.62 : New option: maxOptionWidth set a maximum width for each option for narrow menus
 vanillaSelectBox : v0.61 : New option: maxSelect, set a maximum to the selectable options in a multiple choice menu
-vanillaSelectBox : v0.60 : Two levels: optgroups are now used to show two level dropdowns 
+vanillaSelectBox : v0.60 : Two levels: Optgroups are now used to show two level dropdowns 
 vanillaSelectBox : v0.59 : Bug fix : search box was overlapping first item in single selects
 vanillaSelectBox : v0.58 : Bug fixes
 vanillaSelectBox : v0.57 : Bug fix (minWidth option not honored)
@@ -64,6 +64,8 @@ function vanillaSelectBox(domSelector, options) {
     this.title;
     this.isMultiple = this.root.hasAttribute("multiple");
     this.multipleSize = this.isMultiple && this.root.hasAttribute("size") ? parseInt(this.root.getAttribute("size")) : -1;
+    this.isOptgroups = false;
+    this.currentOptgroup = 0;
     this.drop;
     this.top;
     this.left;
@@ -77,12 +79,10 @@ function vanillaSelectBox(domSelector, options) {
     this.ulminWidth = 140;
     this.ulmaxWidth = 280;
     this.ulminHeight = 25;
-    this.optgroups = false;
-    this.currentOptgroup = 0;
     this.maxOptionWidth = Infinity;
     this.maxSelect = Infinity;
-    this.remote = false;
-    this.onSearch = null; // if remote is true : a user defined function that loads more options from the back
+    this.isRemote = false;
+    this.onSearch = null; // if isRemote is true : a user defined function that loads more options from the back
     this.forbidenAttributes = ["class","selected","disabled","data-text","data-value","style"]; 
     this.forbidenClasses= ["active","disabled"]; 
     this.userOptions = {
@@ -121,9 +121,10 @@ function vanillaSelectBox(domSelector, options) {
             this.search = options.search;
         }
         if(options.remote != undefined && options.remote){
-            this.remote = this.search; // search is mandatory to use the remote option
+            this.isRemote = this.search; // search is mandatory to use the remote option
         }
-        if(options.onSearch!= undefined && typeof options.onSearch === 'function' && this.remote){
+        // user defined remote search function
+        if(options.onSearch!= undefined && typeof options.onSearch === 'function' && this.isRemote){
             this.onSearch=options.onSearch;
         }
 		if (options.stayOpen != undefined) {
@@ -351,8 +352,8 @@ function vanillaSelectBox(domSelector, options) {
         });
         
         if (document.querySelector(this.domSelector + ' optgroup') !== null) {
-            this.optgroups = true; 
-            this.remote = false;// debug
+            this.isOptgroups = true; 
+            this.isRemote = false;// debug
             this.options = document.querySelectorAll(this.domSelector + " option");
             let groups = document.querySelectorAll(this.domSelector + ' optgroup');
             Array.prototype.slice.call(groups).forEach(function(group) {
@@ -439,7 +440,7 @@ function vanillaSelectBox(domSelector, options) {
                 let nrFound = 0;
                 let nrChecked = 0;
                 let selectAll = null;
-                if (self.remote != null) {
+                if (self.isRemote != null) {
                     if (searchValueLength == 0) {
                         self.removeOptionsNotChecked();
                         self.reloadTree();
@@ -520,6 +521,7 @@ function vanillaSelectBox(domSelector, options) {
 
         this.drop.addEventListener("click", function (e) {
             if (self.isDisabled) return;
+            if(e.target.tagName === 'INPUT') return;
             let isShowHideCommand = e.target.tagName === 'SPAN';
             let isCheckCommand = e.target.tagName === 'I';
             let liClicked = e.target.parentElement;
@@ -645,6 +647,9 @@ function vanillaSelectBox(domSelector, options) {
                 Array.prototype.slice.call(self.listElements).forEach(function (x) {
                     x.classList.remove("hidden-search");
                 });
+                if(self.isRemote){
+                    self.removeOptionsNotChecked();
+                }
             }
         }
     }
@@ -679,7 +684,7 @@ vanillaSelectBox.prototype.remoteSearchIntegrate = function(data){
 
 vanillaSelectBox.prototype.removeOptionsNotChecked = function () {
     let self = this;
-
+    if(!self.isMultiple) return;
     for (var i = self.root.length-1; i >=0; i--) {
         if (self.root.options[i].selected==false){
             self.root.remove(i);
@@ -690,12 +695,38 @@ vanillaSelectBox.prototype.removeOptionsNotChecked = function () {
 vanillaSelectBox.prototype.remoteSearchIntegrateIt = function(data){
     let self = this;
     if(data == null || data.length == 0) return;
+    if(self.isOptgroups){
+        let groups = data.filter(function(x){
+            return x.isGroup;
+        });
+        groups.forEach(function(g){
+           var optgroup = document.createElement("optgroup");
+           optgroup.appendChild(document.createTextNode(g.name));
+           self.root.appendChild(optgroup);
 
-    for (var i = 0; i < data.length; i++) {
-        option = document.createElement("option");
-        option.value = data[i].id;
-        option.text = data[i].name;
-        self.root.appendChild(option);
+           let options = data.filter(function(x){
+             return x.parent == g.name;
+            });
+            options.forEach(function(x){
+                var option = document.createElement("option");
+                option.value = data[i].id;
+                option.text = data[i].name;
+                self.root.appendChild(option);
+             });
+        });
+        for (var i = 0; i < data.length; i++) {
+            var option = document.createElement("option");
+            option.value = data[i].id;
+            option.text = data[i].name;
+            self.root.appendChild(option);
+        }
+    }else{
+        for (var i = 0; i < data.length; i++) {
+            var option = document.createElement("option");
+            option.value = data[i].id;
+            option.text = data[i].name;
+            self.root.appendChild(option);
+        }
     }
     self.reloadTree();
 }
@@ -915,38 +946,37 @@ vanillaSelectBox.prototype.checkUncheckFromParent = function (liClicked) {
 
 vanillaSelectBox.prototype.checkUncheckAll = function () {
     let self = this;
-    if (self.isMultiple) {
-        let nrChecked = 0;
-        let nrCheckable = 0;
-        let checkAllElement = null;
+    if (!self.isMultiple) return;
+    let nrChecked = 0;
+    let nrCheckable = 0;
+    let checkAllElement = null;
 
-        Array.prototype.slice.call(self.listElements).forEach(function (x) {
-            if (x.hasAttribute('data-value')){
-                if(x.getAttribute('data-value') === 'all'){
-                    checkAllElement = x;
-                }
-                if (x.getAttribute('data-value') !== 'all'
-                    && !x.classList.contains('hidden-search')
-                    && !x.classList.contains('disabled')) {
-                    nrCheckable++;
-                    nrChecked += x.classList.contains('active');
-                }
+    Array.prototype.slice.call(self.listElements).forEach(function (x) {
+        if (x.hasAttribute('data-value')) {
+            if (x.getAttribute('data-value') === 'all') {
+                checkAllElement = x;
             }
-        });
+            if (x.getAttribute('data-value') !== 'all'
+                && !x.classList.contains('hidden-search')
+                && !x.classList.contains('disabled')) {
+                nrCheckable++;
+                nrChecked += x.classList.contains('active');
+            }
+        }
+    });
 
-        if(checkAllElement ){
-         if(nrChecked === nrCheckable){
-                // check the checkAll checkbox
-                checkAllElement.classList.add("active");
-                checkAllElement.innerText = self.userOptions.translations.clearAll;
-                checkAllElement.setAttribute('data-selected', 'true')
-            }else if(nrChecked === 0){
-                // uncheck the checkAll checkbox
-                self.title.textContent = self.userOptions.placeHolder;
-                checkAllElement.classList.remove("active");
-                checkAllElement.innerText = self.userOptions.translations.selectAll;
-                checkAllElement.setAttribute('data-selected', 'false')
-            }
+    if (checkAllElement) {
+        if (nrChecked === nrCheckable) {
+            // check the checkAll checkbox
+            checkAllElement.classList.add("active");
+            checkAllElement.innerText = self.userOptions.translations.clearAll;
+            checkAllElement.setAttribute('data-selected', 'true')
+        } else if (nrChecked === 0) {
+            // uncheck the checkAll checkbox
+            self.title.textContent = self.userOptions.placeHolder;
+            checkAllElement.classList.remove("active");
+            checkAllElement.innerText = self.userOptions.translations.selectAll;
+            checkAllElement.setAttribute('data-selected', 'false')
         }
     }
 }

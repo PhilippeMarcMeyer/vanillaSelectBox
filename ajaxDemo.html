@@ -181,8 +181,19 @@
 	<b>vanillaSelectBox()</b> <br/>
 	Demonstrate remote searching on "large" data
 	</p>
-	
-	<div id="app" class="demo-zone" style="text-align:left;" id="demo-ajax">
+
+	<p>Multiple select 1 level</p>
+	<div id="appM1" class="demo-zone" style="text-align:left;" id="demo-ajax">
+
+    </div>
+
+    <p>Multiple select 2 levels</p>
+	<div id="appM2" class="demo-zone" style="text-align:left;" id="demo-ajax">
+
+    </div>
+
+    <p>Single select 1 level</p>
+	<div id="appS1" class="demo-zone" style="text-align:left;" id="demo-ajax">
 
     </div>
 
@@ -225,21 +236,28 @@ function init() {
   loadJSON(function(response) {
       if(response != null){
         var data = JSON.parse(response).slice(0,15);
-	    buildSelect(data,"app","demo");
-	    let selectDemo = new vanillaSelectBox("#demo",{ "maxHeight": 300,"search": true,translations: { "all": "everybody", "items": "persons" },remote:true,"onSearch":remoteSearch });
-      } // todo
+	    buildSelect(data,"appM1","demoM1",1);
+	    let selectDemoM1 = new vanillaSelectBox("#demoM1",{ "maxHeight": 300,"search": true,translations: { "all": "everybody", "items": "persons" },remote:true,"onSearch":remoteSearch });
+        buildSelect(data,"appS1","demoS1",false);
+	    let selectDemoS1 = new vanillaSelectBox("#demoS1",{ "maxHeight": 300,"search": true,translations: { "all": "everybody", "items": "persons" },remote:true,"onSearch":remoteSearch });
+  
+    
+    
+    } // todo
   });
 }
 
 init();
-function buildSelect(data,divId,SelectId){
+function buildSelect(data,divId,SelectId,isMultiple,size){
         let anOption;
         let div = document.getElementById(divId);
         div.innerHTML="";
         let elem = document.createElement("select");
         elem.setAttribute('id',SelectId);
-        elem.setAttribute('multiple','true');
-        elem.setAttribute('size','1');
+        if(isMultiple){
+            elem.setAttribute('multiple','true');
+            elem.setAttribute('size',size);
+        }
         div.appendChild(elem);
         data.forEach(function(x){
 			anOption = document.createElement("option");
