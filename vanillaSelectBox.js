@@ -7,7 +7,7 @@ vanillaSelectBox : v0.64 : Two levels: groups are now checkable to check/uncheck
 vanillaSelectBox : v0.63 : Two levels: one click on the group selects / unselects children
 vanillaSelectBox : v0.62 : New option: maxOptionWidth set a maximum width for each option for narrow menus
 vanillaSelectBox : v0.61 : New option: maxSelect, set a maximum to the selectable options in a multiple choice menu
-vanillaSelectBox : v0.60 : Two levels: optgroups are now used to show two level dropdowns 
+vanillaSelectBox : v0.60 : Two levels: Optgroups are now used to show two level dropdowns 
 vanillaSelectBox : v0.59 : Bug fix : search box was overlapping first item in single selects
 vanillaSelectBox : v0.58 : Bug fixes
 vanillaSelectBox : v0.57 : Bug fix (minWidth option not honored)
@@ -64,6 +64,8 @@ function vanillaSelectBox(domSelector, options) {
     this.title;
     this.isMultiple = this.root.hasAttribute("multiple");
     this.multipleSize = this.isMultiple && this.root.hasAttribute("size") ? parseInt(this.root.getAttribute("size")) : -1;
+    this.isOptgroups = false;
+    this.currentOptgroup = 0;
     this.drop;
     this.top;
     this.left;
@@ -77,10 +79,10 @@ function vanillaSelectBox(domSelector, options) {
     this.ulminWidth = 140;
     this.ulmaxWidth = 280;
     this.ulminHeight = 25;
-    this.optgroups = false;
-    this.currentOptgroup = 0;
     this.maxOptionWidth = Infinity;
     this.maxSelect = Infinity;
+    this.isRemote = false;
+    this.onSearch = null; // if isRemote is true : a user defined function that loads more options from the back
     this.forbidenAttributes = ["class","selected","disabled","data-text","data-value","style"]; 
     this.forbidenClasses= ["active","disabled"]; 
     this.userOptions = {
@@ -118,6 +120,13 @@ function vanillaSelectBox(domSelector, options) {
         if (options.search != undefined) {
             this.search = options.search;
         }
+        if(options.remote != undefined && options.remote){
+            this.isRemote = this.search; // search is mandatory to use the remote option
+        }
+        // user defined remote search function
+        if(options.onSearch!= undefined && typeof options.onSearch === 'function' && this.isRemote){
+            this.onSearch=options.onSearch;
+        }
 		if (options.stayOpen != undefined) {
             this.userOptions.stayOpen = options.stayOpen;
         }
@@ -132,7 +141,6 @@ function vanillaSelectBox(domSelector, options) {
             this.maxOptionWidth = options.maxOptionWidth;
             this.ulminWidth= options.maxOptionWidth+60;
             this.ulmaxWidth = options.maxOptionWidth+60;
-            
         }
     }
 
@@ -150,6 +158,7 @@ function vanillaSelectBox(domSelector, options) {
     }
 
     this.getCssArray =function(selector){
+        // Why inline css ? To protect the button display from foreign css files
         let cssArray = [];
     if(selector === ".vsb-main button"){
        cssArray= [
@@ -343,7 +352,8 @@ function vanillaSelectBox(domSelector, options) {
         });
         
         if (document.querySelector(this.domSelector + ' optgroup') !== null) {
-            this.optgroups = true;
+            this.isOptgroups = true; 
+            this.isRemote = false;// debug
             this.options = document.querySelectorAll(this.domSelector + " option");
             let groups = document.querySelectorAll(this.domSelector + ' optgroup');
             Array.prototype.slice.call(groups).forEach(function(group) {
@@ -365,6 +375,7 @@ function vanillaSelectBox(domSelector, options) {
                 li.id = optId;
                 li.appendChild(labelElement);
                 labelElement.appendChild(document.createTextNode(group.label));
+                li.setAttribute("data-text", group.label);
                 self.ul.appendChild(li);
 
                 Array.prototype.slice.call(groupOptions).forEach(function(x) {
@@ -430,49 +441,60 @@ function vanillaSelectBox(domSelector, options) {
                 let nrFound = 0;
                 let nrChecked = 0;
                 let selectAll = null;
-                if (searchValueLength < 2) {
-                    Array.prototype.slice.call(self.listElements).forEach(function (x) {
-                        if (x.getAttribute('data-value') === 'all') {
-                            selectAll = x;
-                        }else{
-                            x.classList.remove("hidden-search");
-                            nrFound++;
-                            nrChecked += x.classList.contains('active');
-                        }
-                    });
-                } else {
-                    Array.prototype.slice.call(self.listElements).forEach(function (x) {
-                        if (x.getAttribute('data-value') !== 'all') {
-                            let text = x.getAttribute("data-text").toUpperCase();
-                            if (text.indexOf(searchValue) === -1 && x.getAttribute('data-value') !== 'all') {
-                                x.classList.add("hidden-search");
+                if (self.isRemote != null) {
+                    if (searchValueLength == 0) {
+                        self.removeOptionsNotChecked();
+                        self.reloadTree();
+                        self.checkUncheckAll();
+                    } else if(searchValueLength >= 3){
+                        self.onSearch(searchValue);
+                    }
+                }else{
+                    if (searchValueLength < 3) {
+                        Array.prototype.slice.call(self.listElements).forEach(function (x) {
+                            if (x.getAttribute('data-value') === 'all') {
+                                selectAll = x;
                             } else {
-                                nrFound++;
                                 x.classList.remove("hidden-search");
+                                nrFound++;
                                 nrChecked += x.classList.contains('active');
                             }
+                        });
+                    } else {
+                        Array.prototype.slice.call(self.listElements).forEach(function (x) {
+                            if (x.getAttribute('data-value') !== 'all') {
+                                let text = x.getAttribute("data-text").toUpperCase();
+                                if (text.indexOf(searchValue) === -1 && x.getAttribute('data-value') !== 'all') {
+                                    x.classList.add("hidden-search");
+                                } else {
+                                    nrFound++;
+                                    x.classList.remove("hidden-search");
+                                    nrChecked += x.classList.contains('active');
+                                }
+                            } else {
+                                selectAll = x;
+                            }
+                        });
+                    }
+                    if(selectAll){
+                        if(nrFound === 0){
+                            selectAll.classList.add('disabled');
                         }else{
-                            selectAll = x;
+                            selectAll.classList.remove('disabled');
                         }
-                    });
-                }
-                if(selectAll){
-                    if(nrFound === 0){
-                        selectAll.classList.add('disabled');
-                    }else{
-                        selectAll.classList.remove('disabled');
-                    }
-                    if( nrChecked !== nrFound){
-                        selectAll.classList.remove("active");
-                        selectAll.innerText = self.userOptions.translations.selectAll;
-                        selectAll.setAttribute('data-selected', 'false')
-                    }else{
-                        selectAll.classList.add("active");
-                        selectAll.innerText = self.userOptions.translations.clearAll;
-                        selectAll.setAttribute('data-selected', 'true')
+                        if( nrChecked !== nrFound){
+                            selectAll.classList.remove("active");
+                            selectAll.innerText = self.userOptions.translations.selectAll;
+                            selectAll.setAttribute('data-selected', 'false')
+                        }else{
+                            selectAll.classList.add("active");
+                            selectAll.innerText = self.userOptions.translations.clearAll;
+                            selectAll.setAttribute('data-selected', 'true')
+                        }
                     }
                 }
-            });
+
+            }); //
         }
 
 		if(self.userOptions.stayOpen){
@@ -500,6 +522,7 @@ function vanillaSelectBox(domSelector, options) {
 
         this.drop.addEventListener("click", function (e) {
             if (self.isDisabled) return;
+            if(e.target.tagName === 'INPUT') return;
             let isShowHideCommand = e.target.tagName === 'SPAN';
             let isCheckCommand = e.target.tagName === 'I';
             let liClicked = e.target.parentElement;
@@ -625,11 +648,186 @@ function vanillaSelectBox(domSelector, options) {
                 Array.prototype.slice.call(self.listElements).forEach(function (x) {
                     x.classList.remove("hidden-search");
                 });
+                if(self.isRemote){
+                    self.removeOptionsNotChecked();
+                }
             }
         }
     }
     this.init();
     this.checkUncheckAll();
+}
+
+vanillaSelectBox.prototype.remoteSearchIntegrate = function(data){
+    let self = this;
+    if(data == null || data.length == 0){
+        self.removeOptionsNotChecked();
+        self.reloadTree();
+    }else{
+        self.removeOptionsNotChecked();
+        let already = Array.prototype.slice.call(self.root.options).map(function(x){
+            return x.value;
+        });
+        if(already.length >0){
+            if(typeof(data[0].id) == "number"){
+                already = already.map(function(x){
+                    return parseInt(x);
+                });
+            }
+            data = data.filter(function(x){
+                return already.indexOf(x.id) === -1;
+            });
+        }
+
+        self.remoteSearchIntegrateIt(data);
+    }
+}
+
+vanillaSelectBox.prototype.removeOptionsNotChecked = function () {
+    let self = this;
+    if(!self.isMultiple) return;
+    for (var i = self.root.length-1; i >=0; i--) {
+        if (self.root.options[i].selected==false){
+            self.root.remove(i);
+        }
+    }
+}
+
+vanillaSelectBox.prototype.remoteSearchIntegrateIt = function(data){
+    let self = this;
+    if(data == null || data.length == 0) return;
+    if(self.isOptgroups){
+        let groups = {};
+        let groupsAlready = [];
+
+        self.root.children.forEach(function(x){
+            console.log(x);
+        });
+/* 
+         data.forEach(function(x){
+             if(x.parent){
+                 if(!groups[x.parent]){
+                    groups[x.parent] = "in_data";
+                    if(groupsAlready.indexOf(x.parent) != -1){
+                        groups[x.parent] = "in_select"; 
+                    }
+                 }
+             }
+            return x.isGroup;
+        });
+        groups.forEach(function(g){
+           var optgroup = document.createElement("optgroup");
+           optgroup.appendChild(document.createTextNode(g.name));c
+           self.root.appendChild(optgroup);
+
+           let options = data.filter(function(x){
+             return x.parent == g.name;
+            });
+            options.forEach(function(x){
+                var option = document.createElement("option");
+                option.value = data[i].id;
+                option.text = data[i].name;
+                self.root.appendChild(option);
+             });
+        });
+        for (var i = 0; i < data.length; i++) {
+            var option = document.createElement("option");
+            option.value = data[i].id;
+            option.text = data[i].name;
+            self.root.appendChild(option);
+        } */
+    }else{
+        for (var i = 0; i < data.length; i++) {
+            var option = document.createElement("option");
+            option.value = data[i].id;
+            option.text = data[i].name;
+            self.root.appendChild(option);
+        }
+    }
+    self.reloadTree();
+}
+
+vanillaSelectBox.prototype.reloadTree = function(){
+    let self = this;
+    let lis = self.ul.querySelectorAll("li");
+    if(lis != null ){
+        for (var i = lis.length-1; i >=0; i--) {
+            if (lis[i].getAttribute('data-value') !== 'all') {
+            self.ul.removeChild(lis[i]);
+            }
+        }
+    }
+    let selectedTexts = ""
+    let sep = "";
+    let nrActives = 0;
+    let nrAll = 0;
+    self.options = self.root.querySelectorAll("option");
+    Array.prototype.slice.call(self.options).forEach(function (x) {
+        let text = x.textContent;
+        let value = x.value;
+        let originalAttrs;
+        if (x.hasAttributes()) {
+            originalAttrs = Array.prototype.slice.call(x.attributes)
+                .filter(function(a){
+                    return self.forbidenAttributes.indexOf(a.name) === -1
+                });
+        }
+        let classes = x.getAttribute("class");
+        if(classes)
+        {
+            classes=classes
+                .split(" ")
+                .filter(function(c){
+                    return self.forbidenClasses.indexOf(c) === -1
+                });
+        }else
+        {
+            classes=[];
+        }
+        let li = document.createElement("li");
+        let isSelected = x.selected;
+        let isDisabled = x.disabled;
+
+        self.ul.appendChild(li);
+        li.setAttribute("data-value", value);
+        li.setAttribute("data-text", text);
+
+        if(originalAttrs !== undefined){
+            originalAttrs.forEach(function(a){
+                li.setAttribute(a.name, a.value);
+            });
+        }
+        
+        classes.forEach(function(x){
+            li.classList.add(x);
+        });
+
+        if(self.maxOptionWidth < Infinity){
+            li.classList.add("short");
+            li.style.maxWidth = self.maxOptionWidth + "px";
+        }
+
+        if (isSelected) {
+            nrActives++;
+            selectedTexts += sep + text;
+            sep = ",";
+            li.classList.add("active");
+            if (!self.isMultiple) {
+                self.title.textContent = text;
+                if (classes.length != 0) {
+                    classes.forEach(function(x){
+                        self.title.classList.add(x);
+                    });
+                }
+            }
+        }
+      if(isDisabled){
+        li.classList.add("disabled");
+      }
+        li.appendChild(document.createTextNode(" " + text));
+    });
+
+    self.listElements = self.drop.querySelectorAll("li:not(.grouped-option)");
 }
 
 vanillaSelectBox.prototype.disableItems = function (values) {
@@ -724,7 +922,6 @@ vanillaSelectBox.prototype.checkUncheckFromChild = function (liClicked){
    }
 }
 
-
 vanillaSelectBox.prototype.checkUncheckFromParent = function (liClicked) {
     let self = this;
     let parentId = liClicked.id;
@@ -763,41 +960,39 @@ vanillaSelectBox.prototype.checkUncheckFromParent = function (liClicked) {
     }
 }
 
-
 vanillaSelectBox.prototype.checkUncheckAll = function () {
     let self = this;
-    if (self.isMultiple) {
-        let nrChecked = 0;
-        let nrCheckable = 0;
-        let checkAllElement = null;
+    if (!self.isMultiple) return;
+    let nrChecked = 0;
+    let nrCheckable = 0;
+    let checkAllElement = null;
 
-        Array.prototype.slice.call(self.listElements).forEach(function (x) {
-            if (x.hasAttribute('data-value')){
-                if(x.getAttribute('data-value') === 'all'){
-                    checkAllElement = x;
-                }
-                if (x.getAttribute('data-value') !== 'all'
-                    && !x.classList.contains('hidden-search')
-                    && !x.classList.contains('disabled')) {
-                    nrCheckable++;
-                    nrChecked += x.classList.contains('active');
-                }
+    Array.prototype.slice.call(self.listElements).forEach(function (x) {
+        if (x.hasAttribute('data-value')) {
+            if (x.getAttribute('data-value') === 'all') {
+                checkAllElement = x;
             }
-        });
+            if (x.getAttribute('data-value') !== 'all'
+                && !x.classList.contains('hidden-search')
+                && !x.classList.contains('disabled')) {
+                nrCheckable++;
+                nrChecked += x.classList.contains('active');
+            }
+        }
+    });
 
-        if(checkAllElement ){
-         if(nrChecked === nrCheckable){
-                // check the checkAll checkbox
-                checkAllElement.classList.add("active");
-                checkAllElement.innerText = self.userOptions.translations.clearAll;
-                checkAllElement.setAttribute('data-selected', 'true')
-            }else if(nrChecked === 0){
-                // uncheck the checkAll checkbox
-                self.title.textContent = self.userOptions.placeHolder;
-                checkAllElement.classList.remove("active");
-                checkAllElement.innerText = self.userOptions.translations.selectAll;
-                checkAllElement.setAttribute('data-selected', 'false')
-            }
+    if (checkAllElement) {
+        if (nrChecked === nrCheckable) {
+            // check the checkAll checkbox
+            checkAllElement.classList.add("active");
+            checkAllElement.innerText = self.userOptions.translations.clearAll;
+            checkAllElement.setAttribute('data-selected', 'true')
+        } else if (nrChecked === 0) {
+            // uncheck the checkAll checkbox
+            self.title.textContent = self.userOptions.placeHolder;
+            checkAllElement.classList.remove("active");
+            checkAllElement.innerText = self.userOptions.translations.selectAll;
+            checkAllElement.setAttribute('data-selected', 'false')
         }
     }
 }

@@ -1,0 +1,20 @@
+
+[
+{id:1,name="Archaeopteryx",parent:"Theropods"},
+{id:2,name="Carnotaurus",parent:"Theropods"},
+{id:3,name="Deinonychus",parent:"Theropods"},
+{id:4,name="Troodon",parent:"Theropods"},
+{id:5,name="Tyrannosaurus",parent:"Theropods"},
+{id:6,name="Velociraptor",parent:"Theropods"},
+{id:7,name="Aegyptosaurus",parent:"Sauropods"},
+{id:8,name="Apatosaurus",parent:"Sauropods"},
+{id:9,name="Argentinosaurus",parent:"Sauropods"},
+{id:10,name="Brachiosaurus",parent:"Sauropods"},
+{id:11,name="Diplodocus",parent:"Sauropods"},
+{id:12,name="Saltasaurus",parent:"Sauropods"},
+{id:13,name="Ankylosaurus",parent:"Armoured dinosaur"},
+{id:14,name="Nodosaurus",parent:"Armoured dinosaur"},
+{id:15,name="Shamosaurus",parent:"Armoured dinosaur"},
+{id:16,name="Tsagantegia",parent:"Armoured dinosaur"},
+{id:17,name="Stegosaurus",parent:"Armoured dinosaur"}
+]
