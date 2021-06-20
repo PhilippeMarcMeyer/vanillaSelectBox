@@ -1,5 +1,5 @@
 
-# vanillaSelectBox v0.65 
+# vanillaSelectBox v0.70
 
 ### A nice select/multiselect ui with no dependency and two levels support thru optgroups
 
@@ -17,6 +17,8 @@ last change : Two levels: one click on the group selects / unselects children
 ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/vanillaSelectBox.png)
 
 Demo : https://philippemarcmeyer.github.io/vanillaSelectBox/
+
+Demo remote (WIP) : https://philippemarcmeyer.github.io/vanillaSelectBox/ajaxDemo.html
 
 ### Transform an HTML select into a selectBox dropdown
 #### the select is hidden and the chosen value(s) is/are available in the source select
@@ -38,6 +40,10 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 * disableSelectAll : true/false. defaut is false : add a checkbox select all / clear all
 * maxSelect : integer. set a maximum in the number of selectable options. CheckAll/uncheckAll is then disabled
 * maxOptionWidth : integer,set a maximum width for each option for narrow menus
+
+### WIP options :
+* remote : true => the search input searches remote thanks to the user defined handler onSearch
+* onSearch : user defined handler (cf ajax.html example)
 
 ### Automatic options :
 * single or multiple choices : depends on the "multiple" attribute that you put in the select code 
@@ -67,6 +73,8 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History : 
+
+v0.70 : remote search (WIP) can be tested. works only on 1 level menus (not optgroups)
 
 v0.65 : Two levels: bug fix : groups are checked/unchecked when check all/uncheck all is clicked
 
@@ -262,4 +270,55 @@ let selectCars = new vanillaSelectBox("#demoShort",
     "search": true,
     translations: { "all": "All", "items": "Cars" } 
 });
+```
+
+Remote search example :
+
+```
+<select id="demoM1" multiple="true" size="3">
+	<option value="1">Airi Berry</option>
+	<option value="2">Airi Byrd</option>
+	<option value="3">Airi Caldwell</option>
+</select>
+
+let selectDemoM1 = new vanillaSelectBox("#demoM1",
+	{ "maxHeight": 300,
+	  "search": true,
+	  "translations": { "all": "everybody", "items": "persons" },
+	  "remote":true,
+	  "onSearch":remoteSearch 
+	});
+
+function loadJSON(file,callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.overrideMimeType("application/json");
+  xhr.open('GET', file, true);
+  xhr.onload = function() {
+    callback(xhr.responseText);
+  };
+  xhr.onerror = function () {
+    callback(null);
+};
+  xhr.send(null);
+}
+
+function remoteSearch(what) {
+    let self = this;
+    loadJSON("./data.json",function(response) {
+      if(response != null){
+        var data = JSON.parse(response);
+        data = data.filter(function(x){
+             if(x.name.toLowerCase().indexOf(what.toLowerCase())!= -1)
+              return{
+                  value: x.id,
+                  text: x.name
+              }
+          });
+          self.remoteSearchIntegrate(data);
+      }else{
+        self.remoteSearchIntegrate(null);
+      }
+  });
+}
+
 ```
