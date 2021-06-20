@@ -375,6 +375,7 @@ function vanillaSelectBox(domSelector, options) {
                 li.id = optId;
                 li.appendChild(labelElement);
                 labelElement.appendChild(document.createTextNode(group.label));
+                li.setAttribute("data-text", group.label);
                 self.ul.appendChild(li);
 
                 Array.prototype.slice.call(groupOptions).forEach(function(x) {
@@ -449,7 +450,7 @@ function vanillaSelectBox(domSelector, options) {
                         self.onSearch(searchValue);
                     }
                 }else{
-                    if (searchValueLength < 2) {
+                    if (searchValueLength < 3) {
                         Array.prototype.slice.call(self.listElements).forEach(function (x) {
                             if (x.getAttribute('data-value') === 'all') {
                                 selectAll = x;
@@ -696,12 +697,27 @@ vanillaSelectBox.prototype.remoteSearchIntegrateIt = function(data){
     let self = this;
     if(data == null || data.length == 0) return;
     if(self.isOptgroups){
-        let groups = data.filter(function(x){
+        let groups = {};
+        let groupsAlready = [];
+
+        self.root.children.forEach(function(x){
+            console.log(x);
+        });
+/* 
+         data.forEach(function(x){
+             if(x.parent){
+                 if(!groups[x.parent]){
+                    groups[x.parent] = "in_data";
+                    if(groupsAlready.indexOf(x.parent) != -1){
+                        groups[x.parent] = "in_select"; 
+                    }
+                 }
+             }
             return x.isGroup;
         });
         groups.forEach(function(g){
            var optgroup = document.createElement("optgroup");
-           optgroup.appendChild(document.createTextNode(g.name));
+           optgroup.appendChild(document.createTextNode(g.name));c
            self.root.appendChild(optgroup);
 
            let options = data.filter(function(x){
@@ -719,7 +735,7 @@ vanillaSelectBox.prototype.remoteSearchIntegrateIt = function(data){
             option.value = data[i].id;
             option.text = data[i].name;
             self.root.appendChild(option);
-        }
+        } */
     }else{
         for (var i = 0; i < data.length; i++) {
             var option = document.createElement("option");
