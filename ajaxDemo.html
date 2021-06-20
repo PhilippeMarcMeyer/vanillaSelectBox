@@ -187,11 +187,6 @@
 
     </div>
 
-    <p>Multiple select 2 levels</p>
-	<div id="appM2" class="demo-zone" style="text-align:left;" id="demo-ajax">
-
-    </div>
-
     <p>Single select 1 level</p>
 	<div id="appS1" class="demo-zone" style="text-align:left;" id="demo-ajax">
 
@@ -232,25 +227,6 @@ function remoteSearch(what) {
   });
 }
 
-/* function remoteSearch2Lvl(what) {
-    let self = this;
-    loadJSON("./dino.json",function(response) {
-      if(response != null){
-        var data = JSON.parse(response);
-        data = data.filter(function(x){
-             if(x.name.toLowerCase().indexOf(what.toLowerCase())!= -1)
-              return{
-                  value: x.id,
-                  text: x.name,
-                  parent:x.parent
-              }
-          });
-          self.remoteSearchIntegrate(data);
-      }else{
-        self.remoteSearchIntegrate(null);
-      }
-  });
-} */
 
 function init() {
   loadJSON("./data.json",function(response) {
@@ -260,7 +236,7 @@ function init() {
 	    let selectDemoM1 = new vanillaSelectBox("#demoM1",{ "maxHeight": 300,"search": true,translations: { "all": "everybody", "items": "persons" },remote:true,"onSearch":remoteSearch });
         buildSelect(data,"appS1","demoS1",false);
 	    let selectDemoS1 = new vanillaSelectBox("#demoS1",{ "maxHeight": 300,"search": true,translations: { "all": "everybody", "items": "persons" },remote:true,"onSearch":remoteSearch });    
-    } // todo
+    } 
   });
 }
 

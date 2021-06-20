@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v0.70 : Remote search (WIP) for users to test
 vanillaSelectBox : v0.65 : Two levels: bug fix : groups are checked/unchecked when check all/uncheck all is clicked
 vanillaSelectBox : v0.64 : Two levels: groups are now checkable to check/uncheck the children options 
 vanillaSelectBox : v0.63 : Two levels: one click on the group selects / unselects children
