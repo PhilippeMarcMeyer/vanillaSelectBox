@@ -1,5 +1,5 @@
 
-# vanillaSelectBox v0.70
+# vanillaSelectBox v0.71 (New : remote search)
 
 ### A nice select/multiselect ui with no dependency and two levels support thru optgroups
 
@@ -42,8 +42,11 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 * maxOptionWidth : integer,set a maximum width for each option for narrow menus
 
 ### WIP options :
-* remote : true => the search input searches remote thanks to the user defined handler onSearch
-* onSearch : user defined handler (cf ajax.html example)
+* remote : object => the search input searches remote thanks to the user defined handler onSearch
+  "remote": {
+      "onSearch": doSearch, // user defined handler used for search and init
+      "onInitSize": 10, // if > 0 onSearch is used for init to populate le select element with the {onInitSize} first elements
+  }
 
 ### Automatic options :
 * single or multiple choices : depends on the "multiple" attribute that you put in the select code 
@@ -73,6 +76,8 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History : 
+
+v0.71 : Remote search (WIP) better code => the remote search user deined function must return a promise
 
 v0.70 : remote search (WIP) can be tested. works only on 1 level menus (not optgroups)
 
@@ -276,49 +281,68 @@ Remote search example :
 
 ```
 <select id="demoM1" multiple="true" size="3">
-	<option value="1">Airi Berry</option>
-	<option value="2">Airi Byrd</option>
-	<option value="3">Airi Caldwell</option>
 </select>
 
 let selectDemoM1 = new vanillaSelectBox("#demoM1",
-	{ "maxHeight": 300,
-	  "search": true,
-	  "translations": { "all": "everybody", "items": "persons" },
-	  "remote":true,
-	  "onSearch":remoteSearch 
-	});
+    {
+        "maxHeight": 300,
+        "search": true,
+        "placeHolder" : "search to load more data",
+        "translations": { "all": "everybody", "items": "people" },
+        "remote": {
+            "onSearch": doSearch, // used fro search and init
+            "onInitSize": 10, // if > 0 onSearch is used for init to populate le select element with the {onInitSize} first elements
+        }
+    }
+);
 
-function loadJSON(file,callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.overrideMimeType("application/json");
-  xhr.open('GET', file, true);
-  xhr.onload = function() {
-    callback(xhr.responseText);
-  };
-  xhr.onerror = function () {
-    callback(null);
-};
-  xhr.send(null);
-}
+function doSearch(what, datasize) {
+      let valueProperty = "id";
+      let textProperty = "name";
+      return new Promise(function (resolve, reject) {
+          var xhr = new XMLHttpRequest();
+          xhr.overrideMimeType("application/json");
+          xhr.open('GET','./data.json', true);
+          xhr.onload = function () {
+              if (this.status >= 200 && this.status < 300) {
+                  var data = JSON.parse(xhr.response);
 
-function remoteSearch(what) {
-    let self = this;
-    loadJSON("./data.json",function(response) {
-      if(response != null){
-        var data = JSON.parse(response);
-        data = data.filter(function(x){
-             if(x.name.toLowerCase().indexOf(what.toLowerCase())!= -1)
-              return{
-                  value: x.id,
-                  text: x.name
+                  if (what == "" && datasize != undefined && datasize > 0) { // for init to show some data
+                      data = data.slice(0, datasize);
+                      data = data.map(function (x) {
+                          return {
+                              value: x[valueProperty],
+                              text: x[textProperty]
+                          }
+                      });
+                  } else {
+                      data = data.filter(function (x) {
+                          let name = x[textProperty].toLowerCase();
+                          if (name.indexOf(what.toLowerCase()) != -1)
+                              return {
+                                  value: x[valueProperty],
+                                  text: x[textProperty]
+                              }
+                      });
+                  }
+                  resolve(data);
+              } else {
+                  reject({
+                      status: this.status,
+                      statusText: xhr.statusText
+                  });
               }
-          });
-          self.remoteSearchIntegrate(data);
-      }else{
-        self.remoteSearchIntegrate(null);
-      }
-  });
-}
+          };
+          xhr.onerror = function () {
+              reject({
+                  status: this.status,
+                  statusText: xhr.statusText
+              });
+          };
+          xhr.send();
+      });
+  }
+
+
 
 ```

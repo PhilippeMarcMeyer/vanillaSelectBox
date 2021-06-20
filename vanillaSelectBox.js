@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v0.71 : Remote search (WIP) better code
 vanillaSelectBox : v0.70 : Remote search (WIP) for users to test
 vanillaSelectBox : v0.65 : Two levels: bug fix : groups are checked/unchecked when check all/uncheck all is clicked
 vanillaSelectBox : v0.64 : Two levels: groups are now checkable to check/uncheck the children options 
@@ -84,6 +85,7 @@ function vanillaSelectBox(domSelector, options) {
     this.maxSelect = Infinity;
     this.isRemote = false;
     this.onSearch = null; // if isRemote is true : a user defined function that loads more options from the back
+    this.onInitSize = 0;
     this.forbidenAttributes = ["class","selected","disabled","data-text","data-value","style"]; 
     this.forbidenClasses= ["active","disabled"]; 
     this.userOptions = {
@@ -122,12 +124,20 @@ function vanillaSelectBox(domSelector, options) {
             this.search = options.search;
         }
         if(options.remote != undefined && options.remote){
-            this.isRemote = this.search; // search is mandatory to use the remote option
+            this.search = true;
+            this.isRemote = true; // search is mandatory to use the remote option
+            if (options.remote.onInitSize != undefined) {
+                this.onInitSize = options.remote.onInitSize;
+                if(this.onInitSize < 0) this.onInitSize = 0;
+            }
+                    // user defined remote search function
+            if(options.remote.onSearch!= undefined && typeof options.remote.onSearch === 'function' && this.isRemote){
+                this.onSearch=options.remote.onSearch;
+            }else{
+                this.isRemote = false;
+            }
         }
-        // user defined remote search function
-        if(options.onSearch!= undefined && typeof options.onSearch === 'function' && this.isRemote){
-            this.onSearch=options.onSearch;
-        }
+       
 		if (options.stayOpen != undefined) {
             this.userOptions.stayOpen = options.stayOpen;
         }
@@ -190,6 +200,19 @@ function vanillaSelectBox(domSelector, options) {
 
     this.init = function () {
         let self = this;
+        if (self.isRemote && self.onInitSize > 0) {
+            self.onSearch("", self.onInitSize)
+                .then(function (data) {
+                    self.buildSelect(data);
+                    self.createTree();
+                });
+        } else {
+            self.createTree();
+        }
+    }
+
+    this.createTree = function () {
+        
         this.rootToken = self.domSelector.replace(/[^A-Za-z0-9]+/,"")
         this.root.style.display = "none";
         let already = document.getElementById("btn-group-" + this.rootToken);
@@ -448,7 +471,10 @@ function vanillaSelectBox(domSelector, options) {
                         self.reloadTree();
                         self.checkUncheckAll();
                     } else if(searchValueLength >= 3){
-                        self.onSearch(searchValue);
+                        self.onSearch(searchValue)
+                        .then(function(data){
+                            self.remoteSearchIntegrate(data);
+                        });
                     }
                 }else{
                     if (searchValueLength < 3) {
@@ -657,6 +683,16 @@ function vanillaSelectBox(domSelector, options) {
     }
     this.init();
     this.checkUncheckAll();
+}
+
+vanillaSelectBox.prototype.buildSelect = function(data){
+    let self = this;
+    data.forEach(function(x){
+        let anOption = document.createElement("option");
+        anOption.value = x.value;
+        anOption.text = x.text;
+        self.root.appendChild(anOption);
+    });
 }
 
 vanillaSelectBox.prototype.remoteSearchIntegrate = function(data){
@@ -967,7 +1003,7 @@ vanillaSelectBox.prototype.checkUncheckAll = function () {
     let nrChecked = 0;
     let nrCheckable = 0;
     let checkAllElement = null;
-
+    if(self.listElements == null) return;
     Array.prototype.slice.call(self.listElements).forEach(function (x) {
         if (x.hasAttribute('data-value')) {
             if (x.getAttribute('data-value') === 'all') {
