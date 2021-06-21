@@ -467,7 +467,7 @@ function vanillaSelectBox(domSelector, options) {
                 let selectAll = null;
                 if (self.isRemote != null) {
                     if (searchValueLength == 0) {
-                        self.removeOptionsNotChecked();
+                        self.removeOptionsNotChecked(null);
                         self.reloadTree();
                         self.checkUncheckAll();
                     } else if(searchValueLength >= 3){
@@ -675,9 +675,6 @@ function vanillaSelectBox(domSelector, options) {
                 Array.prototype.slice.call(self.listElements).forEach(function (x) {
                     x.classList.remove("hidden-search");
                 });
-                if(self.isRemote){
-                    self.removeOptionsNotChecked();
-                }
             }
         }
     }
@@ -698,10 +695,10 @@ vanillaSelectBox.prototype.buildSelect = function(data){
 vanillaSelectBox.prototype.remoteSearchIntegrate = function(data){
     let self = this;
     if(data == null || data.length == 0){
-        self.removeOptionsNotChecked();
+        self.removeOptionsNotChecked(null);
         self.reloadTree();
     }else{
-        self.removeOptionsNotChecked();
+        self.removeOptionsNotChecked(data);
         let already = Array.prototype.slice.call(self.root.options).map(function(x){
             return x.value;
         });
@@ -720,12 +717,21 @@ vanillaSelectBox.prototype.remoteSearchIntegrate = function(data){
     }
 }
 
-vanillaSelectBox.prototype.removeOptionsNotChecked = function () {
+vanillaSelectBox.prototype.removeOptionsNotChecked = function (data) {
     let self = this;
-    if(!self.isMultiple) return;
-    for (var i = self.root.length-1; i >=0; i--) {
-        if (self.root.options[i].selected==false){
-            self.root.remove(i);
+    let minimumSize = self.onInitSize;
+    let newSearchSize = data == null ? 0 :data.length;
+    let presentSize = self.root.length;
+    if(presentSize+newSearchSize > minimumSize){
+        let maxToRemove = presentSize+newSearchSize - minimumSize-1;
+        let removed = 0;
+        for (var i = self.root.length-1; i >=0; i--) {
+            if (self.root.options[i].selected==false){
+                if(removed <= maxToRemove) {
+                    removed++;
+                    self.root.remove(i);
+                }
+            }
         }
     }
 }
