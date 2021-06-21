@@ -18,8 +18,6 @@ last change : Two levels: one click on the group selects / unselects children
 
 Demo : https://philippemarcmeyer.github.io/vanillaSelectBox/
 
-Demo remote (WIP) : https://philippemarcmeyer.github.io/vanillaSelectBox/ajaxDemo.html
-
 ### Transform an HTML select into a selectBox dropdown
 #### the select is hidden and the chosen value(s) is/are available in the source select
 
