@@ -732,6 +732,9 @@ vanillaSelectBox.prototype.removeOptionsNotChecked = function (data) {
                     self.root.remove(i);
                 }
             }
+            if(self.root.options[i].getAttribute("data-value")=="all"){
+                self.root.remove(i);
+            }
         }
     }
 }
