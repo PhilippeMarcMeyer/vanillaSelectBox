@@ -465,7 +465,7 @@ function vanillaSelectBox(domSelector, options) {
                 let nrFound = 0;
                 let nrChecked = 0;
                 let selectAll = null;
-                if (self.isRemote != null) {
+                if (self.isRemote) {
                     if (searchValueLength == 0) {
                         self.removeOptionsNotChecked(null);
                         self.reloadTree();
