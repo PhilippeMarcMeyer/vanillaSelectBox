@@ -732,9 +732,6 @@ vanillaSelectBox.prototype.removeOptionsNotChecked = function (data) {
                     self.root.remove(i);
                 }
             }
-            if(self.root.options[i].getAttribute("data-value")=="all"){
-                self.root.remove(i);
-            }
         }
     }
 }
@@ -799,7 +796,7 @@ vanillaSelectBox.prototype.reloadTree = function(){
     if(lis != null ){
         for (var i = lis.length-1; i >=0; i--) {
             if (lis[i].getAttribute('data-value') !== 'all') {
-            self.ul.removeChild(lis[i]);
+                self.ul.removeChild(lis[i]);
             }
         }
     }
