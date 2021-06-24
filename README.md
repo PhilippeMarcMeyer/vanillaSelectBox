@@ -1,7 +1,7 @@
 
 # vanillaSelectBox v0.71 (New : remote search)
 
->>>>> Remote search is still buggy : it does not work well with the "select all" checkbox :-( <<<<<
+> Remote search is still buggy : it does not work well with the "select all" checkbox :-( 
 
 ### A nice select/multiselect ui with no dependency and two levels support thru optgroups
 
