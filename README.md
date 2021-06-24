@@ -1,7 +1,5 @@
 
-# vanillaSelectBox v0.71 (New : remote search)
-
-> Remote search is still buggy : it does not work well with the "select all" checkbox :-( 
+# vanillaSelectBox v0.72 (New : remote search)
 
 ### A nice select/multiselect ui with no dependency and two levels support thru optgroups
 
@@ -78,6 +76,8 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History : 
+
+v0.72 : Remote search (WIP) bugfix [x] Select all duplicated
 
 v0.71 : Remote search (WIP) better code => the remote search user deined function must return a promise
 

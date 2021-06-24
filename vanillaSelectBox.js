@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v0.72 : Remote search (WIP) bugfix [x] Select all duplicated
 vanillaSelectBox : v0.71 : Remote search (WIP) better code
 vanillaSelectBox : v0.70 : Remote search (WIP) for users to test
 vanillaSelectBox : v0.65 : Two levels: bug fix : groups are checked/unchecked when check all/uncheck all is clicked
@@ -36,21 +37,21 @@ let VSBoxCounter = function () {
     let instances = [];
     return {
         set: function (instancePtr) {
-            instances.push({offset:++count,ptr:instancePtr});
-            return instances[instances.length-1].offset;
+            instances.push({ offset: ++count, ptr: instancePtr });
+            return instances[instances.length - 1].offset;
         },
         remove: function (instanceNr) {
-            let temp = instances.filter(function(x){
-               return x.offset != instanceNr;
+            let temp = instances.filter(function (x) {
+                return x.offset != instanceNr;
             })
             instances = temp.splice(0);
         },
-        closeAllButMe:function(instanceNr){
-            instances.forEach(function(x){
-                if(x.offset != instanceNr){
+        closeAllButMe: function (instanceNr) {
+            instances.forEach(function (x) {
+                if (x.offset != instanceNr) {
                     x.ptr.closeOrder();
                 }
-             });
+            });
         }
     };
 }();
@@ -86,16 +87,16 @@ function vanillaSelectBox(domSelector, options) {
     this.isRemote = false;
     this.onSearch = null; // if isRemote is true : a user defined function that loads more options from the back
     this.onInitSize = 0;
-    this.forbidenAttributes = ["class","selected","disabled","data-text","data-value","style"]; 
-    this.forbidenClasses= ["active","disabled"]; 
+    this.forbidenAttributes = ["class", "selected", "disabled", "data-text", "data-value", "style"];
+    this.forbidenClasses = ["active", "disabled"];
     this.userOptions = {
         maxWidth: 500,
-        minWidth:-1,
+        minWidth: -1,
         maxHeight: 400,
-        translations: { "all": "All", "items": "items","selectAll":"Select All","clearAll":"Clear All"},
+        translations: { "all": "All", "items": "items", "selectAll": "Select All", "clearAll": "Clear All" },
         search: false,
         placeHolder: "",
-		stayOpen:false,
+        stayOpen: false,
         disableSelectAll: false
     }
     if (options) {
@@ -111,11 +112,11 @@ function vanillaSelectBox(domSelector, options) {
         if (options.translations != undefined) {
             for (var property in options.translations) {
                 if (options.translations.hasOwnProperty(property)) {
-                    if(this.userOptions.translations[property] ){
+                    if (this.userOptions.translations[property]) {
                         this.userOptions.translations[property] = options.translations[property];
                     }
                 }
-              }
+            }
         }
         if (options.placeHolder != undefined) {
             this.userOptions.placeHolder = options.placeHolder;
@@ -123,75 +124,75 @@ function vanillaSelectBox(domSelector, options) {
         if (options.search != undefined) {
             this.search = options.search;
         }
-        if(options.remote != undefined && options.remote){
+        if (options.remote != undefined && options.remote) {
             this.search = true;
             this.isRemote = true; // search is mandatory to use the remote option
             if (options.remote.onInitSize != undefined) {
                 this.onInitSize = options.remote.onInitSize;
-                if(this.onInitSize < 0) this.onInitSize = 0;
+                if (this.onInitSize < 0) this.onInitSize = 0;
             }
-                    // user defined remote search function
-            if(options.remote.onSearch!= undefined && typeof options.remote.onSearch === 'function' && this.isRemote){
-                this.onSearch=options.remote.onSearch;
-            }else{
+            // user defined remote search function
+            if (options.remote.onSearch != undefined && typeof options.remote.onSearch === 'function' && this.isRemote) {
+                this.onSearch = options.remote.onSearch;
+            } else {
                 this.isRemote = false;
             }
         }
-       
-		if (options.stayOpen != undefined) {
+
+        if (options.stayOpen != undefined) {
             this.userOptions.stayOpen = options.stayOpen;
         }
         if (options.disableSelectAll != undefined) {
             this.userOptions.disableSelectAll = options.disableSelectAll;
         }
-        if (options.maxSelect != undefined && !isNaN(options.maxSelect) && options.maxSelect >=1) {
+        if (options.maxSelect != undefined && !isNaN(options.maxSelect) && options.maxSelect >= 1) {
             this.maxSelect = options.maxSelect;
             this.userOptions.disableSelectAll = true;
         }
-        if (options.maxOptionWidth != undefined && !isNaN(options.maxOptionWidth) && options.maxOptionWidth >=20) {
+        if (options.maxOptionWidth != undefined && !isNaN(options.maxOptionWidth) && options.maxOptionWidth >= 20) {
             this.maxOptionWidth = options.maxOptionWidth;
-            this.ulminWidth= options.maxOptionWidth+60;
-            this.ulmaxWidth = options.maxOptionWidth+60;
+            this.ulminWidth = options.maxOptionWidth + 60;
+            this.ulmaxWidth = options.maxOptionWidth + 60;
         }
     }
 
-    this.closeOrder=function(){
+    this.closeOrder = function () {
         let self = this;
-        if(!self.userOptions.stayOpen){
+        if (!self.userOptions.stayOpen) {
             self.drop.style.visibility = "hidden";
-            if(self.search){
+            if (self.search) {
                 self.inputBox.value = "";
                 Array.prototype.slice.call(self.listElements).forEach(function (x) {
-                   x.classList.remove("hide");
+                    x.classList.remove("hide");
                 });
             }
         }
     }
 
-    this.getCssArray =function(selector){
+    this.getCssArray = function (selector) {
         // Why inline css ? To protect the button display from foreign css files
         let cssArray = [];
-    if(selector === ".vsb-main button"){
-       cssArray= [
-                {"key":"min-width","value":"120px"},
-                {"key":"border-radius","value":"0"},
-                {"key":"width","value":"100%"},
-                {"key":"text-align","value":"left"},
-                {"key":"z-index","value":"1"},
-                {"key":"color","value":"#333"},
-                {"key":"background","value":"white !important"},
-                {"key":"border","value":"1px solid #999 !important"},
-                {"key":"line-height","value":"20px"},
-                {"key":"font-size","value":"14px"},
-                {"key":"padding","value":"6px 12px"}
-                ]
+        if (selector === ".vsb-main button") {
+            cssArray = [
+                { "key": "min-width", "value": "120px" },
+                { "key": "border-radius", "value": "0" },
+                { "key": "width", "value": "100%" },
+                { "key": "text-align", "value": "left" },
+                { "key": "z-index", "value": "1" },
+                { "key": "color", "value": "#333" },
+                { "key": "background", "value": "white !important" },
+                { "key": "border", "value": "1px solid #999 !important" },
+                { "key": "line-height", "value": "20px" },
+                { "key": "font-size", "value": "14px" },
+                { "key": "padding", "value": "6px 12px" }
+            ]
         }
-    
+
         return cssArrayToString(cssArray);
-    
-        function cssArrayToString(cssList){
+
+        function cssArrayToString(cssList) {
             let list = "";
-            cssList.forEach(function(x){
+            cssList.forEach(function (x) {
                 list += x.key + ":" + x.value + ";";
             });
             return list;
@@ -212,8 +213,8 @@ function vanillaSelectBox(domSelector, options) {
     }
 
     this.createTree = function () {
-        
-        this.rootToken = self.domSelector.replace(/[^A-Za-z0-9]+/,"")
+
+        this.rootToken = self.domSelector.replace(/[^A-Za-z0-9]+/, "")
         this.root.style.display = "none";
         let already = document.getElementById("btn-group-" + this.rootToken);
         if (already) {
@@ -224,19 +225,19 @@ function vanillaSelectBox(domSelector, options) {
         this.main.classList.add("vsb-main");
         this.main.setAttribute("id", "btn-group-" + this.rootToken);
         this.main.style.marginLeft = this.main.style.marginLeft;
-        if(self.userOptions.stayOpen){
-            this.main.style.minHeight =  (this.userOptions.maxHeight+10) + "px";
+        if (self.userOptions.stayOpen) {
+            this.main.style.minHeight = (this.userOptions.maxHeight + 10) + "px";
         }
 
-        if(self.userOptions.stayOpen){
+        if (self.userOptions.stayOpen) {
             this.button = document.createElement("div");
-        }else{
+        } else {
             this.button = document.createElement("button");
             var cssList = self.getCssArray(".vsb-main button");
             this.button.setAttribute("style", cssList);
         }
         this.button.style.maxWidth = this.userOptions.maxWidth + "px";
-        if(this.userOptions.minWidth !== -1){
+        if (this.userOptions.minWidth !== -1) {
             this.button.style.minWidth = this.userOptions.minWidth + "px";
         }
 
@@ -252,11 +253,11 @@ function vanillaSelectBox(domSelector, options) {
         caret.style.right = "8px";
         caret.style.marginTop = "8px";
 
-		if(self.userOptions.stayOpen){
-			caret.style.display = "none";
-			this.title.style.paddingLeft = "20px";
-			this.title.style.fontStyle = "italic";
-			this.title.style.verticalAlign = "20%";
+        if (self.userOptions.stayOpen) {
+            caret.style.display = "none";
+            this.title.style.paddingLeft = "20px";
+            this.title.style.fontStyle = "italic";
+            this.title.style.verticalAlign = "20%";
         }
 
         this.drop = document.createElement("div");
@@ -268,7 +269,7 @@ function vanillaSelectBox(domSelector, options) {
 
         this.ul.style.maxHeight = this.userOptions.maxHeight + "px";
         this.ul.style.minWidth = this.ulminWidth + "px";
-        this.ul.style.maxWidth= this.ulmaxWidth + "px";
+        this.ul.style.maxWidth = this.ulmaxWidth + "px";
         this.ul.style.minHeight = this.ulminHeight + "px";
         if (this.isMultiple) {
             this.ul.classList.add("multi");
@@ -276,9 +277,9 @@ function vanillaSelectBox(domSelector, options) {
                 let selectAll = document.createElement("option");
                 selectAll.setAttribute("value", 'all');
                 selectAll.innerText = self.userOptions.translations.selectAll;
-                this.root.insertBefore(selectAll,(this.root.hasChildNodes())
-                  ? this.root.childNodes[0]
-                  : null);
+                this.root.insertBefore(selectAll, (this.root.hasChildNodes())
+                    ? this.root.childNodes[0]
+                    : null);
             }
         }
         let selectedTexts = ""
@@ -294,7 +295,7 @@ function vanillaSelectBox(domSelector, options) {
             this.searchZone.appendChild(this.inputBox);
             this.inputBox.setAttribute("type", "text");
             this.inputBox.setAttribute("id", "search_" + this.rootToken);
-            if(this.maxOptionWidth < Infinity){
+            if (this.maxOptionWidth < Infinity) {
                 this.searchZone.style.maxWidth = self.maxOptionWidth + 30 + "px";
                 this.inputBox.style.maxWidth = self.maxOptionWidth + 30 + "px";
             }
@@ -316,21 +317,19 @@ function vanillaSelectBox(domSelector, options) {
             let originalAttrs;
             if (x.hasAttributes()) {
                 originalAttrs = Array.prototype.slice.call(x.attributes)
-                    .filter(function(a){
+                    .filter(function (a) {
                         return self.forbidenAttributes.indexOf(a.name) === -1
                     });
             }
             let classes = x.getAttribute("class");
-            if(classes)
-            {
-                classes=classes
+            if (classes) {
+                classes = classes
                     .split(" ")
-                    .filter(function(c){
+                    .filter(function (c) {
                         return self.forbidenClasses.indexOf(c) === -1
                     });
-            }else
-            {
-                classes=[];
+            } else {
+                classes = [];
             }
             let li = document.createElement("li");
             let isSelected = x.hasAttribute("selected");
@@ -340,17 +339,17 @@ function vanillaSelectBox(domSelector, options) {
             li.setAttribute("data-value", value);
             li.setAttribute("data-text", text);
 
-            if(originalAttrs !== undefined){
-                originalAttrs.forEach(function(a){
+            if (originalAttrs !== undefined) {
+                originalAttrs.forEach(function (a) {
                     li.setAttribute(a.name, a.value);
                 });
             }
-            
-            classes.forEach(function(x){
+
+            classes.forEach(function (x) {
                 li.classList.add(x);
             });
 
-            if(self.maxOptionWidth < Infinity){
+            if (self.maxOptionWidth < Infinity) {
                 li.classList.add("short");
                 li.style.maxWidth = self.maxOptionWidth + "px";
             }
@@ -363,56 +362,54 @@ function vanillaSelectBox(domSelector, options) {
                 if (!self.isMultiple) {
                     self.title.textContent = text;
                     if (classes.length != 0) {
-                        classes.forEach(function(x){
+                        classes.forEach(function (x) {
                             self.title.classList.add(x);
                         });
                     }
                 }
             }
-          if(isDisabled){
-            li.classList.add("disabled");
-          }
+            if (isDisabled) {
+                li.classList.add("disabled");
+            }
             li.appendChild(document.createTextNode(" " + text));
         });
-        
+
         if (document.querySelector(this.domSelector + ' optgroup') !== null) {
-            this.isOptgroups = true; 
+            this.isOptgroups = true;
             this.isRemote = false;// debug
             this.options = document.querySelectorAll(this.domSelector + " option");
             let groups = document.querySelectorAll(this.domSelector + ' optgroup');
-            Array.prototype.slice.call(groups).forEach(function(group) {
+            Array.prototype.slice.call(groups).forEach(function (group) {
                 let groupOptions = group.querySelectorAll('option');
                 let li = document.createElement("li");
                 let span = document.createElement("span");
                 let iCheck = document.createElement("i");
                 let labelElement = document.createElement("b");
                 let dataWay = group.getAttribute("data-way");
-                if(!dataWay) dataWay = "closed";
-                if(!dataWay || (dataWay !== "closed" && dataWay !== "open") ) dataWay = "closed";
+                if (!dataWay) dataWay = "closed";
+                if (!dataWay || (dataWay !== "closed" && dataWay !== "open")) dataWay = "closed";
                 li.appendChild(span);
                 li.appendChild(iCheck);
                 self.ul.appendChild(li);
                 li.classList.add('grouped-option');
                 li.classList.add(dataWay);
-                self.currentOptgroup ++;
-                let optId = self.rootToken+"-opt-"+self.currentOptgroup;
+                self.currentOptgroup++;
+                let optId = self.rootToken + "-opt-" + self.currentOptgroup;
                 li.id = optId;
                 li.appendChild(labelElement);
                 labelElement.appendChild(document.createTextNode(group.label));
                 li.setAttribute("data-text", group.label);
                 self.ul.appendChild(li);
 
-                Array.prototype.slice.call(groupOptions).forEach(function(x) {
+                Array.prototype.slice.call(groupOptions).forEach(function (x) {
                     let text = x.textContent;
                     let value = x.value;
                     let classes = x.getAttribute("class");
-                    if(classes)
-                    {
-                        classes=classes.split(" ");
+                    if (classes) {
+                        classes = classes.split(" ");
                     }
-                    else
-                    {
-                        classes=[];
+                    else {
+                        classes = [];
                     }
                     classes.push(dataWay);
                     let li = document.createElement("li");
@@ -420,9 +417,9 @@ function vanillaSelectBox(domSelector, options) {
                     self.ul.appendChild(li);
                     li.setAttribute("data-value", value);
                     li.setAttribute("data-text", text);
-                    li.setAttribute("data-parent",optId);
+                    li.setAttribute("data-parent", optId);
                     if (classes.length != 0) {
-                        classes.forEach(function(x){
+                        classes.forEach(function (x) {
                             li.classList.add(x);
                         });
                     }
@@ -434,7 +431,7 @@ function vanillaSelectBox(domSelector, options) {
                         if (!self.isMultiple) {
                             self.title.textContent = text;
                             if (classes.length != 0) {
-                                classes.forEach(function(x){
+                                classes.forEach(function (x) {
                                     self.title.classList.add(x);
                                 });
                             }
@@ -470,13 +467,13 @@ function vanillaSelectBox(domSelector, options) {
                         self.removeOptionsNotChecked(null);
                         self.reloadTree();
                         self.checkUncheckAll();
-                    } else if(searchValueLength >= 3){
+                    } else if (searchValueLength >= 3) {
                         self.onSearch(searchValue)
-                        .then(function(data){
-                            self.remoteSearchIntegrate(data);
-                        });
+                            .then(function (data) {
+                                self.remoteSearchIntegrate(data);
+                            });
                     }
-                }else{
+                } else {
                     if (searchValueLength < 3) {
                         Array.prototype.slice.call(self.listElements).forEach(function (x) {
                             if (x.getAttribute('data-value') === 'all') {
@@ -503,17 +500,17 @@ function vanillaSelectBox(domSelector, options) {
                             }
                         });
                     }
-                    if(selectAll){
-                        if(nrFound === 0){
+                    if (selectAll) {
+                        if (nrFound === 0) {
                             selectAll.classList.add('disabled');
-                        }else{
+                        } else {
                             selectAll.classList.remove('disabled');
                         }
-                        if( nrChecked !== nrFound){
+                        if (nrChecked !== nrFound) {
                             selectAll.classList.remove("active");
                             selectAll.innerText = self.userOptions.translations.selectAll;
                             selectAll.setAttribute('data-selected', 'false')
-                        }else{
+                        } else {
                             selectAll.classList.add("active");
                             selectAll.innerText = self.userOptions.translations.clearAll;
                             selectAll.setAttribute('data-selected', 'true')
@@ -524,53 +521,53 @@ function vanillaSelectBox(domSelector, options) {
             }); //
         }
 
-		if(self.userOptions.stayOpen){
+        if (self.userOptions.stayOpen) {
             self.drop.style.visibility = "visible";
-			self.drop.style.boxShadow = "none";
-			self.drop.style.minHeight =  (this.userOptions.maxHeight+10) + "px";
-			self.drop.style.position = "relative";
-			self.drop.style.left = "0px";
-			self.drop.style.top = "0px";
-			self.button.style.border = "none";
-		}else{
-			this.main.addEventListener("click", function (e) {
-				if (self.isDisabled) return;
-                    self.drop.style.left = self.left + "px";
-                    self.drop.style.top = self.top + "px";
-                    self.drop.style.visibility = "visible";
-                    document.addEventListener("click", docListener);
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if(!self.userOptions.stayOpen ){
-                        VSBoxCounter.closeAllButMe(self.instanceOffset);
-                    }
-				});
-		}
+            self.drop.style.boxShadow = "none";
+            self.drop.style.minHeight = (this.userOptions.maxHeight + 10) + "px";
+            self.drop.style.position = "relative";
+            self.drop.style.left = "0px";
+            self.drop.style.top = "0px";
+            self.button.style.border = "none";
+        } else {
+            this.main.addEventListener("click", function (e) {
+                if (self.isDisabled) return;
+                self.drop.style.left = self.left + "px";
+                self.drop.style.top = self.top + "px";
+                self.drop.style.visibility = "visible";
+                document.addEventListener("click", docListener);
+                e.preventDefault();
+                e.stopPropagation();
+                if (!self.userOptions.stayOpen) {
+                    VSBoxCounter.closeAllButMe(self.instanceOffset);
+                }
+            });
+        }
 
         this.drop.addEventListener("click", function (e) {
             if (self.isDisabled) return;
-            if(e.target.tagName === 'INPUT') return;
+            if (e.target.tagName === 'INPUT') return;
             let isShowHideCommand = e.target.tagName === 'SPAN';
             let isCheckCommand = e.target.tagName === 'I';
             let liClicked = e.target.parentElement;
             if (!liClicked.hasAttribute("data-value")) {
-                if(liClicked.classList.contains("grouped-option")){
-                    if(!isShowHideCommand && !isCheckCommand) return;
-                    let oldClass,newClass;
-                    if(isCheckCommand){ // check or uncheck children
+                if (liClicked.classList.contains("grouped-option")) {
+                    if (!isShowHideCommand && !isCheckCommand) return;
+                    let oldClass, newClass;
+                    if (isCheckCommand) { // check or uncheck children
                         self.checkUncheckFromParent(liClicked);
-                    }else{ //open or close
-                        if(liClicked.classList.contains("open")){
+                    } else { //open or close
+                        if (liClicked.classList.contains("open")) {
                             oldClass = "open"
                             newClass = "closed"
-                        }else{
+                        } else {
                             oldClass = "closed"
-                            newClass = "open"   
+                            newClass = "open"
                         }
                         liClicked.classList.remove(oldClass);
                         liClicked.classList.add(newClass);
-                        let theChildren = self.drop.querySelectorAll("[data-parent='"+liClicked.id+"']");
-                        theChildren.forEach(function(x){
+                        let theChildren = self.drop.querySelectorAll("[data-parent='" + liClicked.id + "']");
+                        theChildren.forEach(function (x) {
                             x.classList.remove(oldClass);
                             x.classList.add(newClass);
                         })
@@ -582,17 +579,17 @@ function vanillaSelectBox(domSelector, options) {
             let choiceText = e.target.getAttribute("data-text");
             let className = e.target.getAttribute("class");
 
-            if(className && className.indexOf("disabled") != -1){
+            if (className && className.indexOf("disabled") != -1) {
                 return;
             }
 
-            if(className && className.indexOf("overflow") != -1){
+            if (className && className.indexOf("overflow") != -1) {
                 return;
             }
 
             if (choiceValue === 'all') {
                 if (e.target.hasAttribute('data-selected')
-                  && e.target.getAttribute('data-selected') === 'true') {
+                    && e.target.getAttribute('data-selected') === 'true') {
                     self.setValue('none')
                 } else {
                     self.setValue('all');
@@ -615,7 +612,7 @@ function vanillaSelectBox(domSelector, options) {
                     e.target.classList.add("active");
                 }
                 self.privateSendChange();
-                if(!self.userOptions.stayOpen){
+                if (!self.userOptions.stayOpen) {
                     docListener();
                 }
             } else {
@@ -628,10 +625,10 @@ function vanillaSelectBox(domSelector, options) {
                 } else {
                     e.target.classList.add("active");
                 }
-               if(e.target.hasAttribute("data-parent")){
+                if (e.target.hasAttribute("data-parent")) {
                     self.checkUncheckFromChild(e.target);
-               }
-                
+                }
+
                 let selectedTexts = ""
                 let sep = "";
                 let nrActives = 0;
@@ -670,7 +667,7 @@ function vanillaSelectBox(domSelector, options) {
         function docListener() {
             document.removeEventListener("click", docListener);
             self.drop.style.visibility = "hidden";
-            if(self.search){
+            if (self.search) {
                 self.inputBox.value = "";
                 Array.prototype.slice.call(self.listElements).forEach(function (x) {
                     x.classList.remove("hidden-search");
@@ -682,9 +679,9 @@ function vanillaSelectBox(domSelector, options) {
     this.checkUncheckAll();
 }
 
-vanillaSelectBox.prototype.buildSelect = function(data){
+vanillaSelectBox.prototype.buildSelect = function (data) {
     let self = this;
-    data.forEach(function(x){
+    data.forEach(function (x) {
         let anOption = document.createElement("option");
         anOption.value = x.value;
         anOption.text = x.text;
@@ -692,23 +689,23 @@ vanillaSelectBox.prototype.buildSelect = function(data){
     });
 }
 
-vanillaSelectBox.prototype.remoteSearchIntegrate = function(data){
+vanillaSelectBox.prototype.remoteSearchIntegrate = function (data) {
     let self = this;
-    if(data == null || data.length == 0){
+    if (data == null || data.length == 0) {
         self.removeOptionsNotChecked(null);
         self.reloadTree();
-    }else{
+    } else {
         self.removeOptionsNotChecked(data);
-        let already = Array.prototype.slice.call(self.root.options).map(function(x){
+        let already = Array.prototype.slice.call(self.root.options).map(function (x) {
             return x.value;
         });
-        if(already.length >0){
-            if(typeof(data[0].id) == "number"){
-                already = already.map(function(x){
+        if (already.length > 0) {
+            if (typeof (data[0].id) == "number") {
+                already = already.map(function (x) {
                     return parseInt(x);
                 });
             }
-            data = data.filter(function(x){
+            data = data.filter(function (x) {
                 return already.indexOf(x.id) === -1;
             });
         }
@@ -720,14 +717,14 @@ vanillaSelectBox.prototype.remoteSearchIntegrate = function(data){
 vanillaSelectBox.prototype.removeOptionsNotChecked = function (data) {
     let self = this;
     let minimumSize = self.onInitSize;
-    let newSearchSize = data == null ? 0 :data.length;
+    let newSearchSize = data == null ? 0 : data.length;
     let presentSize = self.root.length;
-    if(presentSize+newSearchSize > minimumSize){
-        let maxToRemove = presentSize+newSearchSize - minimumSize-1;
+    if (presentSize + newSearchSize > minimumSize) {
+        let maxToRemove = presentSize + newSearchSize - minimumSize - 1;
         let removed = 0;
-        for (var i = self.root.length-1; i >=0; i--) {
-            if (self.root.options[i].selected==false){
-                if(removed <= maxToRemove) {
+        for (var i = self.root.length - 1; i >= 0; i--) {
+            if (self.root.options[i].selected == false) {
+                if (removed <= maxToRemove) {
                     removed++;
                     self.root.remove(i);
                 }
@@ -736,50 +733,50 @@ vanillaSelectBox.prototype.removeOptionsNotChecked = function (data) {
     }
 }
 
-vanillaSelectBox.prototype.remoteSearchIntegrateIt = function(data){
+vanillaSelectBox.prototype.remoteSearchIntegrateIt = function (data) {
     let self = this;
-    if(data == null || data.length == 0) return;
-    if(self.isOptgroups){
+    if (data == null || data.length == 0) return;
+    if (self.isOptgroups) {
         let groups = {};
         let groupsAlready = [];
 
-        self.root.children.forEach(function(x){
+        self.root.children.forEach(function (x) {
             console.log(x);
         });
-/* 
-         data.forEach(function(x){
-             if(x.parent){
-                 if(!groups[x.parent]){
-                    groups[x.parent] = "in_data";
-                    if(groupsAlready.indexOf(x.parent) != -1){
-                        groups[x.parent] = "in_select"; 
-                    }
-                 }
-             }
-            return x.isGroup;
-        });
-        groups.forEach(function(g){
-           var optgroup = document.createElement("optgroup");
-           optgroup.appendChild(document.createTextNode(g.name));c
-           self.root.appendChild(optgroup);
-
-           let options = data.filter(function(x){
-             return x.parent == g.name;
-            });
-            options.forEach(function(x){
-                var option = document.createElement("option");
-                option.value = data[i].id;
-                option.text = data[i].name;
-                self.root.appendChild(option);
-             });
-        });
-        for (var i = 0; i < data.length; i++) {
-            var option = document.createElement("option");
-            option.value = data[i].id;
-            option.text = data[i].name;
-            self.root.appendChild(option);
-        } */
-    }else{
+        /* 
+                 data.forEach(function(x){
+                     if(x.parent){
+                         if(!groups[x.parent]){
+                            groups[x.parent] = "in_data";
+                            if(groupsAlready.indexOf(x.parent) != -1){
+                                groups[x.parent] = "in_select"; 
+                            }
+                         }
+                     }
+                    return x.isGroup;
+                });
+                groups.forEach(function(g){
+                   var optgroup = document.createElement("optgroup");
+                   optgroup.appendChild(document.createTextNode(g.name));c
+                   self.root.appendChild(optgroup);
+        
+                   let options = data.filter(function(x){
+                     return x.parent == g.name;
+                    });
+                    options.forEach(function(x){
+                        var option = document.createElement("option");
+                        option.value = data[i].id;
+                        option.text = data[i].name;
+                        self.root.appendChild(option);
+                     });
+                });
+                for (var i = 0; i < data.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = data[i].id;
+                    option.text = data[i].name;
+                    self.root.appendChild(option);
+                } */
+    } else {
         for (var i = 0; i < data.length; i++) {
             var option = document.createElement("option");
             option.value = data[i].id;
@@ -790,84 +787,86 @@ vanillaSelectBox.prototype.remoteSearchIntegrateIt = function(data){
     self.reloadTree();
 }
 
-vanillaSelectBox.prototype.reloadTree = function(){
+vanillaSelectBox.prototype.reloadTree = function () {
     let self = this;
     let lis = self.ul.querySelectorAll("li");
-    if(lis != null ){
-        for (var i = lis.length-1; i >=0; i--) {
+    if (lis != null) {
+        for (var i = lis.length - 1; i >= 0; i--) {
             if (lis[i].getAttribute('data-value') !== 'all') {
                 self.ul.removeChild(lis[i]);
             }
         }
     }
+
     let selectedTexts = ""
     let sep = "";
     let nrActives = 0;
     let nrAll = 0;
+
     self.options = self.root.querySelectorAll("option");
     Array.prototype.slice.call(self.options).forEach(function (x) {
         let text = x.textContent;
         let value = x.value;
-        let originalAttrs;
-        if (x.hasAttributes()) {
-            originalAttrs = Array.prototype.slice.call(x.attributes)
-                .filter(function(a){
-                    return self.forbidenAttributes.indexOf(a.name) === -1
-                });
-        }
-        let classes = x.getAttribute("class");
-        if(classes)
-        {
-            classes=classes
-                .split(" ")
-                .filter(function(c){
-                    return self.forbidenClasses.indexOf(c) === -1
-                });
-        }else
-        {
-            classes=[];
-        }
-        let li = document.createElement("li");
-        let isSelected = x.selected;
-        let isDisabled = x.disabled;
-
-        self.ul.appendChild(li);
-        li.setAttribute("data-value", value);
-        li.setAttribute("data-text", text);
-
-        if(originalAttrs !== undefined){
-            originalAttrs.forEach(function(a){
-                li.setAttribute(a.name, a.value);
-            });
-        }
-        
-        classes.forEach(function(x){
-            li.classList.add(x);
-        });
-
-        if(self.maxOptionWidth < Infinity){
-            li.classList.add("short");
-            li.style.maxWidth = self.maxOptionWidth + "px";
-        }
-
-        if (isSelected) {
-            nrActives++;
-            selectedTexts += sep + text;
-            sep = ",";
-            li.classList.add("active");
-            if (!self.isMultiple) {
-                self.title.textContent = text;
-                if (classes.length != 0) {
-                    classes.forEach(function(x){
-                        self.title.classList.add(x);
+        if (value != "all") {
+            let originalAttrs;
+            if (x.hasAttributes()) {
+                originalAttrs = Array.prototype.slice.call(x.attributes)
+                    .filter(function (a) {
+                        return self.forbidenAttributes.indexOf(a.name) === -1
                     });
+            }
+            let classes = x.getAttribute("class");
+            if (classes) {
+                classes = classes
+                    .split(" ")
+                    .filter(function (c) {
+                        return self.forbidenClasses.indexOf(c) === -1
+                    });
+            } else {
+                classes = [];
+            }
+            let li = document.createElement("li");
+            let isSelected = x.selected;
+            let isDisabled = x.disabled;
+
+            self.ul.appendChild(li);
+            li.setAttribute("data-value", value);
+            li.setAttribute("data-text", text);
+
+            if (originalAttrs !== undefined) {
+                originalAttrs.forEach(function (a) {
+                    li.setAttribute(a.name, a.value);
+                });
+            }
+
+            classes.forEach(function (x) {
+                li.classList.add(x);
+            });
+
+            if (self.maxOptionWidth < Infinity) {
+                li.classList.add("short");
+                li.style.maxWidth = self.maxOptionWidth + "px";
+            }
+
+            if (isSelected) {
+                nrActives++;
+                selectedTexts += sep + text;
+                sep = ",";
+                li.classList.add("active");
+                if (!self.isMultiple) {
+                    self.title.textContent = text;
+                    if (classes.length != 0) {
+                        classes.forEach(function (x) {
+                            self.title.classList.add(x);
+                        });
+                    }
                 }
             }
+            if (isDisabled) {
+                li.classList.add("disabled");
+            }
+            li.appendChild(document.createTextNode(" " + text));
         }
-      if(isDisabled){
-        li.classList.add("disabled");
-      }
-        li.appendChild(document.createTextNode(" " + text));
     });
 
     self.listElements = self.drop.querySelectorAll("li:not(.grouped-option)");
@@ -880,11 +879,11 @@ vanillaSelectBox.prototype.disableItems = function (values) {
         values = values.split(",");
     }
 
-    if(vanillaSelectBox_type(values) == "array"){
+    if (vanillaSelectBox_type(values) == "array") {
         Array.prototype.slice.call(self.options).forEach(function (x) {
             if (values.indexOf(x.value) != -1) {
                 foundValues.push(x.value);
-                x.setAttribute("disabled","");
+                x.setAttribute("disabled", "");
             }
         });
     }
@@ -903,7 +902,7 @@ vanillaSelectBox.prototype.enableItems = function (values) {
         values = values.split(",");
     }
 
-    if(vanillaSelectBox_type(values) == "array"){
+    if (vanillaSelectBox_type(values) == "array") {
         Array.prototype.slice.call(self.options).forEach(function (x) {
             if (values.indexOf(x.value) != -1) {
                 foundValues.push(x.value);
@@ -919,82 +918,82 @@ vanillaSelectBox.prototype.enableItems = function (values) {
     });
 }
 
-vanillaSelectBox.prototype.checkSelectMax= function (nrActives) {
+vanillaSelectBox.prototype.checkSelectMax = function (nrActives) {
     let self = this;
-    if (self.maxSelect == Infinity || !self.isMultiple ) return;
+    if (self.maxSelect == Infinity || !self.isMultiple) return;
     if (self.maxSelect <= nrActives) {
         Array.prototype.slice.call(self.listElements).forEach(function (x) {
-            if (x.hasAttribute('data-value')){
-                if(!x.classList.contains('disabled') && !x.classList.contains('active')){
+            if (x.hasAttribute('data-value')) {
+                if (!x.classList.contains('disabled') && !x.classList.contains('active')) {
                     x.classList.add("overflow");
                 }
             }
         });
-    }else{
+    } else {
         Array.prototype.slice.call(self.listElements).forEach(function (x) {
-            if(x.classList.contains('overflow')){
+            if (x.classList.contains('overflow')) {
                 x.classList.remove("overflow");
             }
-        }); 
+        });
     }
 
 }
 
-vanillaSelectBox.prototype.checkUncheckFromChild = function (liClicked){
+vanillaSelectBox.prototype.checkUncheckFromChild = function (liClicked) {
     let self = this;
     let parentId = liClicked.getAttribute('data-parent');
     let parentLi = document.getElementById(parentId);
     if (!self.isMultiple) return;
-    let childrenElements = Array.prototype.slice.call(self.listElements).filter(function(el){
+    let childrenElements = Array.prototype.slice.call(self.listElements).filter(function (el) {
         return el.hasAttribute("data-parent") && el.getAttribute('data-parent') == parentId;
-   });
-   let nrChecked = 0;
-   let nrCheckable = childrenElements.length ; 
-   if(nrCheckable == 0) return;
-   childrenElements.forEach(function(el){
-       if(el.classList.contains('active')) nrChecked++;
-   });
-   if(nrChecked === nrCheckable || nrChecked === 0){
-       if(nrChecked === 0){
+    });
+    let nrChecked = 0;
+    let nrCheckable = childrenElements.length;
+    if (nrCheckable == 0) return;
+    childrenElements.forEach(function (el) {
+        if (el.classList.contains('active')) nrChecked++;
+    });
+    if (nrChecked === nrCheckable || nrChecked === 0) {
+        if (nrChecked === 0) {
             parentLi.classList.remove("checked");
-       }else{
+        } else {
             parentLi.classList.add("checked");
-       }
-   }else{
+        }
+    } else {
         parentLi.classList.remove("checked");
-   }
+    }
 }
 
 vanillaSelectBox.prototype.checkUncheckFromParent = function (liClicked) {
     let self = this;
     let parentId = liClicked.id;
     if (!self.isMultiple) return;
-    let childrenElements = Array.prototype.slice.call(self.listElements).filter(function(el){
-         return el.hasAttribute("data-parent") && el.getAttribute('data-parent') == parentId;
+    let childrenElements = Array.prototype.slice.call(self.listElements).filter(function (el) {
+        return el.hasAttribute("data-parent") && el.getAttribute('data-parent') == parentId;
     });
     let nrChecked = 0;
-    let nrCheckable = childrenElements.length ; 
-    if(nrCheckable == 0) return;
-    childrenElements.forEach(function(el){
-        if(el.classList.contains('active')) nrChecked++;
+    let nrCheckable = childrenElements.length;
+    if (nrCheckable == 0) return;
+    childrenElements.forEach(function (el) {
+        if (el.classList.contains('active')) nrChecked++;
     });
-    if(nrChecked === nrCheckable || nrChecked === 0){
+    if (nrChecked === nrCheckable || nrChecked === 0) {
         //check all or uncheckAll : just do the opposite
-        childrenElements.forEach(function(el){
+        childrenElements.forEach(function (el) {
             var event = document.createEvent('HTMLEvents');
             event.initEvent('click', true, false);
             el.dispatchEvent(event);
         });
-        if(nrChecked === 0){
+        if (nrChecked === 0) {
             liClicked.classList.add("checked");
-        }else{
+        } else {
             liClicked.classList.remove("checked");
         }
-    }else{
+    } else {
         //check all
         liClicked.classList.remove("checked");
-        childrenElements.forEach(function(el){
-            if(!el.classList.contains('active')){
+        childrenElements.forEach(function (el) {
+            if (!el.classList.contains('active')) {
                 var event = document.createEvent('HTMLEvents');
                 event.initEvent('click', true, false);
                 el.dispatchEvent(event);
@@ -1009,7 +1008,7 @@ vanillaSelectBox.prototype.checkUncheckAll = function () {
     let nrChecked = 0;
     let nrCheckable = 0;
     let checkAllElement = null;
-    if(self.listElements == null) return;
+    if (self.listElements == null) return;
     Array.prototype.slice.call(self.listElements).forEach(function (x) {
         if (x.hasAttribute('data-value')) {
             if (x.getAttribute('data-value') === 'all') {
@@ -1065,27 +1064,27 @@ vanillaSelectBox.prototype.setValue = function (values) {
                                     }
                                 }
                             }
-                        } else if(x.classList.contains('grouped-option') ) {
+                        } else if (x.classList.contains('grouped-option')) {
                             x.classList.add("checked");
                         }
                     });
                 } else if (values === "none") {
                     values = [];
                     Array.prototype.slice.call(listElements).forEach(function (x) {
-                        if (x.hasAttribute('data-value')){
+                        if (x.hasAttribute('data-value')) {
                             let value = x.getAttribute('data-value');
-                            if (value !== 'all'){
-                                if(x.classList.contains('active')){
-                                    if(x.classList.contains('hidden-search') || x.classList.contains('disabled')){
+                            if (value !== 'all') {
+                                if (x.classList.contains('active')) {
+                                    if (x.classList.contains('hidden-search') || x.classList.contains('disabled')) {
                                         values.push(value);
                                     }
                                 }
                             }
-                        }else if(x.classList.contains('grouped-option') ) {
+                        } else if (x.classList.contains('grouped-option')) {
                             x.classList.remove("checked");
                         }
                     });
-                }else {
+                } else {
                     values = values.split(",");
                 }
             }
@@ -1170,47 +1169,47 @@ vanillaSelectBox.prototype.privateSendChange = function () {
     this.root.dispatchEvent(event);
 }
 
-	vanillaSelectBox.prototype.empty = function () {
-        Array.prototype.slice.call(this.listElements).forEach(function (x) {
-            x.classList.remove("active");
-        });
-        Array.prototype.slice.call(this.options).forEach(function (x) {
-            x.selected = false;
-        });
-        this.title.textContent = "";
-        if (this.userOptions.placeHolder != "" && this.title.textContent == "") {
-            this.title.textContent = this.userOptions.placeHolder;
-        }
-        this.checkUncheckAll();
-        this.privateSendChange();
+vanillaSelectBox.prototype.empty = function () {
+    Array.prototype.slice.call(this.listElements).forEach(function (x) {
+        x.classList.remove("active");
+    });
+    Array.prototype.slice.call(this.options).forEach(function (x) {
+        x.selected = false;
+    });
+    this.title.textContent = "";
+    if (this.userOptions.placeHolder != "" && this.title.textContent == "") {
+        this.title.textContent = this.userOptions.placeHolder;
     }
+    this.checkUncheckAll();
+    this.privateSendChange();
+}
 
-    vanillaSelectBox.prototype.destroy = function () {
-        let already = document.getElementById("btn-group-" + this.rootToken);
-        if (already) {
-            VSBoxCounter.remove(this.instanceOffset);
-            already.remove();
-            this.root.style.display = "inline-block";
-        }
+vanillaSelectBox.prototype.destroy = function () {
+    let already = document.getElementById("btn-group-" + this.rootToken);
+    if (already) {
+        VSBoxCounter.remove(this.instanceOffset);
+        already.remove();
+        this.root.style.display = "inline-block";
     }
-    vanillaSelectBox.prototype.disable = function () {
-        let already = document.getElementById("btn-group-" + this.rootToken);
-        if (already) {
-            button = already.querySelector("button")
-			if(button) button.classList.add("disabled");
-            this.isDisabled = true;
-        }
+}
+vanillaSelectBox.prototype.disable = function () {
+    let already = document.getElementById("btn-group-" + this.rootToken);
+    if (already) {
+        button = already.querySelector("button")
+        if (button) button.classList.add("disabled");
+        this.isDisabled = true;
     }
-    vanillaSelectBox.prototype.enable = function () {
-        let already = document.getElementById("btn-group-" + this.rootToken);
-        if (already) {
-            button = already.querySelector("button")
-            if(button) button.classList.remove("disabled");
-            this.isDisabled = false;
-        }
+}
+vanillaSelectBox.prototype.enable = function () {
+    let already = document.getElementById("btn-group-" + this.rootToken);
+    if (already) {
+        button = already.querySelector("button")
+        if (button) button.classList.remove("disabled");
+        this.isDisabled = false;
     }
+}
 
-vanillaSelectBox.prototype.showOptions = function(){
+vanillaSelectBox.prototype.showOptions = function () {
     console.log(this.userOptions);
 }
 // Polyfills for IE
