@@ -191,13 +191,68 @@
             <select id="demoM1" multiple="" size="3"></select>
         </div>
 
+        <p>Multiple select 2 levels</p>
+        <div class="demo-zone">
+            <select id="demoM2" multiple="" size="3"></select>
+        </div>
+
         <p>Single select 1 level</p>
         <div class="demo-zone">
             <select id="demoS1"></select>
         </div>
 
-        <script src="./vanillaSelectBox.js?v0.72"></script>
+        <script src="./vanillaSelectBox.js?v0.73"></script>
         <script>
+
+            function do2LevelSearch(what, datasize) {
+                let valueProperty = "id";
+                let textProperty = "name";
+                let parentProperty = "parent";
+                return new Promise(function (resolve, reject) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.overrideMimeType("application/json");
+                    xhr.open('GET','./dino.json', true);
+                    xhr.onload = function () {
+                        if (this.status >= 200 && this.status < 300) {
+                            var data = JSON.parse(xhr.response);
+
+                            if (what == "" && datasize != undefined && datasize > 0) { // for init to show some data
+                                data = data.slice(0, datasize);
+                                data = data.map(function (x) {
+                                    return {
+                                        value: x[valueProperty],
+                                        text: x[textProperty],
+                                        parent: x[parentProperty]
+                                    }
+                                });
+                            } else {
+                                data = data.filter(function (x) {
+                                    let name = x[textProperty].toLowerCase();
+                                    if (name.indexOf(what.toLowerCase()) != -1)
+                                        return {
+                                            value: x[valueProperty],
+                                            text: x[textProperty],
+                                            parent: x[parentProperty]
+                                        }
+                                });
+                            }
+                            resolve(data);
+                        } else {
+                            reject({
+                                status: this.status,
+                                statusText: xhr.statusText
+                            });
+                        }
+                    };
+                    xhr.onerror = function () {
+                        reject({
+                            status: this.status,
+                            statusText: xhr.statusText
+                        });
+                    };
+                    xhr.send();
+                });
+            }
 
             function doSearch(what, datasize) {
                 let valueProperty = "id";
@@ -262,6 +317,19 @@
                     }
                 );
 
+                let selectDemoM2 = new vanillaSelectBox("#demoM2",
+                    {
+                        "maxHeight": 300,
+                        "search": true,
+                        "placeHolder" : "search to load more data",
+                        "translations": { "all": "everybody", "items": "people" },
+                        "remote": {
+                            "onSearch": do2LevelSearch,
+                            "onInitSize": 10,
+                        }
+                    }
+                );
+
                 let selectDemoS1 = new vanillaSelectBox("#demoS1",
                     {
                         "maxHeight": 300,
@@ -273,7 +341,6 @@
                         }
                     }
                 );
-
             }
 
             init();

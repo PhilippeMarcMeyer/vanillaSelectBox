@@ -376,7 +376,7 @@ function vanillaSelectBox(domSelector, options) {
 
         if (document.querySelector(this.domSelector + ' optgroup') !== null) {
             this.isOptgroups = true;
-            this.isRemote = false;// debug
+            //this.isRemote = false;// debug
             this.options = document.querySelectorAll(this.domSelector + " option");
             let groups = document.querySelectorAll(this.domSelector + ' optgroup');
             Array.prototype.slice.call(groups).forEach(function (group) {
@@ -681,12 +681,43 @@ function vanillaSelectBox(domSelector, options) {
 
 vanillaSelectBox.prototype.buildSelect = function (data) {
     let self = this;
-    data.forEach(function (x) {
-        let anOption = document.createElement("option");
-        anOption.value = x.value;
-        anOption.text = x.text;
-        self.root.appendChild(anOption);
-    });
+    if(data == null || data.length < 1) return;
+    self.isOptgroups = data[0].parent != undefined && data[0].parent != "";
+
+    if(self.isOptgroups){
+        let groups = {};
+        data = data.filter(function(x){
+            return x.parent != undefined && x.parent != "";
+        });
+    
+        data.forEach(function (x) {
+            if(!groups[x.parent]){
+                groups[x.parent] = true;
+            }
+        });
+        for (let group in groups) {
+            let anOptgroup = document.createElement("optgroup");
+            anOptgroup.setAttribute("label", group);
+            
+            options = data.filter(function(x){
+                return x.parent == group;
+            });
+            options.forEach(function (x) {
+                let anOption = document.createElement("option");
+                anOption.value = x.value;
+                anOption.text = x.text;
+                anOptgroup.appendChild(anOption);
+            });
+            self.root.appendChild(anOptgroup);
+        }
+    }else{
+        data.forEach(function (x) {
+            let anOption = document.createElement("option");
+            anOption.value = x.value;
+            anOption.text = x.text;
+            self.root.appendChild(anOption);
+        });
+    }
 }
 
 vanillaSelectBox.prototype.remoteSearchIntegrate = function (data) {
