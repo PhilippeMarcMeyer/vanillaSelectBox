@@ -354,4 +354,3 @@ function doSearch(what, datasize) {
 - Add more than levels via optgroups
 - Maybe keep the the tree internaly as an objet and keeping the original select as an option but not mandatory anymore
 - Better alternate css support
--
