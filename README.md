@@ -11,8 +11,9 @@ I think one improvement would be to integrate the css as style tags because ther
 
 What do you think ?
 
-last change : Two levels: one click on the group selects / unselects children
+#### Find examples at the end of the readme file !
 
+#### Check my todo list at the very bottom !
 
 ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/vanillaSelectBox.png)
 
