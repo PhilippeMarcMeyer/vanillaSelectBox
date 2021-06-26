@@ -345,6 +345,13 @@ function doSearch(what, datasize) {
       });
   }
 
-
-
 ```
+
+### TODO
+
+- Remote search and loading : manage 2 levels dropdowns
+- Add a getResult() function instead of just getting from the DOM hidden select element
+- Add more than levels via optgroups
+- Maybe keep the the tree internaly as an objet and keeping the original select as an option but not mandatory anymore
+- Better alternate css support
+-
