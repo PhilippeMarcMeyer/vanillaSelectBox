@@ -191,9 +191,14 @@
             <select id="demoM1" multiple="" size="3"></select>
         </div>
 
-        <p>Multiple select 2 levels</p>
+        <p>Multiple select 2 level => init & search remotes</p>
         <div class="demo-zone">
             <select id="demoM2" multiple="" size="3"></select>
+        </div>
+
+        <p>Multiple select 2 level => init remote but search local</p>
+        <div class="demo-zone">
+            <select id="demoM2SearchLocal" multiple="" size="3"></select>
         </div>
 
         <p>Single select 1 level</p>
@@ -204,7 +209,7 @@
         <script src="./vanillaSelectBox.js?v0.73"></script>
         <script>
 
-            function do2LevelSearch(what, datasize) {
+            function get2LevelData(what, datasize) {
                 let valueProperty = "id";
                 let textProperty = "name";
                 let parentProperty = "parent";
@@ -216,8 +221,10 @@
                         if (this.status >= 200 && this.status < 300) {
                             var data = JSON.parse(xhr.response);
 
-                            if (what == "" && datasize != undefined && datasize > 0) { // for init to show some data
-                                data = data.slice(0, datasize);
+                            if (what == "") { // for init to show some data
+                                if(datasize){
+                                    data = data.slice(0, datasize);
+                                }
                                 data = data.map(function (x) {
                                     return {
                                         value: x[valueProperty],
@@ -254,7 +261,7 @@
                 });
             }
 
-            function doSearch(what, datasize) {
+            function getData(what, datasize) {
                 let valueProperty = "id";
                 let textProperty = "name";
                 return new Promise(function (resolve, reject) {
@@ -264,16 +271,18 @@
                     xhr.onload = function () {
                         if (this.status >= 200 && this.status < 300) {
                             var data = JSON.parse(xhr.response);
-
-                            if (what == "" && datasize != undefined && datasize > 0) { // for init to show some data
-                                data = data.slice(0, datasize);
+                            // init
+                            if (what == "") { // for init to show some data
+                                if(datasize){
+                                    data = data.slice(0, datasize);
+                                }
                                 data = data.map(function (x) {
                                     return {
                                         value: x[valueProperty],
                                         text: x[textProperty]
                                     }
                                 });
-                            } else {
+                            } else { //search
                                 data = data.filter(function (x) {
                                     let name = x[textProperty].toLowerCase();
                                     if (name.indexOf(what.toLowerCase()) != -1)
@@ -311,8 +320,9 @@
                         "placeHolder" : "search to load more data",
                         "translations": { "all": "everybody", "items": "people" },
                         "remote": {
-                            "onSearch": doSearch,
-                            "onInitSize": 6,
+                            "onInit": getData,// no function here make init comes from SELECT element
+                            "onInitSize": 8,//  limits the number of data lines for init
+                            "onSearch": getData // no function here make search local
                         }
                     }
                 );
@@ -324,20 +334,35 @@
                         "placeHolder" : "search to load more data",
                         "translations": { "all": "everybody", "items": "people" },
                         "remote": {
-                            "onSearch": do2LevelSearch,
+                            "onInit": get2LevelData,
                             "onInitSize": 10,
+                            "onSearch": get2LevelData // no function here make search local
                         }
                     }
                 );
 
+                
+                let selectDemoM2Local = new vanillaSelectBox("#demoM2SearchLocal",
+                    {
+                        "maxHeight": 300,
+                        "search": true,
+                        "placeHolder" : "search to load more data",
+                        "translations": { "all": "everybody", "items": "people" },
+                        "remote": {
+                            "onInit": get2LevelData, // no init size loads everything
+                        }
+                    }
+                );
+                
                 let selectDemoS1 = new vanillaSelectBox("#demoS1",
                     {
                         "maxHeight": 300,
                         "search": true,
                         "placeHolder" : "search to load more data",
                         "remote": {
-                            "onSearch": doSearch,
+                            "onInit": getData,
                             "onInitSize": 5,
+                            "onSearch": getData // no function here make search local
                         }
                     }
                 );

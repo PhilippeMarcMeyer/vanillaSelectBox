@@ -84,9 +84,11 @@ function vanillaSelectBox(domSelector, options) {
     this.ulminHeight = 25;
     this.maxOptionWidth = Infinity;
     this.maxSelect = Infinity;
-    this.isRemote = false;
+    this.isInitRemote = false;
+    this.isSearchRemote = false;
+    this.onInit = null;
     this.onSearch = null; // if isRemote is true : a user defined function that loads more options from the back
-    this.onInitSize = 0;
+    this.onInitSize = null;
     this.forbidenAttributes = ["class", "selected", "disabled", "data-text", "data-value", "style"];
     this.forbidenClasses = ["active", "disabled"];
     this.userOptions = {
@@ -125,30 +127,36 @@ function vanillaSelectBox(domSelector, options) {
             this.search = options.search;
         }
         if (options.remote != undefined && options.remote) {
-            this.search = true;
-            this.isRemote = true; // search is mandatory to use the remote option
+
+           // user defined onInit  function
+            if (options.remote.onInit!= undefined && typeof options.remote.onInit === 'function') {
+                this.onInit = options.remote.onInit;
+                this.isInitRemote = true;
+            } 
             if (options.remote.onInitSize != undefined) {
                 this.onInitSize = options.remote.onInitSize;
-                if (this.onInitSize < 0) this.onInitSize = 0;
+                if (this.onInitSize < 3) this.onInitSize = 3;
             }
             // user defined remote search function
-            if (options.remote.onSearch != undefined && typeof options.remote.onSearch === 'function' && this.isRemote) {
+            if (options.remote.onSearch != undefined && typeof options.remote.onSearch === 'function') {
                 this.onSearch = options.remote.onSearch;
-            } else {
-                this.isRemote = false;
+                this.isSearchRemote = true;
             }
         }
 
         if (options.stayOpen != undefined) {
             this.userOptions.stayOpen = options.stayOpen;
         }
+
         if (options.disableSelectAll != undefined) {
             this.userOptions.disableSelectAll = options.disableSelectAll;
         }
+
         if (options.maxSelect != undefined && !isNaN(options.maxSelect) && options.maxSelect >= 1) {
             this.maxSelect = options.maxSelect;
             this.userOptions.disableSelectAll = true;
         }
+
         if (options.maxOptionWidth != undefined && !isNaN(options.maxOptionWidth) && options.maxOptionWidth >= 20) {
             this.maxOptionWidth = options.maxOptionWidth;
             this.ulminWidth = options.maxOptionWidth + 60;
@@ -201,8 +209,8 @@ function vanillaSelectBox(domSelector, options) {
 
     this.init = function () {
         let self = this;
-        if (self.isRemote && self.onInitSize > 0) {
-            self.onSearch("", self.onInitSize)
+        if (self.isInitRemote) {
+            self.onInit("",self.onInitSize)
                 .then(function (data) {
                     self.buildSelect(data);
                     self.createTree();
@@ -462,7 +470,7 @@ function vanillaSelectBox(domSelector, options) {
                 let nrFound = 0;
                 let nrChecked = 0;
                 let selectAll = null;
-                if (self.isRemote) {
+                if (self.isSearchRemote) {
                     if (searchValueLength == 0) {
                         self.removeOptionsNotChecked(null);
                         self.reloadTree();
@@ -722,11 +730,14 @@ vanillaSelectBox.prototype.buildSelect = function (data) {
 
 vanillaSelectBox.prototype.remoteSearchIntegrate = function (data) {
     let self = this;
+    let dataChecked = self.optionsCheckedToData();
+
     if (data == null || data.length == 0) {
-        self.removeOptionsNotChecked(null);
+        data = dataChecked.slice(0);
         self.reloadTree();
     } else {
-        self.removeOptionsNotChecked(data);
+        data = dataChecked.concat(data);
+
         let already = Array.prototype.slice.call(self.root.options).map(function (x) {
             return x.value;
         });
@@ -743,6 +754,31 @@ vanillaSelectBox.prototype.remoteSearchIntegrate = function (data) {
 
         self.remoteSearchIntegrateIt(data);
     }
+}
+
+vanillaSelectBox.prototype.optionsCheckedToData = function () {
+    let self = this;
+    let dataChecked = [];
+    let treeOptions = self.ul.querySelectorAll("li.active");
+    let keepParents = {};
+        if (treeOptions != null) {
+            Array.prototype.slice.call(treeOptions).forEach(function (x) {
+                let oneData = {"id":x.getAttribute("data-value"),"name":x.getAttribute("data-text"),"checked":true};
+                if(self.isOptgroups){
+                    let parentId = x.getAttribute("data-parent");
+                    if(keepParents[parentId]!=undefined){
+                        oneData.parent = keepParents[parentId];
+                    }else{
+                        let parentPtr = self.ul.querySelector("#"+parentId);
+                        let parentName = parentPtr.getAttribute("data-text");
+                        keepParents[parentId] = parentName;
+                        oneData.parent = parentName;
+                    }
+                }
+                dataChecked.push(oneData);
+            });
+        }
+        return dataChecked;
 }
 
 vanillaSelectBox.prototype.removeOptionsNotChecked = function (data) {
