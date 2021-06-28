@@ -727,6 +727,9 @@ vanillaSelectBox.prototype.buildSelect = function (data) {
             let anOption = document.createElement("option");
             anOption.value = x.value;
             anOption.text = x.text;
+            if(x.selected){
+                anOption.setAttribute("selected",true)
+            }
             self.root.appendChild(anOption);
         });
     }
@@ -806,7 +809,7 @@ vanillaSelectBox.prototype.remoteSearchIntegrateIt = function (data) {
     self.root.removeChild(self.root.firstChild);
     
     self.buildSelect(data);
-    self.createTree();
+    self.reloadTree();
 }
 
 vanillaSelectBox.prototype.reloadTree = function () {
@@ -825,73 +828,142 @@ vanillaSelectBox.prototype.reloadTree = function () {
     let nrActives = 0;
     let nrAll = 0;
 
-    self.options = self.root.querySelectorAll("option");
-    Array.prototype.slice.call(self.options).forEach(function (x) {
-        let text = x.textContent;
-        let value = x.value;
-        if (value != "all") {
-            let originalAttrs;
-            if (x.hasAttributes()) {
-                originalAttrs = Array.prototype.slice.call(x.attributes)
-                    .filter(function (a) {
-                        return self.forbidenAttributes.indexOf(a.name) === -1
-                    });
-            }
-            let classes = x.getAttribute("class");
-            if (classes) {
-                classes = classes
-                    .split(" ")
-                    .filter(function (c) {
-                        return self.forbidenClasses.indexOf(c) === -1
-                    });
-            } else {
-                classes = [];
-            }
-            let li = document.createElement("li");
-            let isSelected = x.selected;
-            let isDisabled = x.disabled;
+    if (self.isOptgroups) {
+        if (document.querySelector(self.domSelector + ' optgroup') !== null) {
+            self.options = document.querySelectorAll(this.domSelector + " option");
+            let groups = document.querySelectorAll(this.domSelector + ' optgroup');
+            Array.prototype.slice.call(groups).forEach(function (group) {
+                let groupOptions = group.querySelectorAll('option');
+                let li = document.createElement("li");
+                let span = document.createElement("span");
+                let iCheck = document.createElement("i");
+                let labelElement = document.createElement("b");
+                let dataWay = group.getAttribute("data-way");
+                if (!dataWay) dataWay = "closed";
+                if (!dataWay || (dataWay !== "closed" && dataWay !== "open")) dataWay = "closed";
+                li.appendChild(span);
+                li.appendChild(iCheck);
+                self.ul.appendChild(li);
+                li.classList.add('grouped-option');
+                li.classList.add(dataWay);
+                self.currentOptgroup++;
+                let optId = self.rootToken + "-opt-" + self.currentOptgroup;
+                li.id = optId;
+                li.appendChild(labelElement);
+                labelElement.appendChild(document.createTextNode(group.label));
+                li.setAttribute("data-text", group.label);
+                self.ul.appendChild(li);
 
-            self.ul.appendChild(li);
-            li.setAttribute("data-value", value);
-            li.setAttribute("data-text", text);
-
-            if (originalAttrs !== undefined) {
-                originalAttrs.forEach(function (a) {
-                    li.setAttribute(a.name, a.value);
-                });
-            }
-
-            classes.forEach(function (x) {
-                li.classList.add(x);
-            });
-
-            if (self.maxOptionWidth < Infinity) {
-                li.classList.add("short");
-                li.style.maxWidth = self.maxOptionWidth + "px";
-            }
-
-            if (isSelected) {
-                nrActives++;
-                selectedTexts += sep + text;
-                sep = ",";
-                li.classList.add("active");
-                if (!self.isMultiple) {
-                    self.title.textContent = text;
+                Array.prototype.slice.call(groupOptions).forEach(function (x) {
+                    let text = x.textContent;
+                    let value = x.value;
+                    let classes = x.getAttribute("class");
+                    if (classes) {
+                        classes = classes.split(" ");
+                    }
+                    else {
+                        classes = [];
+                    }
+                    classes.push(dataWay);
+                    let li = document.createElement("li");
+                    let isSelected = x.hasAttribute("selected");
+                    self.ul.appendChild(li);
+                    li.setAttribute("data-value", value);
+                    li.setAttribute("data-text", text);
+                    li.setAttribute("data-parent", optId);
                     if (classes.length != 0) {
                         classes.forEach(function (x) {
-                            self.title.classList.add(x);
+                            li.classList.add(x);
                         });
                     }
-                }
-            }
-            if (isDisabled) {
-                li.classList.add("disabled");
-            }
-            li.appendChild(document.createTextNode(" " + text));
+                    if (isSelected) {
+                        nrActives++;
+                        selectedTexts += sep + text;
+                        sep = ",";
+                        li.classList.add("active");
+                        if (!self.isMultiple) {
+                            self.title.textContent = text;
+                            if (classes.length != 0) {
+                                classes.forEach(function (x) {
+                                    self.title.classList.add(x);
+                                });
+                            }
+                        }
+                    }
+                    li.appendChild(document.createTextNode(text));
+                })
+            })
         }
-    });
+    } else {
 
-    self.listElements = self.drop.querySelectorAll("li:not(.grouped-option)");
+        self.options = self.root.querySelectorAll("option");
+        Array.prototype.slice.call(self.options).forEach(function (x) {
+            let text = x.textContent;
+            let value = x.value;
+            if (value != "all") {
+                let originalAttrs;
+                if (x.hasAttributes()) {
+                    originalAttrs = Array.prototype.slice.call(x.attributes)
+                        .filter(function (a) {
+                            return self.forbidenAttributes.indexOf(a.name) === -1
+                        });
+                }
+                let classes = x.getAttribute("class");
+                if (classes) {
+                    classes = classes
+                        .split(" ")
+                        .filter(function (c) {
+                            return self.forbidenClasses.indexOf(c) === -1
+                        });
+                } else {
+                    classes = [];
+                }
+                let li = document.createElement("li");
+                let isSelected = x.hasAttribute("selected");
+
+                let isDisabled = x.disabled;
+
+                self.ul.appendChild(li);
+                li.setAttribute("data-value", value);
+                li.setAttribute("data-text", text);
+
+                if (originalAttrs !== undefined) {
+                    originalAttrs.forEach(function (a) {
+                        li.setAttribute(a.name, a.value);
+                    });
+                }
+
+                classes.forEach(function (x) {
+                    li.classList.add(x);
+                });
+
+                if (self.maxOptionWidth < Infinity) {
+                    li.classList.add("short");
+                    li.style.maxWidth = self.maxOptionWidth + "px";
+                }
+
+                if (isSelected) {
+                    nrActives++;
+                    selectedTexts += sep + text;
+                    sep = ",";
+                    li.classList.add("active");
+                    if (!self.isMultiple) {
+                        self.title.textContent = text;
+                        if (classes.length != 0) {
+                            classes.forEach(function (x) {
+                                self.title.classList.add(x);
+                            });
+                        }
+                    }
+                }
+                if (isDisabled) {
+                    li.classList.add("disabled");
+                }
+                li.appendChild(document.createTextNode(" " + text));
+            }
+        });
+    }
+
 }
 
 vanillaSelectBox.prototype.disableItems = function (values) {
