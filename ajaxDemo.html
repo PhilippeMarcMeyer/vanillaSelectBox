@@ -235,12 +235,14 @@
                             } else {
                                 data = data.filter(function (x) {
                                     let name = x[textProperty].toLowerCase();
-                                    if (name.indexOf(what.toLowerCase()) != -1)
-                                        return {
-                                            value: x[valueProperty],
-                                            text: x[textProperty],
-                                            parent: x[parentProperty]
-                                        }
+                                    return(name.indexOf(what.toLowerCase()) != -1)
+                                });
+                                data = data.map(function (x) {
+                                    return {
+                                        value: x[valueProperty],
+                                        text: x[textProperty],
+                                        parent: x[parentProperty]
+                                    }
                                 });
                             }
                             resolve(data);
@@ -285,11 +287,13 @@
                             } else { //search
                                 data = data.filter(function (x) {
                                     let name = x[textProperty].toLowerCase();
-                                    if (name.indexOf(what.toLowerCase()) != -1)
-                                        return {
-                                            value: x[valueProperty],
-                                            text: x[textProperty]
-                                        }
+                                    return (name.indexOf(what.toLowerCase()) != -1)
+                                });
+                                data = data.map(function (x) {
+                                    return {
+                                        value: x[valueProperty],
+                                        text: x[textProperty]
+                                    }
                                 });
                             }
                             resolve(data);

@@ -472,9 +472,7 @@ function vanillaSelectBox(domSelector, options) {
                 let selectAll = null;
                 if (self.isSearchRemote) {
                     if (searchValueLength == 0) {
-                        self.removeOptionsNotChecked(null);
-                        self.reloadTree();
-                        self.checkUncheckAll();
+                        self.remoteSearchIntegrate(null);
                     } else if (searchValueLength >= 3) {
                         self.onSearch(searchValue)
                             .then(function (data) {
@@ -690,8 +688,10 @@ function vanillaSelectBox(domSelector, options) {
 vanillaSelectBox.prototype.buildSelect = function (data) {
     let self = this;
     if(data == null || data.length < 1) return;
-    self.isOptgroups = data[0].parent != undefined && data[0].parent != "";
-
+    if(!self.isOptgroups){
+        self.isOptgroups = data[0].parent != undefined && data[0].parent != "";
+    }
+  
     if(self.isOptgroups){
         let groups = {};
         data = data.filter(function(x){
@@ -702,6 +702,7 @@ vanillaSelectBox.prototype.buildSelect = function (data) {
             if(!groups[x.parent]){
                 groups[x.parent] = true;
             }
+
         });
         for (let group in groups) {
             let anOptgroup = document.createElement("optgroup");
@@ -714,6 +715,9 @@ vanillaSelectBox.prototype.buildSelect = function (data) {
                 let anOption = document.createElement("option");
                 anOption.value = x.value;
                 anOption.text = x.text;
+                if(x.selected){
+                    anOption.setAttribute("selected",true)
+                }
                 anOptgroup.appendChild(anOption);
             });
             self.root.appendChild(anOptgroup);
@@ -730,27 +734,22 @@ vanillaSelectBox.prototype.buildSelect = function (data) {
 
 vanillaSelectBox.prototype.remoteSearchIntegrate = function (data) {
     let self = this;
-    let dataChecked = self.optionsCheckedToData();
 
     if (data == null || data.length == 0) {
-        data = dataChecked.slice(0);
-        self.reloadTree();
+        let dataChecked = self.optionsCheckedToData();
+        if(dataChecked)
+            data = dataChecked.slice(0);
+        self.remoteSearchIntegrateIt(data);
     } else {
-        data = dataChecked.concat(data);
-
-        let already = Array.prototype.slice.call(self.root.options).map(function (x) {
-            return x.value;
-        });
-        if (already.length > 0) {
-            if (typeof (data[0].id) == "number") {
-                already = already.map(function (x) {
-                    return parseInt(x);
-                });
+        let dataChecked = self.optionsCheckedToData();
+        if (dataChecked.length > 0){
+            for (var i = data.length - 1; i >= 0; i--) {
+                if(dataChecked.indexOf(data[i].id) !=-1){
+                    data.slice(i,1);
+                }
             }
-            data = data.filter(function (x) {
-                return already.indexOf(x.id) === -1;
-            });
         }
+        data = data.concat(dataChecked);
 
         self.remoteSearchIntegrateIt(data);
     }
@@ -759,11 +758,11 @@ vanillaSelectBox.prototype.remoteSearchIntegrate = function (data) {
 vanillaSelectBox.prototype.optionsCheckedToData = function () {
     let self = this;
     let dataChecked = [];
-    let treeOptions = self.ul.querySelectorAll("li.active");
+    let treeOptions = self.ul.querySelectorAll("li.active:not(.grouped-option)");
     let keepParents = {};
         if (treeOptions != null) {
             Array.prototype.slice.call(treeOptions).forEach(function (x) {
-                let oneData = {"id":x.getAttribute("data-value"),"name":x.getAttribute("data-text"),"checked":true};
+                let oneData = {"value":x.getAttribute("data-value"),"text":x.getAttribute("data-text"),"selected":true};
                 if(self.isOptgroups){
                     let parentId = x.getAttribute("data-parent");
                     if(keepParents[parentId]!=undefined){
@@ -803,55 +802,11 @@ vanillaSelectBox.prototype.removeOptionsNotChecked = function (data) {
 vanillaSelectBox.prototype.remoteSearchIntegrateIt = function (data) {
     let self = this;
     if (data == null || data.length == 0) return;
-    if (self.isOptgroups) {
-        let groups = {};
-        let groupsAlready = [];
-
-        self.root.children.forEach(function (x) {
-            console.log(x);
-        });
-        /* 
-                 data.forEach(function(x){
-                     if(x.parent){
-                         if(!groups[x.parent]){
-                            groups[x.parent] = "in_data";
-                            if(groupsAlready.indexOf(x.parent) != -1){
-                                groups[x.parent] = "in_select"; 
-                            }
-                         }
-                     }
-                    return x.isGroup;
-                });
-                groups.forEach(function(g){
-                   var optgroup = document.createElement("optgroup");
-                   optgroup.appendChild(document.createTextNode(g.name));c
-                   self.root.appendChild(optgroup);
-        
-                   let options = data.filter(function(x){
-                     return x.parent == g.name;
-                    });
-                    options.forEach(function(x){
-                        var option = document.createElement("option");
-                        option.value = data[i].id;
-                        option.text = data[i].name;
-                        self.root.appendChild(option);
-                     });
-                });
-                for (var i = 0; i < data.length; i++) {
-                    var option = document.createElement("option");
-                    option.value = data[i].id;
-                    option.text = data[i].name;
-                    self.root.appendChild(option);
-                } */
-    } else {
-        for (var i = 0; i < data.length; i++) {
-            var option = document.createElement("option");
-            option.value = data[i].id;
-            option.text = data[i].name;
-            self.root.appendChild(option);
-        }
-    }
-    self.reloadTree();
+    while(self.root.firstChild)
+    self.root.removeChild(self.root.firstChild);
+    
+    self.buildSelect(data);
+    self.createTree();
 }
 
 vanillaSelectBox.prototype.reloadTree = function () {
