@@ -763,21 +763,24 @@ vanillaSelectBox.prototype.optionsCheckedToData = function () {
     let dataChecked = [];
     let treeOptions = self.ul.querySelectorAll("li.active:not(.grouped-option)");
     let keepParents = {};
-        if (treeOptions != null) {
+        if (treeOptions) {
             Array.prototype.slice.call(treeOptions).forEach(function (x) {
                 let oneData = {"value":x.getAttribute("data-value"),"text":x.getAttribute("data-text"),"selected":true};
-                if(self.isOptgroups){
-                    let parentId = x.getAttribute("data-parent");
-                    if(keepParents[parentId]!=undefined){
-                        oneData.parent = keepParents[parentId];
-                    }else{
-                        let parentPtr = self.ul.querySelector("#"+parentId);
-                        let parentName = parentPtr.getAttribute("data-text");
-                        keepParents[parentId] = parentName;
-                        oneData.parent = parentName;
+                if(oneData.value !== "all"){
+                    if(self.isOptgroups){
+                        let parentId = x.getAttribute("data-parent");
+                        if(keepParents[parentId]!=undefined){
+                            oneData.parent = keepParents[parentId];
+                        }else{
+                            let parentPtr = self.ul.querySelector("#"+parentId);
+                            let parentName = parentPtr.getAttribute("data-text");
+                            keepParents[parentId] = parentName;
+                            oneData.parent = parentName;
+                        }
                     }
+                    dataChecked.push(oneData);
                 }
-                dataChecked.push(oneData);
+
             });
         }
         return dataChecked;
@@ -894,6 +897,7 @@ vanillaSelectBox.prototype.reloadTree = function () {
                 })
             })
         }
+        self.listElements = this.drop.querySelectorAll("li:not(.grouped-option)");
     } else {
 
         self.options = self.root.querySelectorAll("option");
@@ -1038,7 +1042,8 @@ vanillaSelectBox.prototype.checkUncheckFromChild = function (liClicked) {
     let parentId = liClicked.getAttribute('data-parent');
     let parentLi = document.getElementById(parentId);
     if (!self.isMultiple) return;
-    let childrenElements = Array.prototype.slice.call(self.listElements).filter(function (el) {
+    let listElements = self.drop.querySelectorAll("li");
+    let childrenElements = Array.prototype.slice.call(listElements).filter(function (el) {
         return el.hasAttribute("data-parent") && el.getAttribute('data-parent') == parentId;
     });
     let nrChecked = 0;
@@ -1062,7 +1067,8 @@ vanillaSelectBox.prototype.checkUncheckFromParent = function (liClicked) {
     let self = this;
     let parentId = liClicked.id;
     if (!self.isMultiple) return;
-    let childrenElements = Array.prototype.slice.call(self.listElements).filter(function (el) {
+    let listElements = self.drop.querySelectorAll("li");
+    let childrenElements = Array.prototype.slice.call(listElements).filter(function (el) {
         return el.hasAttribute("data-parent") && el.getAttribute('data-parent') == parentId;
     });
     let nrChecked = 0;
