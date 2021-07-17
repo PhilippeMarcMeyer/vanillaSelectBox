@@ -11,8 +11,9 @@ I think one improvement would be to integrate the css as style tags because ther
 
 What do you think ?
 
-last change : Two levels: one click on the group selects / unselects children
+#### Find examples at the end of the readme file !
 
+#### Check my todo list at the very bottom !
 
 ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/vanillaSelectBox.png)
 
@@ -76,6 +77,7 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": true, "placeHolder": "Choose a brand..." });
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
+
 #### History : 
 
 v0.75 : Remote search ready + local search modification : when a check on optgroup checks children only 
@@ -349,6 +351,13 @@ function doSearch(what, datasize) {
       });
   }
 
-
-
 ```
+
+### TODO
+
+- Remote search and loading : manage 2 levels dropdowns
+- Add a getResult() function instead of just getting it from the DOM hidden select element
+- Add more than levels via optgroups
+- Maybe keep the the tree internaly as an objet and keeping the original select as an option but not mandatory anymore
+- Better alternate css support
+
