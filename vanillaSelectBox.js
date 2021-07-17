@@ -2,6 +2,8 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v0.75 : Remote search ready + local search modification : when a check on optgroup checks children only 
+                           if they not excluded from search.
 vanillaSelectBox : v0.72 : Remote search (WIP) bugfix [x] Select all duplicated
 vanillaSelectBox : v0.71 : Remote search (WIP) better code
 vanillaSelectBox : v0.70 : Remote search (WIP) for users to test
@@ -1034,7 +1036,6 @@ vanillaSelectBox.prototype.checkSelectMax = function (nrActives) {
             }
         });
     }
-
 }
 
 vanillaSelectBox.prototype.checkUncheckFromChild = function (liClicked) {
@@ -1044,7 +1045,7 @@ vanillaSelectBox.prototype.checkUncheckFromChild = function (liClicked) {
     if (!self.isMultiple) return;
     let listElements = self.drop.querySelectorAll("li");
     let childrenElements = Array.prototype.slice.call(listElements).filter(function (el) {
-        return el.hasAttribute("data-parent") && el.getAttribute('data-parent') == parentId;
+        return el.hasAttribute("data-parent") && el.getAttribute('data-parent') == parentId  && !el.classList.contains('hidden-search') ;
     });
     let nrChecked = 0;
     let nrCheckable = childrenElements.length;
@@ -1069,7 +1070,7 @@ vanillaSelectBox.prototype.checkUncheckFromParent = function (liClicked) {
     if (!self.isMultiple) return;
     let listElements = self.drop.querySelectorAll("li");
     let childrenElements = Array.prototype.slice.call(listElements).filter(function (el) {
-        return el.hasAttribute("data-parent") && el.getAttribute('data-parent') == parentId;
+        return el.hasAttribute("data-parent") && el.getAttribute('data-parent') == parentId && !el.classList.contains('hidden-search');
     });
     let nrChecked = 0;
     let nrCheckable = childrenElements.length;

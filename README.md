@@ -1,5 +1,5 @@
 
-# vanillaSelectBox v0.72 (New : remote search)
+# vanillaSelectBox v0.75 (New : remote search one and two levels + remote init)
 
 ### A nice select/multiselect ui with no dependency and two levels support thru optgroups
 
@@ -41,12 +41,13 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 * maxSelect : integer. set a maximum in the number of selectable options. CheckAll/uncheckAll is then disabled
 * maxOptionWidth : integer,set a maximum width for each option for narrow menus
 
-### WIP options :
-* remote : object => the search input searches remote thanks to the user defined handler onSearch
-  "remote": {
-      "onSearch": doSearch, // user defined handler used for search and init
-      "onInitSize": 10, // if > 0 onSearch is used for init to populate le select element with the {onInitSize} first elements
-  }
+### New options : Remote 
+* remote : 
+  "remote": { //object => the search input searches remote thanks to the user defined handler onSearch
+	"onInit": getData,// no function here make init comes from SELECT element
+	"onInitSize": 8,//  limits the number of data lines for init
+	"onSearch": getData // no function here make search local
+}
 
 ### Automatic options :
 * single or multiple choices : depends on the "multiple" attribute that you put in the select code 
@@ -76,6 +77,9 @@ selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": tru
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 #### History : 
+
+v0.75 : Remote search ready + local search modification : when a check on optgroup checks children only 
+        if they not excluded from search.
 
 v0.72 : Remote search (WIP) bugfix [x] Select all duplicated
 
