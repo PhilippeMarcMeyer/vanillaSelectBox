@@ -1,5 +1,5 @@
 
-# vanillaSelectBox v0.72 (New : remote search)
+# vanillaSelectBox v0.75 (New : remote search one and two levels + remote init)
 
 ### A nice select/multiselect ui with no dependency and two levels support thru optgroups
 
@@ -42,12 +42,13 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 * maxSelect : integer. set a maximum in the number of selectable options. CheckAll/uncheckAll is then disabled
 * maxOptionWidth : integer,set a maximum width for each option for narrow menus
 
-### WIP options :
-* remote : object => the search input searches remote thanks to the user defined handler onSearch
-  "remote": {
-      "onSearch": doSearch, // user defined handler used for search and init
-      "onInitSize": 10, // if > 0 onSearch is used for init to populate le select element with the {onInitSize} first elements
-  }
+### New options : Remote 
+* remote : 
+  "remote": { //object => the search input searches remote thanks to the user defined handler onSearch
+	"onInit": getData,// no function here make init comes from SELECT element
+	"onInitSize": 8,//  limits the number of data lines for init
+	"onSearch": getData // no function here make search local
+}
 
 ### Automatic options :
 * single or multiple choices : depends on the "multiple" attribute that you put in the select code 
@@ -76,6 +77,80 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 selectBox = new vanillaSelectBox("#brandsOne", { "maxHeight": 200, "search": true, "placeHolder": "Choose a brand..." });
 selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
+
+#### History : 
+
+v0.75 : Remote search ready + local search modification : when a check on optgroup checks children only 
+        if they not excluded from search.
+
+v0.72 : Remote search (WIP) bugfix [x] Select all duplicated
+
+v0.71 : Remote search (WIP) better code => the remote search user deined function must return a promise
+
+v0.70 : remote search (WIP) can be tested. works only on 1 level menus (not optgroups)
+
+v0.65 : Two levels: bug fix : groups are checked/unchecked when check all/uncheck all is clicked
+
+v0.64 : Two levels: groups are now checkable to check/uncheck the children options 
+
+v0.63 : Two levels: one click on the group selects / unselects children
+
+v0.62 : New option: maxOptionWidth set a maximum width for each option for narrow menus (ellipsis troncature)
+
+v0.61 : New option: maxSelect, set a maximum to the selectable options in a multiple choice menu
+
+v0.60 : Two levels: optgroups are now used to show two level dropdowns 
+
+ ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/twoLevels.jpg)
+
+
+v0.59 : Bug fix : search box was overlapping first item in single selects
+
+v0.58 : Bug fixes
+
+v0.57 : Bug fix (minWidth option not honored)
+
+v0.56 : The multiselect checkboxes are a little smaller, maxWidth option is now working + added minWidth option as well
+        The button has now a style attribute to protect its appearance 
+
+v0.55 : All attributes from the original select options are copied to the selectBox element.
+        Excepted => "selected","disabled","data-text","data-value","style"
+        
+v0.54 : if all the options of the select are selected by the user then the check all checkbox is checked.
+
+v0.53 : if all the options of the select are selected then the check all checkbox is checked => see demo "select all test"
+
+v0.52 : Better support of select('all') => command is consistent with checkbox and selecting / deselecting while searching select / uncheck only the found items
+
+v0.51 : Translations for select all/clear all + minor css corrections + don't select disabled items
+
+v0.50 : PR by https://github.com/jaguerra2017 adding a select all/clear all check button + optgroup support !
+
+v 0.41 : Bug corrected, the menu content was misplaced if a css transform was applied on a parent
+
+v 0.40 : A click on one selectBox close the other opened boxes
+
+v 0.35 : You can enable and disable items. The already disble options of the select are also used at init time.
+
+v 0.30 : The menu stops moving around on window resize and scroll + z-index in order of creation for multiple instances
+
+v 0.26 : Corrected bug in stayOpen mode with disable() function
+
+v 0.25 : New option stayOpen, and the dropbox is no longer a dropbox but a nice multi-select
+ 
+ ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/stayOpen.jpg)
+ 
+v 0.22 : Migrating the function to vanillaSelectBox prototype => several instances of vanillaSelectBox() but 1 set of functions in memory
+ 
+v 0.21 : IE 11 compatibility
+
+v 0.20 : working selectBox both single and multiple choices, with search-box !
+
+v 0.10 : functional plugin for both single and multiple selects, without search box for the moment
+
+v 0.02 : added dispatch change event to select + nicer check mark
+
+v 0.01 : first commit => basics for a single select box + the Dom is cleaned if you init twice
 
 ## Examples
 
@@ -286,73 +361,3 @@ function doSearch(what, datasize) {
 - Maybe keep the the tree internaly as an objet and keeping the original select as an option but not mandatory anymore
 - Better alternate css support
 
-#### History : 
-
-v0.72 : Remote search (WIP) bugfix [x] Select all duplicated
-
-v0.71 : Remote search (WIP) better code => the remote search user deined function must return a promise
-
-v0.70 : remote search (WIP) can be tested. works only on 1 level menus (not optgroups)
-
-v0.65 : Two levels: bug fix : groups are checked/unchecked when check all/uncheck all is clicked
-
-v0.64 : Two levels: groups are now checkable to check/uncheck the children options 
-
-v0.63 : Two levels: one click on the group selects / unselects children
-
-v0.62 : New option: maxOptionWidth set a maximum width for each option for narrow menus (ellipsis troncature)
-
-v0.61 : New option: maxSelect, set a maximum to the selectable options in a multiple choice menu
-
-v0.60 : Two levels: optgroups are now used to show two level dropdowns 
-
- ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/twoLevels.jpg)
-
-
-v0.59 : Bug fix : search box was overlapping first item in single selects
-
-v0.58 : Bug fixes
-
-v0.57 : Bug fix (minWidth option not honored)
-
-v0.56 : The multiselect checkboxes are a little smaller, maxWidth option is now working + added minWidth option as well
-        The button has now a style attribute to protect its appearance 
-
-v0.55 : All attributes from the original select options are copied to the selectBox element.
-        Excepted => "selected","disabled","data-text","data-value","style"
-        
-v0.54 : if all the options of the select are selected by the user then the check all checkbox is checked.
-
-v0.53 : if all the options of the select are selected then the check all checkbox is checked => see demo "select all test"
-
-v0.52 : Better support of select('all') => command is consistent with checkbox and selecting / deselecting while searching select / uncheck only the found items
-
-v0.51 : Translations for select all/clear all + minor css corrections + don't select disabled items
-
-v0.50 : PR by https://github.com/jaguerra2017 adding a select all/clear all check button + optgroup support !
-
-v 0.41 : Bug corrected, the menu content was misplaced if a css transform was applied on a parent
-
-v 0.40 : A click on one selectBox close the other opened boxes
-
-v 0.35 : You can enable and disable items. The already disble options of the select are also used at init time.
-
-v 0.30 : The menu stops moving around on window resize and scroll + z-index in order of creation for multiple instances
-
-v 0.26 : Corrected bug in stayOpen mode with disable() function
-
-v 0.25 : New option stayOpen, and the dropbox is no longer a dropbox but a nice multi-select
- 
- ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/stayOpen.jpg)
- 
-v 0.22 : Migrating the function to vanillaSelectBox prototype => several instances of vanillaSelectBox() but 1 set of functions in memory
- 
-v 0.21 : IE 11 compatibility
-
-v 0.20 : working selectBox both single and multiple choices, with search-box !
-
-v 0.10 : functional plugin for both single and multiple selects, without search box for the moment
-
-v 0.02 : added dispatch change event to select + nicer check mark
-
-v 0.01 : first commit => basics for a single select box + the Dom is cleaned if you init twice

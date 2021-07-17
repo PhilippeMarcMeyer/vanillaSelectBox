@@ -191,41 +191,58 @@
             <select id="demoM1" multiple="" size="3"></select>
         </div>
 
+        <p>Multiple select 2 level => init & search remotes</p>
+        <div class="demo-zone">
+            <select id="demoM2" multiple="" size="3"></select>
+        </div>
+
+        <p>Multiple select 2 level => init remote but search local</p>
+        <div class="demo-zone">
+            <select id="demoM2SearchLocal" multiple="" size="3"></select>
+        </div>
+
         <p>Single select 1 level</p>
         <div class="demo-zone">
             <select id="demoS1"></select>
         </div>
 
-        <script src="./vanillaSelectBox.js?v0.72"></script>
+        <script src="./vanillaSelectBox.js?v0.75"></script>
         <script>
 
-            function doSearch(what, datasize) {
+            function get2LevelData(what, datasize) {
                 let valueProperty = "id";
                 let textProperty = "name";
+                let parentProperty = "parent";
                 return new Promise(function (resolve, reject) {
                     var xhr = new XMLHttpRequest();
                     xhr.overrideMimeType("application/json");
-                    xhr.open('GET','./data.json', true);
+                    xhr.open('GET','./dino.json', true);
                     xhr.onload = function () {
                         if (this.status >= 200 && this.status < 300) {
                             var data = JSON.parse(xhr.response);
 
-                            if (what == "" && datasize != undefined && datasize > 0) { // for init to show some data
-                                data = data.slice(0, datasize);
+                            if (what == "") { // for init to show some data
+                                if(datasize){
+                                    data = data.slice(0, datasize);
+                                }
                                 data = data.map(function (x) {
                                     return {
                                         value: x[valueProperty],
-                                        text: x[textProperty]
+                                        text: x[textProperty],
+                                        parent: x[parentProperty]
                                     }
                                 });
                             } else {
                                 data = data.filter(function (x) {
                                     let name = x[textProperty].toLowerCase();
-                                    if (name.indexOf(what.toLowerCase()) != -1)
-                                        return {
-                                            value: x[valueProperty],
-                                            text: x[textProperty]
-                                        }
+                                    return(name.indexOf(what.toLowerCase()) != -1)
+                                });
+                                data = data.map(function (x) {
+                                    return {
+                                        value: x[valueProperty],
+                                        text: x[textProperty],
+                                        parent: x[parentProperty]
+                                    }
                                 });
                             }
                             resolve(data);
@@ -246,6 +263,56 @@
                 });
             }
 
+            function getData(what, datasize) {
+                let valueProperty = "id";
+                let textProperty = "name";
+                return new Promise(function (resolve, reject) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.overrideMimeType("application/json");
+                    xhr.open('GET','./data.json', true);
+                    xhr.onload = function () {
+                        if (this.status >= 200 && this.status < 300) {
+                            var data = JSON.parse(xhr.response);
+                            // init
+                            if (what == "") { // for init to show some data
+                                if(datasize){
+                                    data = data.slice(0, datasize);
+                                }
+                                data = data.map(function (x) {
+                                    return {
+                                        value: x[valueProperty],
+                                        text: x[textProperty]
+                                    }
+                                });
+                            } else { //search
+                                data = data.filter(function (x) {
+                                    let name = x[textProperty].toLowerCase();
+                                    return (name.indexOf(what.toLowerCase()) != -1)
+                                });
+                                data = data.map(function (x) {
+                                    return {
+                                        value: x[valueProperty],
+                                        text: x[textProperty]
+                                    }
+                                });
+                            }
+                            resolve(data);
+                        } else {
+                            reject({
+                                status: this.status,
+                                statusText: xhr.statusText
+                            });
+                        }
+                    };
+                    xhr.onerror = function () {
+                        reject({
+                            status: this.status,
+                            statusText: xhr.statusText
+                        });
+                    };
+                    xhr.send();
+                });
+            }
 
             function init() {
 
@@ -256,24 +323,52 @@
                         "placeHolder" : "search to load more data",
                         "translations": { "all": "everybody", "items": "people" },
                         "remote": {
-                            "onSearch": doSearch,
-                            "onInitSize": 6,
+                            "onInit": getData,// no function here make init comes from SELECT element
+                            "onInitSize": 8,//  limits the number of data lines for init
+                            "onSearch": getData // no function here make search local
                         }
                     }
                 );
 
+                let selectDemoM2 = new vanillaSelectBox("#demoM2",
+                    {
+                        "maxHeight": 300,
+                        "search": true,
+                        "placeHolder" : "search to load more data",
+                        "translations": { "all": "everybody", "items": "dinos" },
+                        "remote": {
+                            "onInit": get2LevelData,
+                            "onInitSize": 10,
+                            "onSearch": get2LevelData // no function here make search local
+                        }
+                    }
+                );
+
+                
+                let selectDemoM2Local = new vanillaSelectBox("#demoM2SearchLocal",
+                    {
+                        "maxHeight": 300,
+                        "search": true,
+                        "placeHolder" : "search to load more data",
+                        "translations": { "all": "everybody", "items": "dinos" },
+                        "remote": {
+                            "onInit": get2LevelData, // no init size loads everything
+                        }
+                    }
+                );
+                
                 let selectDemoS1 = new vanillaSelectBox("#demoS1",
                     {
                         "maxHeight": 300,
                         "search": true,
                         "placeHolder" : "search to load more data",
                         "remote": {
-                            "onSearch": doSearch,
+                            "onInit": getData,
                             "onInitSize": 5,
+                            "onSearch": getData // no function here make search local
                         }
                     }
                 );
-
             }
 
             init();
