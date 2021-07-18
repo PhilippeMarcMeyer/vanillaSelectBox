@@ -355,9 +355,9 @@ function doSearch(what, datasize) {
 
 ### TODO
 
-- Remote search and loading : manage 2 levels dropdowns
+- ~~Remote search and loading : manage 2 levels dropdowns~~ DONE in 0.75
 - Add a getResult() function instead of just getting it from the DOM hidden select element
-- Add more than levels via optgroups
-- Maybe keep the the tree internaly as an objet and keeping the original select as an option but not mandatory anymore
-- Better alternate css support
+- ~~Add more than levels via optgroups~~ NO don't over complicate this plugin, make another
+- ~~Maybe keep the tree internaly as an objet and keeping the original select as an option but not mandatory anymore~~ NO the select element is the main idea of this plugin
+- Better alternate css support => first of all change css icons with images
 
