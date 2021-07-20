@@ -3,7 +3,7 @@
 
 ### A nice select/multiselect ui with no dependency and two levels support thru optgroups
 
-The idea is tu use a mundane SELECT element, hide it and provide a nice drop-down instead. But the data comes froms the original element and this one is updated with choices made and still receives a change event. An exception is the remote init and the remote search added with v 0.75 but they require at least an empty SELECT element and the result is still provided in the original element. Feel free to ask more explanations in the discussions tab. See you soon
+The idea is to use a mundane SELECT element, hide it and provide a nice drop-down instead. But the data comes from the original element and this one is updated with choices made and still receives a change event. An exception is the remote init() and the remote search() functions (optional) added with v 0.75 but they require at least an empty SELECT element and the result is still provided in the original element. Feel free to ask more explanations in the discussions tab. See you soon
 
 ### New : you can use the discussions page to help me improve this little tool or even suggest other plugins
 
