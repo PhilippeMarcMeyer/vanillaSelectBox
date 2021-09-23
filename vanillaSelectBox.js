@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v0.76 : New changeTree function : to rebuild the original tree with new data + correcting empty() function
 vanillaSelectBox : v0.75 : Remote search ready + local search modification : when a check on optgroup checks children only 
                            if they not excluded from search.
 vanillaSelectBox : v0.72 : Remote search (WIP) bugfix [x] Select all duplicated
@@ -807,6 +808,19 @@ vanillaSelectBox.prototype.removeOptionsNotChecked = function (data) {
     }
 }
 
+vanillaSelectBox.prototype.changeTree = function (data, options) {
+    let self = this;
+    self.empty();
+    self.remoteSearchIntegrateIt(data);
+    if (options && options.onSearch) {
+        if (typeof options.onSearch === 'function') {
+            self.onSearch = options.onSearch;
+            self.isSearchRemote = true;
+        }
+    }
+    self.listElements = this.drop.querySelectorAll("li:not(.grouped-option)");
+}
+
 vanillaSelectBox.prototype.remoteSearchIntegrateIt = function (data) {
     let self = this;
     if (data == null || data.length == 0) return;
@@ -901,7 +915,6 @@ vanillaSelectBox.prototype.reloadTree = function () {
         }
         self.listElements = this.drop.querySelectorAll("li:not(.grouped-option)");
     } else {
-
         self.options = self.root.querySelectorAll("option");
         Array.prototype.slice.call(self.options).forEach(function (x) {
             let text = x.textContent;
@@ -1164,6 +1177,8 @@ vanillaSelectBox.prototype.setValue = function (values) {
                                         values.push(value);
                                     }
                                 }
+                            }else{
+                                x.classList.add("active");
                             }
                         } else if (x.classList.contains('grouped-option')) {
                             x.classList.add("checked");
@@ -1232,12 +1247,15 @@ vanillaSelectBox.prototype.setValue = function (values) {
             let text = "";
             let classNames = ""
             Array.prototype.slice.call(listElements).forEach(function (x) {
-                if (x.getAttribute("data-value") == values) {
-                    x.classList.add("active");
-                    found = true;
-                    text = x.getAttribute("data-text")
-                } else {
-                    x.classList.remove("active");
+                let liVal = x.getAttribute("data-value") == values;
+                if(liVal !== "all"){
+                    if (liVal == values) {
+                        x.classList.add("active");
+                        found = true;
+                        text = x.getAttribute("data-text")
+                    } else {
+                        x.classList.remove("active");
+                    }
                 }
             });
             Array.prototype.slice.call(self.options).forEach(function (x) {
@@ -1274,6 +1292,12 @@ vanillaSelectBox.prototype.empty = function () {
     Array.prototype.slice.call(this.listElements).forEach(function (x) {
         x.classList.remove("active");
     });
+    let parentElements = this.drop.querySelectorAll("li.grouped-option");
+    if(parentElements){
+        Array.prototype.slice.call(parentElements).forEach(function (x) {
+            x.classList.remove("checked");
+        });
+    }
     Array.prototype.slice.call(this.options).forEach(function (x) {
         x.selected = false;
     });
