@@ -1,5 +1,7 @@
 
-# vanillaSelectBox v0.76 (New : remote search one and two levels + remote init)
+# vanillaSelectBox v0.76 
+
+## New : Possibility to change the dropdown tree and change the remote search function
 
 ### A nice select/multiselect ui with no dependency and two levels support thru optgroups
 
@@ -79,7 +81,7 @@ selectBox.disableItems(['Lamborghini','Land Rover']);
 
 #### History : 
 
-v0.76 : New changeTree function : to rebuild the original tree with new data + correcting empty() function
+v0.76 : Possibility to change the dropdown tree and change the remote search function + correcting empty() function
 
 v0.75 : Remote search ready + local search modification : when a check on optgroup checks children only 
         if they not excluded from search.
