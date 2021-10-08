@@ -1,5 +1,5 @@
 
-# vanillaSelectBox v0.76 
+# vanillaSelectBox v0.77 
 
 ## New : Possibility to change the dropdown tree and change the remote search function
 
@@ -80,6 +80,8 @@ selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 
 #### History : 
+
+v0.77 : Work on place holder with bastoune help => still seems to lose placeholder value on multiple dropdown checkall
 
 v0.76 : Possibility to change the dropdown tree and change the remote search function + correcting empty() function
 
