@@ -1,26 +1,26 @@
 /*
 Copyright (C) Philippe Meyer 2019-2021
-Distributed under the MIT License 
+Distributed under the MIT License
 
 vanillaSelectBox : v0.78 : Stop using inline styles in the main button. You can steal use keepInlineStyles:true to use the legacy behaviour
 vanillaSelectBox : v0.77 : Work on place holder with bastoune help => still seems to lose placeholder value on multiple dropdown checkall
 vanillaSelectBox : v0.76 : New changeTree function : to rebuild the original tree with new data + correcting empty() function
-vanillaSelectBox : v0.75 : Remote search ready + local search modification : when a check on optgroup checks children only 
+vanillaSelectBox : v0.75 : Remote search ready + local search modification : when a check on optgroup checks children only
                            if they not excluded from search.
 vanillaSelectBox : v0.72 : Remote search (WIP) bugfix [x] Select all duplicated
 vanillaSelectBox : v0.71 : Remote search (WIP) better code
 vanillaSelectBox : v0.70 : Remote search (WIP) for users to test
 vanillaSelectBox : v0.65 : Two levels: bug fix : groups are checked/unchecked when check all/uncheck all is clicked
-vanillaSelectBox : v0.64 : Two levels: groups are now checkable to check/uncheck the children options 
+vanillaSelectBox : v0.64 : Two levels: groups are now checkable to check/uncheck the children options
 vanillaSelectBox : v0.63 : Two levels: one click on the group selects / unselects children
 vanillaSelectBox : v0.62 : New option: maxOptionWidth set a maximum width for each option for narrow menus
 vanillaSelectBox : v0.61 : New option: maxSelect, set a maximum to the selectable options in a multiple choice menu
-vanillaSelectBox : v0.60 : Two levels: Optgroups are now used to show two level dropdowns 
+vanillaSelectBox : v0.60 : Two levels: Optgroups are now used to show two level dropdowns
 vanillaSelectBox : v0.59 : Bug fix : search box was overlapping first item in single selects
 vanillaSelectBox : v0.58 : Bug fixes
 vanillaSelectBox : v0.57 : Bug fix (minWidth option not honored)
 vanillaSelectBox : v0.56 : The multiselect checkboxes are a little smaller, maxWidth option is now working + added minWidth option as well
-                           The button has now a style attribute to protect its appearance 
+                           The button has now a style attribute to protect its appearance
 vanillaSelectBox : v0.55 : All attributes from the original select options are copied to the selectBox element
 vanillaSelectBox : v0.54 : if all the options of the select are selected by the user then the check all checkbox is checked
 vanillaSelectBox : v0.53 : if all the options of the select are selected then the check all checkbox is checked
@@ -106,7 +106,7 @@ function vanillaSelectBox(domSelector, options) {
         stayOpen: false,
         disableSelectAll: false,
         keepInlineStyles: false // to protect the main button style
-    } 
+    }
     if (options) {
         if(options.keepInlineStyles != undefined){
             if(options.keepInlineStyles){
@@ -143,7 +143,7 @@ function vanillaSelectBox(domSelector, options) {
             if (options.remote.onInit!= undefined && typeof options.remote.onInit === 'function') {
                 this.onInit = options.remote.onInit;
                 this.isInitRemote = true;
-            } 
+            }
             if (options.remote.onInitSize != undefined) {
                 this.onInitSize = options.remote.onInitSize;
                 if (this.onInitSize < 3) this.onInitSize = 3;
@@ -288,6 +288,10 @@ function vanillaSelectBox(domSelector, options) {
         this.main.appendChild(this.drop);
         this.drop.classList.add("vsb-menu");
         this.drop.style.zIndex = 2000 - this.instanceOffset;
+        if (!self.userOptions.stayOpen){
+          this.drop.classList.add("visibility");
+          this.drop.style.visibility = "hidden";
+        }
         this.ul = document.createElement("ul");
         this.drop.appendChild(this.ul);
 
@@ -556,7 +560,7 @@ function vanillaSelectBox(domSelector, options) {
                 if (self.isDisabled) return;
                 self.drop.style.left = self.left + "px";
                 self.drop.style.top = self.top + "px";
-                self.drop.style.visibility = "visible";
+                self.drop.style.visibility = (self.drop.style.visibility == 'hidden') ? "visible" : "hidden";
                 document.addEventListener("click", docListener);
                 e.preventDefault();
                 e.stopPropagation();
@@ -707,13 +711,13 @@ vanillaSelectBox.prototype.buildSelect = function (data) {
     if(!self.isOptgroups){
         self.isOptgroups = data[0].parent != undefined && data[0].parent != "";
     }
-  
+
     if(self.isOptgroups){
         let groups = {};
         data = data.filter(function(x){
             return x.parent != undefined && x.parent != "";
         });
-    
+
         data.forEach(function (x) {
             if(!groups[x.parent]){
                 groups[x.parent] = true;
@@ -723,7 +727,7 @@ vanillaSelectBox.prototype.buildSelect = function (data) {
         for (let group in groups) {
             let anOptgroup = document.createElement("optgroup");
             anOptgroup.setAttribute("label", group);
-            
+
             options = data.filter(function(x){
                 return x.parent == group;
             });
@@ -839,7 +843,7 @@ vanillaSelectBox.prototype.remoteSearchIntegrateIt = function (data) {
     if (data == null || data.length == 0) return;
     while(self.root.firstChild)
     self.root.removeChild(self.root.firstChild);
-    
+
     self.buildSelect(data);
     self.reloadTree();
 }
