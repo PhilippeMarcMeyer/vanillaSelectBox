@@ -1,7 +1,7 @@
 
-# vanillaSelectBox v0.78 
+# vanillaSelectBox v1.0.0
 
-## Breaking change with v 0.78 => VSB uses to inject inline css style into the main dropdown button, to protect it from invasive other css rules I could not filter. But this behaviour is preventing other developers to change the looks and feel of the dropdown ! This new version suppress the inline injection. You may now modify its look by authoring .vsb-main button in the css file. If you absolutly need the inline css behaviour please use the new keepInlineStyles:true (false by default)
+## vanillaSelectBox : v1.00 : Adding a package.json file 
 
 ## New : Possibility to change the dropdown tree and change the remote search function
 
@@ -82,6 +82,8 @@ selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 
 #### History : 
+
+v1.00 : Due to demand : added a package.json file and switched to 1.0.0 in preparation to an upload to npm
 
 v0.78 : Stop using inline styles in the main button. You can steal use keepInlineStyles:true to use the legacy behaviour
 
