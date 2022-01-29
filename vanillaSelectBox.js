@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v1.01 : Removing useless code line 550,551 issue 71 by chchch
 vanillaSelectBox : v1.00 : Adding a package.json file 
 vanillaSelectBox : v0.78 : Stop using inline styles in the main button. You can steal use keepInlineStyles:true to use the legacy behaviour
 vanillaSelectBox : v0.77 : Work on place holder with bastoune help => still seems to lose placeholder value on multiple dropdown checkall
@@ -547,8 +548,6 @@ function vanillaSelectBox(domSelector, options) {
         } else {
             this.main.addEventListener("click", function (e) {
                 if (self.isDisabled) return;
-                self.drop.style.left = self.left + "px";
-                self.drop.style.top = self.top + "px";
                 self.drop.style.visibility = "visible";
                 document.addEventListener("click", docListener);
                 e.preventDefault();

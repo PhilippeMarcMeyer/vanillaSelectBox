@@ -1,7 +1,7 @@
 
-# vanillaSelectBox v1.0.0
+# vanillaSelectBox v1.0.1
 
-## vanillaSelectBox : v1.00 : Adding a package.json file 
+## vanillaSelectBox : v1.01 : Removing useless code line 550,551 issue 71 by chchch
 
 ## New : Possibility to change the dropdown tree and change the remote search function
 
@@ -82,6 +82,8 @@ selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 
 #### History : 
+
+v1.01 : Removing useless code line 550,551 issue 71 by chchch
 
 v1.00 : Due to demand : added a package.json file and switched to 1.0.0 in preparation to an upload to npm
 
