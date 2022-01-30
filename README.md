@@ -1,6 +1,8 @@
 
 # vanillaSelectBox v1.0.1
 
+npm i vanillaselectbox
+
 ## vanillaSelectBox : v1.01 : Removing useless code line 550,551 issue 71 by chchch
 
 ## New : Possibility to change the dropdown tree and change the remote search function

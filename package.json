@@ -1,12 +1,14 @@
-
 {
   "name": "vanillaselectbox",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "vanilla js plugin to transform a select tag into a nice drop-down",
   "homepage": "https://philippemarcmeyer.github.io/#vanillajs",
-  "repository": "https://github.com/PhilippeMarcMeyer/vanillaSelectBox.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PhilippeMarcMeyer/vanillaSelectBox.git"
+  },
   "funding": "",
-  "author": "Philippe Meyer <pmg.meyer@gmail.com>",
+  "author": "Philippemarcmeyer",
   "license": "MIT",
   "scripts": {},
   "keywords": [
@@ -27,5 +29,8 @@
   "semistandard": {
     "ignore": [],
     "globals": []
+  },
+  "bugs": {
+    "url": "https://github.com/PhilippeMarcMeyer/vanillaSelectBox/issues"
   }
 }
