@@ -1,9 +1,10 @@
 
-# vanillaSelectBox v1.0.1
+# vanillaSelectBox v1.0.2
 
 npm i vanillaselectbox
 
-## vanillaSelectBox : v1.01 : Removing useless code line 550,551 issue 71 by chchch
+## vanillaSelectBox : v1.02 : Adding 2 new options "itemsSeparator" to change the default "," item separator showing in the button and translations.item to show the item in singular if there is only one.
+
 
 ## New : Possibility to change the dropdown tree and change the remote search function
 
@@ -39,13 +40,14 @@ let selectBox = new vanillaSelectBox("#brands",{"maxHeight":200,search:true});
 * maxWidth : for the UI if you don't want the title to expand to much to the right
 * minWidth : for the UI if you don't want the title to be to narrow (combining both, you've got a fixed width)
 * maxHeight : the maxHeight set a scroll on the menu when there are too many items 
-* translations : { "all": "Tous", "items": "éléments","selectAll":"Tout sélectionner","clearAll":"Effacer"}
+* translations : { "all": "Tous", "item":"élément","items": "éléments","selectAll":"Tout sélectionner","clearAll":"Effacer"}
 * search : true/false, to provide a search input text to reduce the list
 * placeHolder : well that's a placeholder !
 * stayOpen : true/false. defaut is false : that's a drop-down. Set it to true and that"s a list (>= v 0.25)
 * disableSelectAll : true/false. defaut is false : add a checkbox select all / clear all
 * maxSelect : integer. set a maximum in the number of selectable options. CheckAll/uncheckAll is then disabled
 * maxOptionWidth : integer,set a maximum width for each option for narrow menus
+* itemsSeparator : string, to change the default "," item separator showing in the button
 
 ### New options : Remote 
 * remote : 
@@ -84,6 +86,8 @@ selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 
 #### History : 
+
+v1.02 : Adding 2 new options "itemsSeparator" to change the default "," item separator showing in the button and translations.item to show the item in singular if there is only one.
 
 v1.01 : Removing useless code line 550,551 issue 71 by chchch
 

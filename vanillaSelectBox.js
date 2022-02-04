@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v1.02 : Adding 2 new options "itemsSeparator" to change the default "," item separator showing in the button and translations.item to show the item in singular if there is only one.
 vanillaSelectBox : v1.01 : Removing useless code line 550,551 issue 71 by chchch
 vanillaSelectBox : v1.00 : Adding a package.json file 
 vanillaSelectBox : v0.78 : Stop using inline styles in the main button. You can steal use keepInlineStyles:true to use the legacy behaviour
@@ -102,13 +103,17 @@ function vanillaSelectBox(domSelector, options) {
         maxWidth: 500,
         minWidth: -1,
         maxHeight: 400,
-        translations: { "all": "All", "items": "items", "selectAll": "Select All", "clearAll": "Clear All" },
+        translations: { "all": "All", "item": "item","items": "items", "selectAll": "Select All", "clearAll": "Clear All" },
         search: false,
         placeHolder: "",
         stayOpen: false,
-        disableSelectAll: false
+        disableSelectAll: false,
+        buttonItemsSeparator : ","
     }
     if (options) {
+        if(options.itemsSeparator!= undefined){
+            this.userOptions.buttonItemsSeparator = options.itemsSeparator;
+        }
         if (options.maxWidth != undefined) {
             this.userOptions.maxWidth = options.maxWidth;
         }
@@ -372,7 +377,7 @@ function vanillaSelectBox(domSelector, options) {
             if (isSelected) {
                 nrActives++;
                 selectedTexts += sep + text;
-                sep = ",";
+                sep = self.userOptions.buttonItemsSeparator;
                 li.classList.add("active");
                 if (!self.isMultiple) {
                     self.title.textContent = text;
@@ -440,7 +445,7 @@ function vanillaSelectBox(domSelector, options) {
                     if (isSelected) {
                         nrActives++;
                         selectedTexts += sep + text;
-                        sep = ",";
+                        sep = self.userOptions.buttonItemsSeparator;
                         li.classList.add("active");
                         if (!self.isMultiple) {
                             self.title.textContent = text;
@@ -459,11 +464,11 @@ function vanillaSelectBox(domSelector, options) {
         let optionsLength = self.options.length - Number(!self.userOptions.disableSelectAll);
 
         if (optionsLength == nrActives) { // Bastoune idea to preserve the placeholder
-            let wordForAll = self.userOptions.translations.all || "all";
+            let wordForAll = self.userOptions.translations.all;
             selectedTexts = wordForAll;
         } else if (self.multipleSize != -1) {
             if (nrActives > self.multipleSize) {
-                let wordForItems = self.userOptions.translations.items || "items"
+                let wordForItems = nrActives === 1 ? self.userOptions.translations.item : self.userOptions.translations.items;
                 selectedTexts = nrActives + " " + wordForItems;
             }
         }
@@ -655,15 +660,15 @@ function vanillaSelectBox(domSelector, options) {
                     if (self.options[i].selected) {
                         nrActives++;
                         selectedTexts += sep + self.options[i].textContent;
-                        sep = ",";
+                        sep = self.userOptions.buttonItemsSeparator;
                     }
                 }
                 if (nrAll == nrActives - Number(!self.userOptions.disableSelectAll)) {
-                    let wordForAll = self.userOptions.translations.all || "all";
+                    let wordForAll = self.userOptions.translations.all;
                     selectedTexts = wordForAll;
                 } else if (self.multipleSize != -1) {
                     if (nrActives > self.multipleSize) {
-                        let wordForItems = self.userOptions.translations.items || "items"
+                        let wordForItems = nrActives === 1 ? self.userOptions.translations.item : self.userOptions.translations.items;
                         selectedTexts = nrActives + " " + wordForItems;
                     }
                 }
@@ -901,7 +906,7 @@ vanillaSelectBox.prototype.reloadTree = function () {
                     if (isSelected) {
                         nrActives++;
                         selectedTexts += sep + text;
-                        sep = ",";
+                        sep = self.userOptions.buttonItemsSeparator;
                         li.classList.add("active");
                         if (!self.isMultiple) {
                             self.title.textContent = text;
@@ -967,7 +972,7 @@ vanillaSelectBox.prototype.reloadTree = function () {
                 if (isSelected) {
                     nrActives++;
                     selectedTexts += sep + text;
-                    sep = ",";
+                    sep = self.userOptions.buttonItemsSeparator;
                     li.classList.add("active");
                     if (!self.isMultiple) {
                         self.title.textContent = text;
@@ -1143,7 +1148,7 @@ vanillaSelectBox.prototype.checkUncheckAll = function () {
     if (checkAllElement) {
         if (nrChecked === nrCheckable) {
             // check the checkAll checkbox
-            self.title.textContent = self.userOptions.translations.all || "all";
+            self.title.textContent = self.userOptions.translations.all;
             checkAllElement.classList.add("active");
             checkAllElement.innerText = self.userOptions.translations.clearAll;
             checkAllElement.setAttribute('data-selected', 'true')
@@ -1230,17 +1235,17 @@ vanillaSelectBox.prototype.setValue = function (values) {
                         x.classList.add("active");
                         nrActives++;
                         selectedTexts += sep + x.getAttribute("data-text");
-                        sep = ",";
+                        sep = self.userOptions.buttonItemsSeparator;
                     } else {
                         x.classList.remove("active");
                     }
                 });
                 if (nrAll == nrActives - Number(!self.userOptions.disableSelectAll)) {
-                    let wordForAll = self.userOptions.translations.all || "all";
+                    let wordForAll = self.userOptions.translations.all;
                     selectedTexts = wordForAll;
                 } else if (self.multipleSize != -1) {
                     if (nrActives > self.multipleSize) {
-                        let wordForItems = self.userOptions.translations.items || "items"
+                        let wordForItems = nrActives === 1 ? self.userOptions.translations.item : self.userOptions.translations.items;
                         selectedTexts = nrActives + " " + wordForItems;
                     }
                 }

@@ -282,7 +282,7 @@
     </div>
 </div>
 
-<script src="./vanillaSelectBox.js?v1.01"></script>
+<script src="./vanillaSelectBox.js?v1.0.2"></script>
 <script>
 
     let brands = ["Abarth", "Alfa Romeo", "Alpine", "Aston Martin", "Audi", "Bentley", "BMW", "Cadillac", "Chevrolet", "Citroën", "Cupra", "DACIA", "DS", "Ferrari", "Fiat", "Ford", "Honda", "Hyundai", "Infiniti", "Jaguar", "Jeep", "KIA", "Lamborghini", "Land Rover", "Lexus", "Lotus", "Maserati", "Mazda", "McLaren", "Mercedes-Benz", "MINI", "Mitsubishi", "Nissan", "Opel", "Peugeot", "Porsche", "Renault", "Rolls-Royce", "SEAT", "Skoda", "smart", "Ssangyong", "Subaru", "Suzuki", "Tesla", "Toyota", "Volkswagen", "Volvo"];
@@ -385,7 +385,7 @@
             buttons.style.display = "none";
         } else if (id == "brandsMulti") {
         
-            selectBox2 = new vanillaSelectBox("#brandsMulti", {"disableSelectAll": true, "maxHeight": 200, "search": true ,"translations": { "all": "All", "items": "items","selectAll":"Check All","clearAll":"Clear All"}});
+            selectBox2 = new vanillaSelectBox("#brandsMulti", {"disableSelectAll": true, "maxHeight": 200,"itemsSeparator":", ", "search": true ,"translations": { "all": "All", "items": "items","selectAll":"Check All","clearAll":"Clear All"}});
             let zone = document.getElementById("demo-multiple");
             buttons = zone.querySelector(".btns-active");
             buttons.style.display = "block";
@@ -393,7 +393,7 @@
             buttons.style.display = "none";
 
         }else if (id == "brandsMultiStay") {
-            selectBox3 = new vanillaSelectBox("#brandsMultiStay", { "maxHeight": 200, "search": true,"stayOpen":true });
+            selectBox3 = new vanillaSelectBox("#brandsMultiStay", { "maxHeight": 200, "search": true,"stayOpen":true,"itemsSeparator":", " });
         }
     }
     function setValues(id, value) {
@@ -688,7 +688,7 @@ for (var i = 0;i < allCountries.length;i++) {
     option.text = allCountries[i].name;
     selectCountries.appendChild(option);
 }
-let selectBox4 = new vanillaSelectBox("#allCountries", { "maxHeight": 200, "search": true,"stayOpen":true,translations: { "all": "All", "items": "Countries" } });
+let selectBox4 = new vanillaSelectBox("#allCountries", { "maxHeight": 200, "itemsSeparator":", ","search": true,"stayOpen":true,translations: { "all": "All", "items": "Countries" } });
 let selecDino = new vanillaSelectBox("#dino-select",{ "maxHeight": 400,"search": true,translations: { "all": "All", "items": "Dinos" } });
         </script>
 </html>
