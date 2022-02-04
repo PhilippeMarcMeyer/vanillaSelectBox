@@ -277,7 +277,7 @@
         </div>
     
         <div class="demo-zone" id="demo-stay-right" style="width:50%;text-align:right;display:inline-block;">
-            <label>All countries : </label><br/><select id="allCountries" multiple size="4"></select>
+            <label>All countries : </label><br/><select id="allCountries" multiple size="0"></select>
         </div>
     </div>
 </div>
@@ -688,7 +688,7 @@ for (var i = 0;i < allCountries.length;i++) {
     option.text = allCountries[i].name;
     selectCountries.appendChild(option);
 }
-let selectBox4 = new vanillaSelectBox("#allCountries", { "maxHeight": 200, "itemsSeparator":", ","search": true,"stayOpen":true,translations: { "all": "All", "items": "Countries" } });
+let selectBox4 = new vanillaSelectBox("#allCountries", { "maxHeight": 200, "itemsSeparator":", ","search": true,"stayOpen":true,translations: { "all": "All","item":"country", "items": "Countries" } });
 let selecDino = new vanillaSelectBox("#dino-select",{ "maxHeight": 400,"search": true,translations: { "all": "All", "items": "Dinos" } });
         </script>
 </html>
