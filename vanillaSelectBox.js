@@ -110,6 +110,8 @@ function vanillaSelectBox(domSelector, options) {
         disableSelectAll: false,
         buttonItemsSeparator : ","
     }
+    this.keepInlineStyles = true;
+    this.keepInlineCaretStyles = true;
     if (options) {
         if(options.itemsSeparator!= undefined){
             this.userOptions.buttonItemsSeparator = options.itemsSeparator;
@@ -174,6 +176,14 @@ function vanillaSelectBox(domSelector, options) {
             this.ulminWidth = options.maxOptionWidth + 60;
             this.ulmaxWidth = options.maxOptionWidth + 60;
         }
+
+        if(options.keepInlineStyles != undefined ) {
+            this.keepInlineStyles = options.keepInlineStyles;
+        }
+        if(options.keepInlineCaretStyles != undefined ) {
+            this.keepInlineCaretStyles = options.keepInlineCaretStyles;
+        }
+        
     }
 
     this.closeOrder = function () {
@@ -253,8 +263,10 @@ function vanillaSelectBox(domSelector, options) {
             this.button = document.createElement("div");
         } else {
             this.button = document.createElement("button");
-            var cssList = self.getCssArray(".vsb-main button");
-            this.button.setAttribute("style", cssList);
+            if(this.keepInlineStyles) {
+                var cssList = self.getCssArray(".vsb-main button");
+                this.button.setAttribute("style", cssList);
+            }
         }
         this.button.style.maxWidth = this.userOptions.maxWidth + "px";
         if (this.userOptions.minWidth !== -1) {
@@ -269,9 +281,11 @@ function vanillaSelectBox(domSelector, options) {
         this.button.appendChild(caret);
 
         caret.classList.add("caret");
-        caret.style.position = "absolute";
-        caret.style.right = "8px";
-        caret.style.marginTop = "8px";
+        if(this.keepInlineCaretStyles) {
+            caret.style.position = "absolute";
+            caret.style.right = "8px";
+            caret.style.marginTop = "8px";
+        }
 
         if (self.userOptions.stayOpen) {
             caret.style.display = "none";
