@@ -1,9 +1,9 @@
 
-# vanillaSelectBox v1.0.2
+# vanillaSelectBox v1.0.3
 
 npm i vanillaselectbox
 
-## vanillaSelectBox : v1.02 : Adding 2 new options "itemsSeparator" to change the default "," item separator showing in the button and translations.item to show the item in singular if there is only one.
+## vanillaSelectBox : v1.03 : getResult() an new fonction to get the selected values in an array
 
 
 ## New : Possibility to change the dropdown tree and change the remote search function
@@ -86,6 +86,8 @@ selectBox.disableItems(['Lamborghini','Land Rover']);
 ```
 
 #### History : 
+
+v1.03 : getResult() an new fonction to get the selected values in an array
 
 v1.02 : Adding 2 new options "itemsSeparator" to change the default "," item separator showing in the button and translations.item to show the item in singular if there is only one.
 

@@ -2,6 +2,7 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v1.03 : getResult() an new fonction to get the selected values in an array
 vanillaSelectBox : v1.02 : Adding 2 new options "itemsSeparator" to change the default "," item separator showing in the button and translations.item to show the item in singular if there is only one.
 vanillaSelectBox : v1.01 : Removing useless code line 550,551 issue 71 by chchch
 vanillaSelectBox : v1.00 : Adding a package.json file 
@@ -243,8 +244,9 @@ function vanillaSelectBox(domSelector, options) {
     }
 
     this.getResult = function () {
+        let self = this;
         let result = [];
-        let collection = document.querySelectorAll("#" + id + " option");
+        let collection = self.root.querySelectorAll("option");
         collection.forEach(function (x) {
             if (x.selected) {
                 result.push(x.value);
@@ -252,7 +254,6 @@ function vanillaSelectBox(domSelector, options) {
         });
         return result;
     }
-
 
     this.createTree = function () {
 
