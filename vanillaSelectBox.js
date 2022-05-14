@@ -242,6 +242,18 @@ function vanillaSelectBox(domSelector, options) {
         }
     }
 
+    this.getResult = function () {
+        let result = [];
+        let collection = document.querySelectorAll("#" + id + " option");
+        collection.forEach(function (x) {
+            if (x.selected) {
+                result.push(x.value);
+            }
+        });
+        return result;
+    }
+
+
     this.createTree = function () {
 
         this.rootToken = self.domSelector.replace(/[^A-Za-z0-9]+/, "")
