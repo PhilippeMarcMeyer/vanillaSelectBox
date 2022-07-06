@@ -1363,6 +1363,10 @@ vanillaSelectBox.prototype.destroy = function () {
     }
 }
 vanillaSelectBox.prototype.disable = function () {
+    this.main.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
     let already = document.getElementById("btn-group-" + this.rootToken);
     if (already) {
         button = already.querySelector("button")
