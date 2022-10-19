@@ -2,6 +2,8 @@
 Copyright (C) Philippe Meyer 2019-2021
 Distributed under the MIT License 
 
+vanillaSelectBox : v1.05 : setValue() bug correction on single mode. You could not set the value
+vanillaSelectBox : v1.04 : select all issue fixed by https://github.com/arthur911016 
 vanillaSelectBox : v1.03 : getResult() an new fonction to get the selected values in an array
 vanillaSelectBox : v1.02 : Adding 2 new options "itemsSeparator" to change the default "," item separator showing in the button and translations.item to show the item in singular if there is only one.
 vanillaSelectBox : v1.01 : Removing useless code line 550,551 issue 71 by chchch
@@ -1292,15 +1294,13 @@ vanillaSelectBox.prototype.setValue = function (values) {
             let text = "";
             let classNames = ""
             Array.prototype.slice.call(listElements).forEach(function (x) {
-                let liVal = x.getAttribute("data-value") == values;
-                if(liVal !== "all"){
-                    if (liVal == values) {
-                        x.classList.add("active");
-                        found = true;
-                        text = x.getAttribute("data-text")
-                    } else {
-                        x.classList.remove("active");
-                    }
+                let liVal = x.getAttribute("data-value");
+                if (liVal == values) {
+                    x.classList.add("active");
+                    found = true;
+                    text = x.getAttribute("data-text")
+                } else {
+                    x.classList.remove("active");
                 }
             });
             Array.prototype.slice.call(self.options).forEach(function (x) {
