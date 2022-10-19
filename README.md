@@ -1,9 +1,9 @@
 
-# vanillaSelectBox v1.0.4
+# vanillaSelectBox v1.0.5
 
 npm i vanillaselectbox
 
-## vanillaSelectBox : v1.04 : Fixed issue by https://github.com/arthur911016 (Thanks)
+## vanillaSelectBox : v1.05 : setValue() bug correction on single mode. You could not set the value
 if you select all the elements when the list is filtered by the textBox it will put the value All to the placeholder even when it does not have all the values selected, if you close and open again the select you will notice that not all the values are checked and the placeholder says All
 
 ## New : Possibility to change the dropdown tree and change the remote search function
@@ -23,9 +23,9 @@ The idea is to use a mundane SELECT element, hide it and provide a nice drop-dow
 
 ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/vanillaSelectBox.png)
 
-Demo classic : https://philippemarcmeyer.github.io/vanillaSelectBox/index.html?v=1.04
+Demo classic : https://philippemarcmeyer.github.io/vanillaSelectBox/index.html?v=1.05
 
-Demo remote  : https://philippemarcmeyer.github.io/vanillaSelectBox/ajaxDemo.html?v=1.04
+Demo remote  : https://philippemarcmeyer.github.io/vanillaSelectBox/ajaxDemo.html?v=1.05
 
 ### Transform an HTML select into a selectBox dropdown
 #### the select is hidden and the chosen value(s) is/are available in the source select
@@ -87,6 +87,8 @@ selectBox.disableItems(['Lamborghini','Land Rover']);
 
 #### History : 
 
+v1.05 : setValue() bug correction on single mode. You could not set the value
+
 v1.04 : select all issue fixed by https://github.com/arthur911016 
 
 v1.03 : getResult() an new fonction to get the selected values in an array
@@ -125,7 +127,6 @@ v0.61 : New option: maxSelect, set a maximum to the selectable options in a mult
 v0.60 : Two levels: optgroups are now used to show two level dropdowns 
 
  ![screen shot](https://raw.githubusercontent.com/PhilippeMarcMeyer/vanillaSelectBox/master/twoLevels.jpg)
-
 
 v0.59 : Bug fix : search box was overlapping first item in single selects
 
