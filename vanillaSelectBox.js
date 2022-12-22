@@ -561,7 +561,7 @@ function vanillaSelectBox(domSelector, options) {
                             selectAll.classList.remove("active");
                             selectAll.innerText = self.userOptions.translations.selectAll;
                             selectAll.setAttribute('data-selected', 'false')
-                        } else {
+                        } else if (nrChecked == self.listElements.length) {
                             selectAll.classList.add("active");
                             selectAll.innerText = self.userOptions.translations.clearAll;
                             selectAll.setAttribute('data-selected', 'true')
@@ -1184,10 +1184,10 @@ vanillaSelectBox.prototype.checkUncheckAll = function () {
             // check the checkAll checkbox
             if (nrChecked === totalAvailableElements) {
                 self.title.textContent = self.userOptions.translations.all;
-            }
-            checkAllElement.classList.add("active");
-            checkAllElement.innerText = self.userOptions.translations.clearAll;
-            checkAllElement.setAttribute('data-selected', 'true')
+                checkAllElement.classList.add("active");
+                checkAllElement.innerText = self.userOptions.translations.clearAll;
+                checkAllElement.setAttribute('data-selected', 'true')
+            }            
         } else if (nrChecked === 0) {
             // uncheck the checkAll checkbox
             self.title.textContent = self.userOptions.placeHolder;
