@@ -182,6 +182,24 @@
     Here are some examples
 	</p>
 
+    <div class="demo-zone" style="text-align:left;" >
+        
+        <select id="fm_time" style="display: inline-block;">
+            <option value="Abarth" >Abarth</option>
+            <option value="Alfa Romeo"  >Alfa Romeo</option>
+            <option value="Alpine" data-test="example" >Alpine</option>
+            <option value="Aston Martin" >Aston Martin</option>
+            <option value="Audi" >Audi</option>
+            <option value="Bentley" >Bentley</option>
+            <option value="BMW" >BMW</option>
+            <option value="Cadillac" >Cadillac</option>
+            <option value="Chevrolet" >Chevrolet</option>
+            <option value="Citroën" >Citroën</option>
+            <option value="Cupra" >Cupra</option>
+            <option value="DACIA" >DACIA</option>
+        </select>
+    </div>
+
 	<div class="demo-zone" style="text-align:left;" id="demo-single">
 		<label>Choose a brand in list : </label><select id="brandsOne"></select> 
 		<div class="btns-active">
@@ -282,7 +300,7 @@
     </div>
 </div>
 
-<script src="./vanillaSelectBox.js?v1.0.3"></script>
+<script src="./vanillaSelectBox.js?v1.0.5"></script>
 <script>
 
     let brands = ["Abarth", "Alfa Romeo", "Alpine", "Aston Martin", "Audi", "Bentley", "BMW", "Cadillac", "Chevrolet", "Citroën", "Cupra", "DACIA", "DS", "Ferrari", "Fiat", "Ford", "Honda", "Hyundai", "Infiniti", "Jaguar", "Jeep", "KIA", "Lamborghini", "Land Rover", "Lexus", "Lotus", "Maserati", "Mazda", "McLaren", "Mercedes-Benz", "MINI", "Mitsubishi", "Nissan", "Opel", "Peugeot", "Porsche", "Renault", "Rolls-Royce", "SEAT", "Skoda", "smart", "Ssangyong", "Subaru", "Suzuki", "Tesla", "Toyota", "Volkswagen", "Volvo"];
@@ -690,5 +708,7 @@ for (var i = 0;i < allCountries.length;i++) {
 }
 let selectBox4 = new vanillaSelectBox("#allCountries", { "maxHeight": 200, "itemsSeparator":", ","search": true,"stayOpen":true,translations: { "all": "All","item":"country", "items": "Countries" } });
 let selecDino = new vanillaSelectBox("#dino-select",{ "maxHeight": 400,"search": true,translations: { "all": "All", "items": "Dinos" } });
+
+let fmtime_select = new vanillaSelectBox('#fm_time',{itemsSeparator:',',disableSelectAll: true,maxOptionWidth: 115,maxWidth: 175,minWidth: 175});
         </script>
 </html>

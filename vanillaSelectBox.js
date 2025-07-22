@@ -1,5 +1,5 @@
 /*
-Copyright (C) Philippe Meyer 2019-2021
+Copyright (C) Philippe Meyer 2019-2025
 Distributed under the MIT License 
 
 vanillaSelectBox : v1.05 : setValue() bug correction on single mode. You could not set the value
